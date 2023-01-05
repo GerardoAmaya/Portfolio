@@ -5,18 +5,18 @@ import {Link} from "react-scroll";
 
 const Home = () => {
   return (
-    <div name='home' className='h-screen w-full bg-gradient-to-b from-black via-black to-gray-800 '>
+    <div name='home' className='h-screen w-full bg-gradient-to-b from-black via-black to-gray-800'>
         <div className='max-w-screen-lg mx-auto flex flex-col items-center justify-center h-full px-4 md:flex-row'>
             {/* px */}
             <div className='flex flex-col justify-center h-full px-4'>
-                <h2 className='text-4xl sm:text-7xl font-bold text-green-500' >
+                <p className='text-4xl sm:text-7xl font-bold text-green-500 pt-20' >
                 Gerardo Amaya
-                </h2>
+                </p>
                 <p className="text-gray-300 py-4 text-lg">
-                I am a Computer Science Engineering student at UFG, I am 22 years old and I like web programming 
+                I am a Computer Science Engineering student and I like web programming 
                 in ReactJS with Tailwind, API REST with NodeJS using the technologys of Express, 
-                Moongose and Docker, making basic mobile applications with Kotlin and working with github in team.
-                Another branch of computing that I like is databases in Oracle Database PL/SQL and Microsoft SQL server T-SQL.
+                Moongose and Docker, mobile applications with Kotlin and working with github in team.
+                Another branch of computing that I like is databases in Oracle PL/SQL and Microsoft SQL server T-SQL.
                 </p>
                 <div>
                     <Link to = "portfolio" 
@@ -34,7 +34,7 @@ const Home = () => {
             </div>
             <div>
                 <img src={HeroImage} alt="My pp" 
-                className='rounded-2xl mx-auto w-2/3 md:w-full '/>
+                className='rounded-2xl mx-auto w-2/3 md:w-fit'/>
             </div>
         </div>
     </div>
