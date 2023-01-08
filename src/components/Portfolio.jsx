@@ -33,21 +33,21 @@ const Portfolio = () => {
     },
 
   ];
-
+  // max-w-md p-4 mx-auto mt-4 bg-gray-200 sm:shadow-md sm::rounded-md sm:bg-gray-100 sm:p-6 md:bg-green-100
   return (
     <div
       name="portfolio"
-      className="bg-gradient-to-b from-black to-gray-800 w-full text-white md:h-screen"
+      className="flex justify-center w-full bg-gradient-to-b from-gray-800 to-black text-white"
     >
       <div className="max-w-screen-lg p-4 mx-auto flex flex-col justify-center w-full h-full">
-        <div className="pb-8">
+        <div className="pt-20">
           <p className="text-4xl font-bold inline border-b-4 border-white text-green-500">
             Portfolio
           </p>
           <p className="py-6 text-2xl">Projects that I have done</p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 px-12 sm:px-0">
+        <div className="flex-wrap grid md:grid-cols-2 lg:grid-cols-3 gap-8 px-12 sm:px-0">
           {portfolios.map(({ id, src, href}) => (
             <div key={id} className="shadow-md shadow-gray-600 rounded-lg ">
               <img

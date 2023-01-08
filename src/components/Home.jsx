@@ -5,10 +5,10 @@ import {Link} from "react-scroll";
 
 const Home = () => {
   return (
-    <div name='home' className='h-screen w-full bg-gradient-to-b from-black via-black to-gray-800'>
-        <div className='max-w-screen-lg mx-auto flex flex-col items-center justify-center h-full px-4 md:flex-row'>
+    <div name='home' className=' flex justify-center bg-gradient-to-b from-black via-black to-gray-800'>
+        <div className='max-w-screen-lg p-4 mx-auto flex flex-col justify-center w-full h-full'>
             {/* px */}
-            <div className='flex flex-col justify-center h-full px-4'>
+            <div className='flex flex-col justify-center h-full px-4 pt-2'>
                 <p className='text-4xl sm:text-7xl font-bold text-green-500 pt-20' >
                 Gerardo Amaya
                 </p>
@@ -17,6 +17,7 @@ const Home = () => {
                 in ReactJS with Tailwind, API REST with NodeJS using the technologys of Express, 
                 Moongose and Docker, mobile applications with Kotlin and working with github in team.
                 Another branch of computing that I like is databases in Oracle PL/SQL and Microsoft SQL server T-SQL.
+                
                 </p>
                 <div>
                     <Link to = "portfolio" 
@@ -31,10 +32,13 @@ const Home = () => {
                         </span>
                     </Link>
                 </div>
+                
             </div>
-            <div>
+            <div className='flex-1 md:mt-0 mt-6 flex justify-center'>
+            <div className='lg:w-60 h-full md:w-10/12 w-52'>
                 <img src={HeroImage} alt="My pp" 
-                className='rounded-2xl mx-auto w-2/3 md:w-fit'/>
+                className='w-full object-cover rounded-xl'/>
+            </div>
             </div>
         </div>
     </div>
