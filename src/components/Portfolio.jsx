@@ -30,6 +30,7 @@ const Portfolio = () => {
     {
       id: 5,
       src: safeOnSivar,
+      href: "https://youtu.be/OCd7V5g8RRU"
     },
 
   ];
@@ -37,7 +38,7 @@ const Portfolio = () => {
   return (
     <div
       name="portfolio"
-      className="flex justify-center w-full bg-gradient-to-b from-gray-800 to-black text-white"
+      className="flex justify-center w-full bg-gradient-to-b from-gray-800 to-black text-white pb-20 pt-2"
     >
       <div className="max-w-screen-lg p-4 mx-auto flex flex-col justify-center w-full h-full">
         <div className="pt-20">
