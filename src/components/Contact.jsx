@@ -1,17 +1,62 @@
 import React from "react";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { HiOutlineMail } from "react-icons/hi";
+import { FaInstagram } from "react-icons/fa";
 
 const Contact = () => {
+
+  const links = [
+    {
+      id: 1,
+      child: (
+        <>
+          <FaLinkedin size={30} />
+        </>
+      ),
+      href: "https://www.linkedin.com/in/gerardo-alberto-amaya-fuentes-20b292240",
+      
+    },
+    {
+      id: 2,
+      child: (
+        <>
+          <FaGithub size={30} />
+        </>
+      ),
+      href: "https://github.com/GerardoAmaya",
+    },
+    {
+      id: 3,
+      child: (
+        <>
+          <HiOutlineMail size={30} />
+        </>
+      ),
+      href: "mailto:gerardoamayasv2000@gmail.com",
+    },
+    {
+      id: 4,
+      child: (
+        <>
+          <FaInstagram size={30} />
+        </>
+      ),
+      href: "https://www.instagram.com/gerardoamaya_/",
+    },
+
+  ];
+
   return (
     <div
       name="contact"
-      className="w-full h-screen bg-gradient-to-b from-black to-gray-800 p-4 text-white"
+      className="bg-gradient-to-b from-black to-gray-800 p-4 text-white w-full h-screen"
     >
-      <div className="flex flex-col p-4 justify-center max-w-screen-lg mx-auto h-full">
-        <div className="pb-2 pt-16">
-          <p className="text-4xl font-bold inline border-b-4 text-green-500">
-            Contact
+      <div className="flex flex-col p-4 justify-center max-w-screen-lg mx-auto w-full h-full">
+        <div className="pb-6 pt-14 flex justify-center items-center">
+          <p className="text-4xl font-bold inline border-b-4 text-green-500 text-center">
+            Contact me !
           </p>
-          <p className="py-6">Send me a message to contact with me</p>
+          
         </div>
 
         <div className=" flex justify-center items-center">
@@ -44,8 +89,33 @@ const Contact = () => {
             </button>
           </form>
         </div>
+        <div className="text-green-500 md:h">
+          <ul className="flex justify-center items-center ">
+            {links.map(({ id, child, href, download }) => (
+              <li 
+                key={id}
+                className={ 
+                  "p-2 cursor-pointer inline-flex items-center rounded-full bg-gray-700 mx-1.5 text-xl hover:text-gray-100 hover:bg-green-600 duration-300" 
+                }
+              >
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  download={download}
+                  className="flex justify-between items-center w-full h-full "
+                >
+                  {child}
+                </a>
+              </li>
+            ))}
+          </ul>
+
+        </div>
       </div>
     </div>
+    
+    
   );
 };
 

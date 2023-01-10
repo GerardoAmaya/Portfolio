@@ -39,14 +39,14 @@ const Home = () => {
                     <Link to = "portfolio" 
                     smooth 
                     duration={500}
-                    className="group w-fit my-2 flex font-semibold items-center text-white bg-gradient-to-r from-green-500 via-green-600 to-green-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-800 dark:focus:ring-green-900 rounded-lg px-5 py-2.5 text-center mr-2 mb-2 cursor-pointer">
+                    className="group w-fit my-2 flex font-semibold items-center text-white bg-green-600 duration-200 hover:scale-105 hover:bg-green-700 focus:ring-4 focus:outline-none rounded-lg px-5 py-2.5 text-center mr-5 mb-2 cursor-pointer">
                         Portfolio
                         <span className='group-hover:rotate-90 duration-300'>
                             <MdKeyboardArrowRight size={25} 
                             className="ml-1" />
                         </span>
                     </Link>
-                    <button className="group w-fit my-2 flex items-center text-white bg-gradient-to-r from-green-500 via-green-600 to-green-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-800 dark:focus:ring-green-900 rounded-lg px-5 py-2.5 text-center mr-2 mb-2">
+                    <button className="group w-fit my-2 flex items-center text-white bg-green-600 duration-200 hover:scale-105 hover:bg-green-700 focus:ring-4 focus:outline-none rounded-lg px-5 py-2.5 text-center mb-2">
                         <a
                         name = "resume"
                         href={links[0].href}
