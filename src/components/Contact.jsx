@@ -41,7 +41,7 @@ const Contact = () => {
           <FaInstagram size={30} />
         </>
       ),
-      href: "https://www.instagram.com/gerardoamaya_/",
+      href: "https://www.instagram.com/gerardoamaya_11/",
     },
 
   ];
