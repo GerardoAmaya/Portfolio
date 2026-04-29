@@ -1,0 +1,37 @@
+import { site } from "@/lib/site";
+import { SITE_URL } from "@/lib/utils";
+
+export function PersonJsonLd() {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: site.fullName,
+    alternateName: site.name,
+    url: SITE_URL,
+    email: `mailto:${site.email}`,
+    jobTitle: site.role,
+    address: { "@type": "PostalAddress", addressCountry: "SV" },
+    sameAs: [site.social.github, site.social.linkedin],
+    knowsAbout: [
+      "PHP",
+      "Laravel",
+      "Node.js",
+      "React",
+      "Next.js",
+      "Vue.js",
+      "TypeScript",
+      "MySQL",
+      "PostgreSQL",
+      "MongoDB",
+      "Docker",
+    ],
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      suppressHydrationWarning
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
