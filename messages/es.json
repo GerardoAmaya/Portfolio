@@ -1,0 +1,115 @@
+{
+  "Metadata": {
+    "siteName": "Gerardo Amaya — Fullstack Developer",
+    "defaultTitle": "Gerardo Amaya — Fullstack Developer",
+    "titleTemplate": "%s · Gerardo Amaya",
+    "description": "Desarrollador fullstack con experiencia en PHP, Laravel, React, Next.js, Vue y Node. Especialista en construir aplicaciones web sólidas, accesibles y bien probadas."
+  },
+  "Nav": {
+    "home": "Inicio",
+    "about": "Sobre mí",
+    "projects": "Proyectos",
+    "experience": "Experiencia",
+    "contact": "Contacto",
+    "resume": "CV",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "toggleTheme": "Cambiar tema",
+    "switchLanguage": "Cambiar idioma"
+  },
+  "Home": {
+    "eyebrow": "Disponible para nuevos proyectos",
+    "titleLead": "Hola, soy Gerardo —",
+    "titleHighlight": "Fullstack Developer",
+    "titleTail": "construyendo productos web sólidos.",
+    "subtitle": "Desarrollo aplicaciones de extremo a extremo con PHP, Laravel, Node, React y Next.js. Me enfoco en código limpio, performance y experiencias accesibles.",
+    "ctaProjects": "Ver proyectos",
+    "ctaResume": "Descargar CV",
+    "stats": {
+      "yearsLabel": "Años escribiendo código",
+      "yearsValue": "5+",
+      "projectsLabel": "Proyectos entregados",
+      "projectsValue": "20+",
+      "stackLabel": "Stack principal",
+      "stackValue": "PHP · Laravel · React · Next.js"
+    },
+    "highlightsTitle": "Lo que hago",
+    "highlights": {
+      "backendTitle": "Backend robusto",
+      "backendDesc": "APIs REST y servicios en Laravel, Node y Express. Modelado de datos con MySQL, PostgreSQL y MongoDB.",
+      "frontendTitle": "Frontend moderno",
+      "frontendDesc": "Interfaces accesibles y rápidas con React, Next.js, Vue y Tailwind. UX cuidada y responsive por defecto.",
+      "devopsTitle": "Listo para producción",
+      "devopsDesc": "Docker, CI/CD, despliegues en Netlify y Vercel. Pruebas, monitoreo y observabilidad básica."
+    }
+  },
+  "About": {
+    "title": "Sobre mí",
+    "lead": "Soy un desarrollador fullstack apasionado por construir software útil y bien hecho.",
+    "paragraphs": [
+      "Empecé escribiendo HTML y CSS por curiosidad y terminé enamorándome del oficio entero: desde modelar una base de datos hasta pulir el último pixel de una interfaz.",
+      "Mi enfoque principal está en el backend con PHP y Laravel, complementado con bases de datos relacionales (MySQL, Oracle, PostgreSQL) y NoSQL (MongoDB). Del lado del cliente trabajo con React, Next.js, Vue y Tailwind.",
+      "Me motiva colaborar con equipos, escribir código que otros puedan leer sin esfuerzo, y entregar productos que resuelvan problemas reales."
+    ],
+    "skillsTitle": "Stack técnico",
+    "categories": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "databases": "Bases de datos",
+      "tools": "Herramientas & DevOps"
+    }
+  },
+  "Projects": {
+    "title": "Proyectos",
+    "subtitle": "Una selección de cosas que he construido. Cada uno con problema, decisiones técnicas y resultado.",
+    "viewCase": "Ver caso de estudio",
+    "viewVideo": "Ver demo",
+    "viewCode": "Ver código",
+    "stack": "Stack",
+    "role": "Rol",
+    "year": "Año",
+    "backToProjects": "Volver a proyectos",
+    "notFound": "Proyecto no encontrado"
+  },
+  "Experience": {
+    "title": "Experiencia",
+    "subtitle": "Trayectoria profesional y formación.",
+    "workTitle": "Trabajo",
+    "educationTitle": "Educación",
+    "present": "Presente"
+  },
+  "Contact": {
+    "title": "Hablemos",
+    "subtitle": "¿Tienes un proyecto, una vacante o solo quieres saludar? Escríbeme.",
+    "name": "Nombre",
+    "namePlaceholder": "Tu nombre",
+    "email": "Email",
+    "emailPlaceholder": "tu@email.com",
+    "message": "Mensaje",
+    "messagePlaceholder": "Cuéntame en qué puedo ayudarte",
+    "send": "Enviar mensaje",
+    "sending": "Enviando…",
+    "successTitle": "¡Mensaje enviado!",
+    "successDesc": "Te responderé lo antes posible. Gracias por escribir.",
+    "errorTitle": "Algo falló",
+    "errorDesc": "No se pudo enviar el mensaje. Intenta de nuevo o escríbeme directamente por correo.",
+    "errors": {
+      "nameMin": "El nombre debe tener al menos 2 caracteres.",
+      "emailInvalid": "Ingresa un email válido.",
+      "messageMin": "El mensaje debe tener al menos 10 caracteres."
+    },
+    "directTitle": "O contáctame directamente",
+    "emailLabel": "Email",
+    "linkedinLabel": "LinkedIn",
+    "githubLabel": "GitHub"
+  },
+  "Footer": {
+    "tagline": "Diseñado y construido con Next.js, Tailwind y mucho café.",
+    "rights": "Todos los derechos reservados."
+  },
+  "NotFound": {
+    "title": "Página no encontrada",
+    "description": "La página que buscas no existe o fue movida.",
+    "back": "Volver al inicio"
+  }
+}

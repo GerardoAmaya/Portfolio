@@ -1,70 +1,68 @@
-# Getting Started with Create React App
+# Gerardo Amaya — Portfolio
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Personal portfolio site built with Next.js 16, TypeScript, Tailwind CSS v4, and shadcn/ui. Bilingual (ES/EN), dark/light themes, optimized for performance and SEO. Deployed on Netlify.
 
-## Available Scripts
+## Tech stack
 
-In the project directory, you can run:
+- **Framework**: Next.js 16 (App Router, Server Components, Server Actions)
+- **Language**: TypeScript (strict mode)
+- **Styling**: Tailwind CSS v4 + shadcn/ui (Radix primitives)
+- **i18n**: next-intl (ES, EN)
+- **Theming**: next-themes (dark / light / system)
+- **Animation**: motion (Framer Motion)
+- **Validation**: Zod
+- **Icons**: Lucide
+- **Forms**: Netlify Forms
 
-### `npm start`
+## Local development
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```bash
+npm install
+npm run dev
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Open [http://localhost:3000](http://localhost:3000).
 
-### `npm test`
+## Scripts
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+| Script | What it does |
+| --- | --- |
+| `npm run dev` | Start dev server with Turbopack |
+| `npm run build` | Production build |
+| `npm start` | Run production build |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | TypeScript check (no emit) |
+| `npm run format` | Prettier write |
 
-### `npm run build`
+## Project structure
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+src/
+  app/
+    [locale]/          # Localized routes (es, en)
+      page.tsx         # Home
+      about/
+      projects/
+      experience/
+      blog/
+      contact/
+    api/               # API routes (if needed)
+  components/
+    ui/                # shadcn/ui primitives
+    sections/          # Page sections
+    layout/            # Header, Footer, etc.
+  content/
+    projects/          # MDX case studies
+    blog/              # MDX articles
+  i18n/                # next-intl config
+  lib/                 # Utilities
+messages/
+  en.json
+  es.json
+public/
+  resume.pdf
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Deployment
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Auto-deployed on Netlify from the `master` branch. Configuration lives in [`netlify.toml`](./netlify.toml).
