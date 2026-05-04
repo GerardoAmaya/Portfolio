@@ -31,19 +31,19 @@ export type Education = {
 export const experiences: Experience[] = [
   {
     id: "goes",
-    startDate: "2023",
+    startDate: "2019 - Present",
     endDate: null,
     company: "Gobierno de El Salvador (GOES)",
     i18n: {
       es: {
         role: "Fullstack Developer",
         description:
-          "Desarrollo y mantenimiento de aplicaciones internas con PHP, Laravel y bases de datos Oracle/MySQL. Diseño de APIs REST, integraciones y mejoras de UX en interfaces existentes.",
+          "Desarrollo y mantenimiento de aplicaciones web. Diseño de APIs REST, integraciones y mejoras de UX en interfaces existentes.",
       },
       en: {
         role: "Fullstack Developer",
         description:
-          "Build and maintain internal applications with PHP, Laravel and Oracle/MySQL databases. Design REST APIs, integrations and UX improvements on existing interfaces.",
+          "Build and maintain internal applications web. Design REST APIs, integrations and UX improvements on existing interfaces.",
       },
     },
   },
@@ -51,10 +51,10 @@ export const experiences: Experience[] = [
 
 export const education: Education[] = [
   {
-    id: "ues",
-    startDate: "2018",
-    endDate: "2024",
-    institution: "Universidad de El Salvador",
+    id: "ufg",
+    startDate: "2021",
+    endDate: "2025",
+    institution: "Universidad Francisco Gavidia (UFG)",
     i18n: {
       es: {
         degree: "Ingeniería en Sistemas Informáticos",
