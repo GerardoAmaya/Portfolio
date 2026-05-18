@@ -3,7 +3,7 @@
     "siteName": "Gerardo Amaya — Fullstack Developer",
     "defaultTitle": "Gerardo Amaya — Fullstack Developer",
     "titleTemplate": "%s · Gerardo Amaya",
-    "description": "Desarrollador fullstack con experiencia en PHP, Laravel, React, Next.js, Vue y Node. Especialista en construir aplicaciones web sólidas, accesibles y bien probadas."
+    "description": "Desarrollador fullstack con experiencia en PHP, Laravel, React, Next.js, Vue y Node. Enfocado en construir aplicaciones web sólidas, accesibles y bien testeadas."
   },
   "Nav": {
     "home": "Inicio",
@@ -22,7 +22,7 @@
     "titleLead": "Hola, soy Gerardo —",
     "titleHighlight": "Fullstack Developer",
     "titleTail": "construyendo productos web sólidos.",
-    "subtitle": "Desarrollo aplicaciones de extremo a extremo con PHP, Laravel, Node, React y Next.js. Me enfoco en código limpio, performance y experiencias accesibles.",
+    "subtitle": "Desarrollo aplicaciones con Node, React, Vue.js, Nest.js y Next.js. Me enfoco en código limpio, performance y experiencias accesibles.",
     "ctaProjects": "Ver proyectos",
     "ctaResume": "Descargar CV",
     "stats": {
@@ -31,14 +31,14 @@
       "projectsLabel": "Proyectos entregados",
       "projectsValue": "20+",
       "stackLabel": "Stack principal",
-      "stackValue": "PHP · Laravel · React · Next.js"
+      "stackValue": "Node · React · Nest.js · Next.js · Laravel · Vue.js"
     },
     "highlightsTitle": "Lo que hago",
     "highlights": {
       "backendTitle": "Backend robusto",
-      "backendDesc": "APIs REST y servicios en Laravel, Node y Express. Modelado de datos con MySQL, PostgreSQL y MongoDB.",
+      "backendDesc": "APIs REST y servicios en Laravel, Node, Nest.js y Express. Modelado de datos con MySQL, PostgreSQL y MongoDB.",
       "frontendTitle": "Frontend moderno",
-      "frontendDesc": "Interfaces accesibles y rápidas con React, Next.js, Vue y Tailwind. UX cuidada y responsive por defecto.",
+      "frontendDesc": "Interfaces accesibles y rápidas con React, Next.js, Vue.js y Tailwind. UX cuidada y responsive por defecto.",
       "devopsTitle": "Listo para producción",
       "devopsDesc": "Docker, CI/CD, despliegues en Netlify y Vercel. Pruebas, monitoreo y observabilidad básica."
     }
@@ -48,7 +48,7 @@
     "lead": "Soy un desarrollador fullstack apasionado por construir software útil y bien hecho.",
     "paragraphs": [
       "Empecé escribiendo HTML y CSS por curiosidad y terminé enamorándome del oficio entero: desde modelar una base de datos hasta pulir el último pixel de una interfaz.",
-      "Mi enfoque principal está en el backend con PHP y Laravel, complementado con bases de datos relacionales (MySQL, Oracle, PostgreSQL) y NoSQL (MongoDB). Del lado del cliente trabajo con React, Next.js, Vue y Tailwind.",
+      "Mi enfoque principal está en el backend con PHP y Laravel, complementado con bases de datos relacionales (MySQL, Oracle, PostgreSQL) y NoSQL (MongoDB). Del lado del cliente trabajo con React, Next.js, Vue.js y Tailwind.",
       "Me motiva colaborar con equipos, escribir código que otros puedan leer sin esfuerzo, y entregar productos que resuelvan problemas reales."
     ],
     "skillsTitle": "Stack técnico",
