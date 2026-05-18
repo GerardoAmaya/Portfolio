@@ -3,7 +3,7 @@
     "siteName": "Gerardo Amaya — Fullstack Developer",
     "defaultTitle": "Gerardo Amaya — Fullstack Developer",
     "titleTemplate": "%s · Gerardo Amaya",
-    "description": "Fullstack developer with experience in PHP, Laravel, React, Next.js, Vue and Node. Focused on building solid, accessible and well-tested web applications."
+    "description": "Fullstack developer with experience in Node, Nest.js, Laravel, React, Next.js and Vue. Focused on building solid, accessible and well-tested web applications."
   },
   "Nav": {
     "home": "Home",
@@ -48,7 +48,7 @@
     "lead": "I'm a fullstack developer passionate about building useful, well-crafted software.",
     "paragraphs": [
       "I started writing HTML and CSS out of curiosity and ended up loving the whole craft: from modeling a database to polishing the last pixel of an interface.",
-      "My main focus is the backend Nest.js complemented with relational databases (MySQL, Oracle, PostgreSQL) and NoSQL (MongoDB). On the client side I work with React, Next.js, Vue.js and Tailwind.",
+      "My main focus is the backend with Node, Nest.js and Laravel, complemented with relational databases (MySQL, Oracle, PostgreSQL) and NoSQL (MongoDB). On the client side I work with React, Next.js, Vue.js and Tailwind.",
       "I'm motivated by collaborating with teams, writing code others can read effortlessly, and shipping products that solve real problems."
     ],
     "skillsTitle": "Tech stack",

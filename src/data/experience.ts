@@ -31,7 +31,7 @@ export type Education = {
 export const experiences: Experience[] = [
   {
     id: "goes",
-    startDate: "2019 - Present",
+    startDate: "2019",
     endDate: null,
     company: "Gobierno de El Salvador (GOES)",
     i18n: {
@@ -43,7 +43,7 @@ export const experiences: Experience[] = [
       en: {
         role: "Fullstack Developer",
         description:
-          "Build and maintain internal applications web. Design REST APIs, integrations and UX improvements on existing interfaces.",
+          "Build and maintain internal web applications. Design REST APIs, integrations and UX improvements on existing interfaces.",
       },
     },
   },
