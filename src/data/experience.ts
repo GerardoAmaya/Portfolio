@@ -31,7 +31,7 @@ export type Education = {
 export const experiences: Experience[] = [
   {
     id: "goes",
-    startDate: "2019",
+    startDate: "2023",
     endDate: null,
     company: "Gobierno de El Salvador (GOES)",
     i18n: {
