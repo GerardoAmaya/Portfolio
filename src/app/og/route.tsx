@@ -8,7 +8,7 @@ export async function GET(request: Request) {
     url.searchParams.get("title") ?? "Gerardo Amaya — Fullstack Developer";
   const subtitle =
     url.searchParams.get("subtitle") ??
-    "Building solid web products with PHP, Laravel, React and Next.js.";
+    "Building solid web products with Node, Nest.js, Laravel, React and Next.js.";
   const eyebrow = url.searchParams.get("eyebrow") ?? "PROJECT";
   const width = Number(url.searchParams.get("w") ?? 1200);
   const height = Number(url.searchParams.get("h") ?? 630);
