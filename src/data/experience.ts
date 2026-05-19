@@ -53,7 +53,7 @@ export const education: Education[] = [
   {
     id: "ufg",
     startDate: "2021",
-    endDate: "2025",
+    endDate: "2026",
     institution: "Universidad Francisco Gavidia (UFG)",
     i18n: {
       es: {
