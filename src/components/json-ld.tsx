@@ -27,6 +27,11 @@ export function PersonJsonLd() {
       "PostgreSQL",
       "MongoDB",
       "Docker",
+      "AWS",
+      "Google Cloud",
+      "Cybersecurity",
+      "OWASP Top 10",
+      "OWASP API Security",
     ],
   };
 

@@ -30,10 +30,10 @@ export type Education = {
 
 export const experiences: Experience[] = [
   {
-    id: "goes",
+    id: "manpower",
     startDate: "2023",
     endDate: null,
-    company: "Gobierno de El Salvador (GOES)",
+    company: "Manpower",
     i18n: {
       es: {
         role: "Fullstack Developer",
