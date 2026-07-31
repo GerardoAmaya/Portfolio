@@ -3,7 +3,7 @@
     "siteName": "Gerardo Amaya — Fullstack Developer",
     "defaultTitle": "Gerardo Amaya — Fullstack Developer",
     "titleTemplate": "%s · Gerardo Amaya",
-    "description": "Fullstack developer with experience in Node, Nest.js, Laravel, React, Next.js and Vue. Focused on building solid, accessible and well-tested web applications."
+    "description": "Fullstack developer with experience in Node, Nest.js, PHP, Laravel, React, Next.js and Vue. Focused on building solid, accessible and well-tested web applications."
   },
   "Nav": {
     "home": "Home",
@@ -22,7 +22,7 @@
     "titleLead": "Hi, I'm Gerardo —",
     "titleHighlight": "Fullstack Developer",
     "titleTail": "shipping solid web products.",
-    "subtitle": "I build end-to-end web applications with Node, React, Vue.js, Nest.js and Next.js. I care about clean code, performance and accessible experiences.",
+    "subtitle": "I build end-to-end web applications with Node, PHP, Laravel, React, Vue.js, Nest.js and Next.js. I care about clean code, performance and accessible experiences.",
     "ctaProjects": "View projects",
     "ctaResume": "Download CV",
     "stats": {
@@ -31,24 +31,25 @@
       "projectsLabel": "Projects shipped",
       "projectsValue": "20+",
       "stackLabel": "Core stack",
-      "stackValue": "Node · React · Nest.js · Next.js · Laravel · Vue.js"
+      "stackValue": "Node · React · Nest.js · Next.js · PHP · Laravel · Vue.js"
     },
     "highlightsTitle": "What I do",
     "highlights": {
       "backendTitle": "Solid backends",
-      "backendDesc": "REST APIs and services in Laravel, Node, Nest.js and Express. Data modeling with MySQL, PostgreSQL and MongoDB.",
+      "backendDesc": "REST APIs and services in PHP, Laravel, Node, Nest.js and Express. Data modeling with MySQL, PostgreSQL and MongoDB.",
       "frontendTitle": "Modern frontends",
       "frontendDesc": "Accessible, fast UIs with React, Next.js, Vue.js and Tailwind. Thoughtful UX, responsive by default.",
       "devopsTitle": "Production-ready",
-      "devopsDesc": "Docker, CI/CD, deploys on Netlify and Vercel. Testing, monitoring and basic observability."
-    }
+      "devopsDesc": "Docker, CI/CD, deploys on AWS, Google Cloud, Netlify and Vercel. Testing, monitoring and basic observability."
+    },
+    "stackTitle": "Tech stack",
+    "stackSubtitle": "Technologies I work with every day, from the backend to the cloud."
   },
   "About": {
     "title": "About me",
     "lead": "I'm a fullstack developer passionate about building useful, well-crafted software.",
     "paragraphs": [
-      "I started writing HTML and CSS out of curiosity and ended up loving the whole craft: from modeling a database to polishing the last pixel of an interface.",
-      "My main focus is the backend with Node, Nest.js and Laravel, complemented with relational databases (MySQL, Oracle, PostgreSQL) and NoSQL (MongoDB). On the client side I work with React, Next.js, Vue.js and Tailwind.",
+      "My main focus is the backend with Node, Nest.js, PHP and Laravel, complemented with relational databases (MySQL, Oracle, PostgreSQL) and NoSQL (MongoDB). On the client side I work with React, Next.js, Vue.js and Tailwind.",
       "I'm motivated by collaborating with teams, writing code others can read effortlessly, and shipping products that solve real problems."
     ],
     "skillsTitle": "Tech stack",
@@ -56,7 +57,9 @@
       "frontend": "Frontend",
       "backend": "Backend",
       "databases": "Databases",
-      "tools": "Tools & DevOps"
+      "cloud": "Cloud",
+      "security": "Security",
+      "tools": "DevOps & Tools"
     }
   },
   "Projects": {

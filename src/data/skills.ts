@@ -1,4 +1,10 @@
-export type SkillCategory = "frontend" | "backend" | "databases" | "tools";
+export type SkillCategory =
+  | "frontend"
+  | "backend"
+  | "databases"
+  | "cloud"
+  | "security"
+  | "tools";
 
 export type Skill = {
   name: string;
@@ -28,6 +34,16 @@ export const skills: Skill[] = [
   { name: "PostgreSQL", category: "databases" },
   { name: "Oracle", category: "databases" },
   { name: "MongoDB", category: "databases" },
+
+  { name: "AWS", category: "cloud" },
+  { name: "Google Cloud", category: "cloud" },
+  { name: "Netlify", category: "cloud" },
+  { name: "Vercel", category: "cloud" },
+
+  { name: "OWASP Top 10", category: "security" },
+  { name: "OWASP API Security", category: "security" },
+  { name: "Security Testing", category: "security" },
+  { name: "JWT & Auth", category: "security" },
 
   { name: "Git", category: "tools" },
   { name: "GitHub", category: "tools" },
