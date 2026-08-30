@@ -30,20 +30,20 @@ export type Education = {
 
 export const experiences: Experience[] = [
   {
-    id: "manpower",
+    id: "GOES",
     startDate: "2023",
     endDate: null,
-    company: "Manpower",
+    company: "GOES",
     i18n: {
       es: {
         role: "Fullstack Developer",
         description:
-          "Desarrollo y mantenimiento de aplicaciones web. Diseño de APIs REST, integraciones y mejoras de UX en interfaces existentes.",
+          "Desarrollo y mantenimiento de aplicaciones web. Diseño de APIs REST, integraciones, mejoras de UX en interfaces , Claude code Y Spec-Driven Development IA",
       },
       en: {
         role: "Fullstack Developer",
         description:
-          "Build and maintain internal web applications. Design REST APIs, integrations and UX improvements on existing interfaces.",
+          "Build and maintain internal web applications. Design REST APIs, integrations and UX improvements on existing interfaces, Claude code and Spec-Driven Development AI",
       },
     },
   },
