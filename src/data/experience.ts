@@ -38,12 +38,12 @@ export const experiences: Experience[] = [
       es: {
         role: "Fullstack Developer",
         description:
-          "Desarrollo y mantenimiento de aplicaciones web. Diseño de APIs REST, integraciones, mejoras de UX en interfaces , Claude code Y Spec-Driven Development IA",
+          "Desarrollo y mantenimiento de aplicaciones web internas: diseño de APIs REST, integraciones entre sistemas y mejoras de UX sobre interfaces existentes. Trabajo con Claude Code y Spec-Driven Development asistido por IA.",
       },
       en: {
         role: "Fullstack Developer",
         description:
-          "Build and maintain internal web applications. Design REST APIs, integrations and UX improvements on existing interfaces, Claude code and Spec-Driven Development AI",
+          "Build and maintain internal web applications: REST API design, system integrations and UX improvements on existing interfaces. Working with Claude Code and AI-assisted Spec-Driven Development.",
       },
     },
   },

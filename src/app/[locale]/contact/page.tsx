@@ -4,16 +4,23 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ContactForm } from "@/components/sections/contact-form";
 import { PageHeader } from "@/components/page-header";
 import { site } from "@/lib/site";
+import { pageMetadata } from "@/lib/metadata";
 import type { Locale } from "@/i18n/routing";
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Contact" });
-  return { title: t("title"), description: t("subtitle") };
+  return pageMetadata({
+    locale,
+    path: "/contact",
+    title: t("title"),
+    description: t("subtitle"),
+    eyebrow: t("title").toUpperCase(),
+  });
 }
 
 export default async function ContactPage({

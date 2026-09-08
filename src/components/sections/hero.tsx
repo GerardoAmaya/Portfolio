@@ -1,6 +1,3 @@
-"use client";
-
-import * as motion from "motion/react-client";
 import { ArrowRight, Download, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -22,12 +19,7 @@ export function Hero() {
       />
 
       <div className="container-app relative pb-20 pt-20 sm:pt-28 md:pb-28 md:pt-36">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="mx-auto flex max-w-3xl flex-col items-center text-center"
-        >
+        <div className="animate-enter mx-auto flex max-w-3xl flex-col items-center text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur">
             <span className="relative flex size-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/60 opacity-75" />
@@ -58,13 +50,11 @@ export function Hero() {
               </a>
             </Button>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
-          className="mx-auto mt-16 grid max-w-3xl grid-cols-2 gap-4 sm:grid-cols-3"
+        <div
+          className="animate-enter mx-auto mt-16 grid max-w-3xl grid-cols-2 gap-4 sm:grid-cols-3"
+          style={{ "--enter-delay": "0.15s" } as React.CSSProperties}
         >
           <Stat label={t("stats.yearsLabel")} value={t("stats.yearsValue")} />
           <Stat
@@ -76,7 +66,7 @@ export function Hero() {
             value={t("stats.stackValue")}
             small
           />
-        </motion.div>
+        </div>
 
         <div className="mt-12 flex justify-center text-muted-foreground/60">
           <Sparkles className="size-4" />

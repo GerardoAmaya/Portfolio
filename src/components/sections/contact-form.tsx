@@ -3,21 +3,31 @@
 import * as React from "react";
 import { Send, Check, AlertCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
+// Form estático que Netlify detecta en build time (ver public/__forms.html).
+// En un sitio Next SSR el POST a "/" lo atiende la función de Next y nunca
+// llega a Netlify Forms.
+const FORM_ENDPOINT = "/__forms.html";
+
 type Status = "idle" | "submitting" | "success" | "error";
 type Errors = Partial<Record<"name" | "email" | "message", string>>;
 
-function buildSchema(t: ReturnType<typeof useTranslations<"Contact">>) {
-  return z.object({
-    name: z.string().min(2, t("errors.nameMin")),
-    email: z.email({ message: t("errors.emailInvalid") }),
-    message: z.string().min(10, t("errors.messageMin")),
-  });
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+/** Validación de los tres campos del form, con los mensajes ya traducidos. */
+function validate(
+  data: Record<"name" | "email" | "message", string>,
+  t: ReturnType<typeof useTranslations<"Contact">>
+): Errors {
+  const errors: Errors = {};
+  if (data.name.trim().length < 2) errors.name = t("errors.nameMin");
+  if (!EMAIL_RE.test(data.email.trim())) errors.email = t("errors.emailInvalid");
+  if (data.message.trim().length < 10) errors.message = t("errors.messageMin");
+  return errors;
 }
 
 function encode(data: Record<string, string>) {
@@ -35,35 +45,32 @@ export function ContactForm() {
     e.preventDefault();
     setErrors({});
 
-    const formData = new FormData(e.currentTarget);
+    // React anula currentTarget al terminar el dispatch, así que hay que
+    // guardar el nodo antes de cualquier await
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const data = {
       name: String(formData.get("name") ?? ""),
       email: String(formData.get("email") ?? ""),
       message: String(formData.get("message") ?? ""),
     };
 
-    const schema = buildSchema(t);
-    const result = schema.safeParse(data);
-    if (!result.success) {
-      const fieldErrors: Errors = {};
-      for (const issue of result.error.issues) {
-        const key = issue.path[0] as keyof Errors;
-        if (key && !fieldErrors[key]) fieldErrors[key] = issue.message;
-      }
+    const fieldErrors = validate(data, t);
+    if (Object.keys(fieldErrors).length > 0) {
       setErrors(fieldErrors);
       return;
     }
 
     setStatus("submitting");
     try {
-      const res = await fetch("/", {
+      const res = await fetch(FORM_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: encode({ "form-name": "contact", ...data }),
       });
       if (!res.ok) throw new Error("Network error");
       setStatus("success");
-      e.currentTarget.reset();
+      form.reset();
     } catch {
       setStatus("error");
     }
@@ -85,6 +92,7 @@ export function ContactForm() {
     <form
       name="contact"
       method="POST"
+      action={FORM_ENDPOINT}
       data-netlify="true"
       data-netlify-honeypot="bot-field"
       onSubmit={onSubmit}

@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, type ComponentType } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useRef, useState, type ComponentType } from "react";
 import { Database, ShieldCheck, Webhook } from "lucide-react";
 import { FaAws } from "react-icons/fa6";
 import {
@@ -96,87 +95,143 @@ const CATEGORIES: SkillCategory[] = [
 
 type TechStackTabsProps = {
   labels: Record<SkillCategory, string>;
+  /** Nombre accesible del grupo de pestañas */
+  ariaLabel: string;
 };
 
-export function TechStackTabs({ labels }: TechStackTabsProps) {
+export function TechStackTabs({ labels, ariaLabel }: TechStackTabsProps) {
   const [active, setActive] = useState<SkillCategory>("backend");
+  const tabRefs = useRef<Partial<Record<SkillCategory, HTMLButtonElement | null>>>({});
+  const listRef = useRef<HTMLDivElement>(null);
+  const [pill, setPill] = useState<{
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+  } | null>(null);
   const items = skills.filter((s) => s.category === active);
+
+  // El indicador activo se posiciona midiendo la pestaña, para animarlo con
+  // una transición CSS en vez de una librería de animación
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+
+    const update = () => {
+      const el = tabRefs.current[active];
+      if (!el) return;
+      setPill({
+        left: el.offsetLeft,
+        top: el.offsetTop,
+        width: el.offsetWidth,
+        height: el.offsetHeight,
+      });
+    };
+
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(list);
+    return () => observer.disconnect();
+  }, [active]);
+
+  // Navegación con flechas dentro del tablist, como pide el patrón ARIA
+  const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    const i = CATEGORIES.indexOf(active);
+    const last = CATEGORIES.length - 1;
+    let next: SkillCategory | undefined;
+
+    if (e.key === "ArrowRight") next = CATEGORIES[i === last ? 0 : i + 1];
+    else if (e.key === "ArrowLeft") next = CATEGORIES[i === 0 ? last : i - 1];
+    else if (e.key === "Home") next = CATEGORIES[0];
+    else if (e.key === "End") next = CATEGORIES[last];
+
+    if (!next) return;
+    e.preventDefault();
+    setActive(next);
+    tabRefs.current[next]?.focus();
+  };
 
   return (
     <div>
       {/* Barra de pestañas */}
       <div
+        ref={listRef}
         role="tablist"
-        aria-label={labels[active]}
-        className="inline-flex max-w-full flex-wrap gap-1 rounded-full border border-border/60 bg-card/40 p-1 backdrop-blur"
+        aria-label={ariaLabel}
+        className="border-border/60 bg-card/40 relative inline-flex max-w-full flex-wrap gap-1 rounded-full border p-1 backdrop-blur"
       >
+        {pill ? (
+          <span
+            aria-hidden
+            className="bg-primary absolute top-0 left-0 rounded-full transition-[transform,width,height] duration-300 ease-out"
+            style={{
+              transform: `translate(${pill.left}px, ${pill.top}px)`,
+              width: pill.width,
+              height: pill.height,
+            }}
+          />
+        ) : null}
         {CATEGORIES.map((cat) => {
           const isActive = cat === active;
           return (
             <button
               key={cat}
+              id={`tech-tab-${cat}`}
+              ref={(el) => {
+                tabRefs.current[cat] = el;
+              }}
               role="tab"
               aria-selected={isActive}
-              aria-controls={`panel-${cat}`}
+              // Solo el panel activo existe en el DOM
+              aria-controls={isActive ? `tech-panel-${cat}` : undefined}
+              tabIndex={isActive ? 0 : -1}
               onClick={() => setActive(cat)}
+              onKeyDown={onKeyDown}
               className={cn(
-                "relative rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
+                "relative z-10 rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
                 isActive
                   ? "text-primary-foreground"
                   : "text-muted-foreground hover:text-foreground",
+                // Antes de hidratar no hay medida: el activo lleva su propio fondo
+                isActive && !pill && "bg-primary"
               )}
             >
-              {isActive && (
-                <motion.span
-                  layoutId="tech-tab-pill"
-                  className="absolute inset-0 rounded-full bg-primary"
-                  transition={{ type: "spring", stiffness: 400, damping: 32 }}
-                />
-              )}
-              <span className="relative z-10">{labels[cat]}</span>
+              {labels[cat]}
             </button>
           );
         })}
       </div>
 
       {/* Grid de cards */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={active}
-          id={`panel-${active}`}
-          role="tabpanel"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.18 }}
-          className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
-        >
-          {items.map((skill, i) => {
-            const meta = TECH_META[skill.name];
-            const Icon = meta?.icon;
-            return (
-              <motion.div
-                key={skill.name}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.04, duration: 0.25 }}
-                className="group flex flex-col items-center gap-3 rounded-xl border border-border/60 bg-card/40 p-5 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
-              >
-                {Icon && (
-                  <Icon
-                    aria-hidden
-                    className="size-8 text-foreground transition-transform duration-300 group-hover:scale-110"
-                    style={meta.color ? { color: meta.color } : undefined}
-                  />
-                )}
-                <span className="text-center text-sm font-medium">
-                  {skill.name}
-                </span>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-      </AnimatePresence>
+      <div
+        key={active}
+        id={`tech-panel-${active}`}
+        role="tabpanel"
+        aria-labelledby={`tech-tab-${active}`}
+        tabIndex={0}
+        className="animate-enter-sm mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
+      >
+        {items.map((skill, i) => {
+          const meta = TECH_META[skill.name];
+          const Icon = meta?.icon;
+          return (
+            <div
+              key={skill.name}
+              style={{ "--enter-delay": `${i * 0.04}s` } as React.CSSProperties}
+              className="animate-enter-sm group border-border/60 bg-card/40 hover:border-primary/40 hover:shadow-primary/5 flex flex-col items-center gap-3 rounded-xl border p-5 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+            >
+              {Icon && (
+                <Icon
+                  aria-hidden
+                  className="text-foreground size-8 transition-transform duration-300 group-hover:scale-110"
+                  style={meta.color ? { color: meta.color } : undefined}
+                />
+              )}
+              <span className="text-center text-sm font-medium">{skill.name}</span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

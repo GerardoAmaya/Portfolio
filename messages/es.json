@@ -112,7 +112,7 @@
   },
   "NotFound": {
     "title": "Página no encontrada",
-    "description": "La página que buscas no existe o fue movida.",
-    "back": "Volver al inicio"
+    "description": "La página que buscas no existe o cambió de dirección.",
+    "backHome": "Volver al inicio"
   }
 }

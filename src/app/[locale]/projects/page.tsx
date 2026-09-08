@@ -5,16 +5,23 @@ import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/page-header";
 import { projects } from "@/data/projects";
+import { pageMetadata } from "@/lib/metadata";
 import type { Locale } from "@/i18n/routing";
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Projects" });
-  return { title: t("title"), description: t("subtitle") };
+  return pageMetadata({
+    locale,
+    path: "/projects",
+    title: t("title"),
+    description: t("subtitle"),
+    eyebrow: t("title").toUpperCase(),
+  });
 }
 
 export default async function ProjectsPage({

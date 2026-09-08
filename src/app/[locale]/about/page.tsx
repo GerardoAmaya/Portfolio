@@ -1,24 +1,27 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHeader } from "@/components/page-header";
+import { pageMetadata } from "@/lib/metadata";
 import { TechStackTabs } from "@/components/sections/tech-stack-tabs";
 import type { Locale } from "@/i18n/routing";
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "About" });
-  return { title: t("title") };
+  return pageMetadata({
+    locale,
+    path: "/about",
+    title: t("title"),
+    description: t("lead"),
+    eyebrow: t("title").toUpperCase(),
+  });
 }
 
-export default async function AboutPage({
-  params,
-}: {
-  params: Promise<{ locale: Locale }>;
-}) {
+export default async function AboutPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "About" });
@@ -30,7 +33,7 @@ export default async function AboutPage({
       <PageHeader title={t("title")} subtitle={t("lead")} />
 
       <section className="container-app pb-12">
-        <div className="prose prose-neutral dark:prose-invert max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+        <div className="prose prose-neutral dark:prose-invert text-muted-foreground max-w-3xl text-base leading-relaxed sm:text-lg">
           {paragraphs.map((p, i) => (
             <p key={i} className="mb-4 last:mb-0">
               {p}
@@ -40,12 +43,11 @@ export default async function AboutPage({
       </section>
 
       <section className="container-app pb-24">
-        <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-          {t("skillsTitle")}
-        </h2>
+        <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">{t("skillsTitle")}</h2>
 
         <div className="mt-8">
           <TechStackTabs
+            ariaLabel={t("skillsTitle")}
             labels={{
               frontend: t("categories.frontend"),
               backend: t("categories.backend"),

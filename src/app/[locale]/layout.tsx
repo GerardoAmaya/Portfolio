@@ -7,8 +7,9 @@ import { Providers } from "@/components/providers";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { PersonJsonLd } from "@/components/json-ld";
-import { routing } from "@/i18n/routing";
+import { routing, type Locale } from "@/i18n/routing";
 import { site } from "@/lib/site";
+import { localeAlternates, ogLocale } from "@/lib/metadata";
 import { SITE_URL } from "@/lib/utils";
 
 const geistSans = Geist({
@@ -37,7 +38,7 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
@@ -54,11 +55,11 @@ export async function generateMetadata({
     creator: site.fullName,
     openGraph: {
       type: "website",
-      locale,
+      locale: ogLocale(locale),
       siteName: t("siteName"),
       title: t("defaultTitle"),
       description: t("description"),
-      url: "/",
+      url: `/${locale}`,
       images: [
         {
           url: "/og",
@@ -74,13 +75,7 @@ export async function generateMetadata({
       description: t("description"),
       images: ["/og"],
     },
-    alternates: {
-      canonical: "/",
-      languages: {
-        es: "/es",
-        en: "/en",
-      },
-    },
+    alternates: localeAlternates(locale, ""),
     icons: {
       icon: "/favicon.ico",
     },
