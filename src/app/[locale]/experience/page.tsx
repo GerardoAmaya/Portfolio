@@ -3,16 +3,23 @@ import { Briefcase, GraduationCap } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHeader } from "@/components/page-header";
 import { education, experiences } from "@/data/experience";
+import { pageMetadata } from "@/lib/metadata";
 import type { Locale } from "@/i18n/routing";
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Experience" });
-  return { title: t("title"), description: t("subtitle") };
+  return pageMetadata({
+    locale,
+    path: "/experience",
+    title: t("title"),
+    description: t("subtitle"),
+    eyebrow: t("title").toUpperCase(),
+  });
 }
 
 export default async function ExperiencePage({

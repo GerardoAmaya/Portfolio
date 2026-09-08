@@ -7,6 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getProject, projects } from "@/data/projects";
+import { pageMetadata } from "@/lib/metadata";
 import { routing, type Locale } from "@/i18n/routing";
 
 export function generateStaticParams() {
@@ -24,15 +25,14 @@ export async function generateMetadata({
   const project = getProject(slug);
   if (!project) return {};
   const i18n = project.i18n[locale];
-  return {
+  return pageMetadata({
+    locale,
+    path: `/projects/${project.slug}`,
     title: i18n.title,
     description: i18n.tagline,
-    openGraph: {
-      title: i18n.title,
-      description: i18n.tagline,
-      images: [{ url: project.cover, width: 1200, height: 630 }],
-    },
-  };
+    eyebrow: locale === "es" ? "PROYECTO" : "PROJECT",
+    type: "article",
+  });
 }
 
 export default async function ProjectDetailPage({

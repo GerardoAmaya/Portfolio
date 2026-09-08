@@ -10,9 +10,8 @@ Personal portfolio site built with Next.js 16, TypeScript, Tailwind CSS v4, and 
 - **i18n**: next-intl (ES, EN)
 - **Theming**: next-themes (dark / light / system)
 - **Animation**: motion (Framer Motion)
-- **Validation**: Zod
-- **Icons**: Lucide
-- **Forms**: Netlify Forms
+- **Icons**: Lucide, react-icons
+- **Forms**: Netlify Forms (via the static `public/__forms.html` definition)
 
 ## Local development
 
@@ -39,29 +38,40 @@ Open [http://localhost:3000](http://localhost:3000).
 ```
 src/
   app/
-    [locale]/          # Localized routes (es, en)
+    [locale]/          # Localized routes (es, en) — owns <html> and metadata
       page.tsx         # Home
       about/
       projects/
+        [slug]/        # Case studies
       experience/
-      blog/
       contact/
-    api/               # API routes (if needed)
+      [...rest]/       # Catches unknown paths -> localized 404
+      not-found.tsx
+    og/route.tsx       # Generated Open Graph images
+    robots.ts
+    sitemap.ts
+    not-found.tsx      # 404 for paths outside /[locale]
   components/
     ui/                # shadcn/ui primitives
     sections/          # Page sections
-    layout/            # Header, Footer, etc.
-  content/
-    projects/          # MDX case studies
-    blog/              # MDX articles
+    layout/            # Header, Footer, switchers
+  data/                # projects, experience, skills (typed per locale)
   i18n/                # next-intl config
-  lib/                 # Utilities
+  lib/                 # site config, metadata helpers, utils
+  proxy.ts             # next-intl middleware
 messages/
   en.json
   es.json
 public/
+  projects/            # Case-study covers
   resume.pdf
+  __forms.html         # Static form Netlify detects at build time
 ```
+
+Every page builds its own canonical and `hreflang` tags through
+[`src/lib/metadata.ts`](./src/lib/metadata.ts). Next inherits `alternates` and
+`openGraph` wholesale from the layout, so a page that omits them ends up
+pointing at the home page.
 
 ## Deployment
 

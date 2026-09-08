@@ -7,17 +7,16 @@ export function TechStack() {
   const tAbout = useTranslations("About");
 
   return (
-    <section className="border-t border-border/60 bg-background py-20 md:py-28">
+    <section className="border-border/60 bg-background border-t py-20 md:py-28">
       <div className="container-app">
-        <h2 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
+        <h2 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
           {t("stackTitle")}
         </h2>
-        <p className="mt-3 max-w-2xl text-muted-foreground">
-          {t("stackSubtitle")}
-        </p>
+        <p className="text-muted-foreground mt-3 max-w-2xl">{t("stackSubtitle")}</p>
 
         <div className="mt-10">
           <TechStackTabs
+            ariaLabel={tAbout("skillsTitle")}
             labels={{
               frontend: tAbout("categories.frontend"),
               backend: tAbout("categories.backend"),
