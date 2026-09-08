@@ -8,9 +8,9 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden">
-      <div className="absolute inset-0 -z-10 grid-bg [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_75%)]" />
+      <div className="grid-bg absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_75%)]" />
       <div
-        className="absolute left-1/2 top-0 -z-10 h-[420px] w-[820px] -translate-x-1/2 rounded-full opacity-50 blur-3xl"
+        className="absolute top-0 left-1/2 -z-10 h-[420px] w-[820px] -translate-x-1/2 rounded-full opacity-50 blur-3xl"
         style={{
           background:
             "radial-gradient(closest-side, oklch(0.706 0.213 293.756 / 0.35), transparent)",
@@ -18,23 +18,22 @@ export function Hero() {
         aria-hidden
       />
 
-      <div className="container-app relative pb-20 pt-20 sm:pt-28 md:pb-28 md:pt-36">
+      <div className="container-app relative pt-20 pb-20 sm:pt-28 md:pt-36 md:pb-28">
         <div className="animate-enter mx-auto flex max-w-3xl flex-col items-center text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur">
+          <span className="border-border bg-background/60 text-muted-foreground inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium backdrop-blur">
             <span className="relative flex size-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/60 opacity-75" />
-              <span className="relative inline-flex size-2 rounded-full bg-primary" />
+              <span className="bg-primary/60 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
+              <span className="bg-primary relative inline-flex size-2 rounded-full" />
             </span>
             {t("eyebrow")}
           </span>
 
-          <h1 className="mt-6 text-balance text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-            {t("titleLead")}{" "}
-            <span className="gradient-text">{t("titleHighlight")}</span>{" "}
+          <h1 className="mt-6 text-4xl font-bold tracking-tight text-balance sm:text-5xl md:text-6xl lg:text-7xl">
+            {t("titleLead")} <span className="gradient-text">{t("titleHighlight")}</span>{" "}
             {t("titleTail")}
           </h1>
 
-          <p className="mt-6 max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg">
+          <p className="text-muted-foreground mt-6 max-w-2xl text-base text-pretty sm:text-lg">
             {t("subtitle")}
           </p>
 
@@ -57,18 +56,11 @@ export function Hero() {
           style={{ "--enter-delay": "0.15s" } as React.CSSProperties}
         >
           <Stat label={t("stats.yearsLabel")} value={t("stats.yearsValue")} />
-          <Stat
-            label={t("stats.projectsLabel")}
-            value={t("stats.projectsValue")}
-          />
-          <Stat
-            label={t("stats.stackLabel")}
-            value={t("stats.stackValue")}
-            small
-          />
+          <Stat label={t("stats.projectsLabel")} value={t("stats.projectsValue")} />
+          <Stat label={t("stats.stackLabel")} value={t("stats.stackValue")} small />
         </div>
 
-        <div className="mt-12 flex justify-center text-muted-foreground/60">
+        <div className="text-muted-foreground/60 mt-12 flex justify-center">
           <Sparkles className="size-4" />
         </div>
       </div>
@@ -76,29 +68,17 @@ export function Hero() {
   );
 }
 
-function Stat({
-  label,
-  value,
-  small,
-}: {
-  label: string;
-  value: string;
-  small?: boolean;
-}) {
+function Stat({ label, value, small }: { label: string; value: string; small?: boolean }) {
   return (
-    <div className="rounded-xl border border-border/60 bg-card/40 p-4 text-center backdrop-blur">
+    <div className="border-border/60 bg-card/40 rounded-xl border p-4 text-center backdrop-blur">
       <p
         className={
-          small
-            ? "text-sm font-medium text-foreground"
-            : "text-2xl font-semibold text-foreground"
+          small ? "text-foreground text-sm font-medium" : "text-foreground text-2xl font-semibold"
         }
       >
         {value}
       </p>
-      <p className="mt-1 text-xs uppercase tracking-wide text-muted-foreground">
-        {label}
-      </p>
+      <p className="text-muted-foreground mt-1 text-xs tracking-wide uppercase">{label}</p>
     </div>
   );
 }

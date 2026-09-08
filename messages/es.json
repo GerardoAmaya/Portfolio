@@ -3,7 +3,7 @@
     "siteName": "Gerardo Amaya — Fullstack Developer",
     "defaultTitle": "Gerardo Amaya — Fullstack Developer",
     "titleTemplate": "%s · Gerardo Amaya",
-    "description": "Desarrollador fullstack con experiencia en Node, Nest.js, PHP, Laravel, React, Next.js y Vue. Enfocado en construir aplicaciones web sólidas, accesibles y bien testeadas."
+    "description": "Desarrollador fullstack con experiencia en Node, Nest.js, PHP, Laravel, Python, React, Next.js y Angular. Construyo aplicaciones web sólidas, accesibles y bien testeadas, e integro LLMs de forma auditable."
   },
   "Nav": {
     "home": "Inicio",
@@ -22,7 +22,7 @@
     "titleLead": "Hola, soy Gerardo —",
     "titleHighlight": "Fullstack Developer",
     "titleTail": "construyendo productos web sólidos.",
-    "subtitle": "Desarrollo aplicaciones con Node, PHP, Laravel, React, Vue.js, Nest.js y Next.js. Me enfoco en código limpio, performance y experiencias accesibles.",
+    "subtitle": "Desarrollo aplicaciones con Node, Nest.js, PHP, Laravel, Python, React y Next.js, e integro modelos de lenguaje en productos que se pueden auditar. Me enfoco en código limpio, performance y experiencias accesibles.",
     "ctaProjects": "Ver proyectos",
     "ctaResume": "Descargar CV",
     "stats": {
@@ -31,16 +31,18 @@
       "projectsLabel": "Proyectos entregados",
       "projectsValue": "20+",
       "stackLabel": "Stack principal",
-      "stackValue": "Node · React · Nest.js · Next.js · PHP · Laravel · Vue.js"
+      "stackValue": "Node · Nest.js · Python · React · Next.js · Laravel"
     },
     "highlightsTitle": "Lo que hago",
     "highlights": {
       "backendTitle": "Backend robusto",
-      "backendDesc": "APIs REST y servicios en PHP, Laravel, Node, Nest.js y Express. Modelado de datos con MySQL, PostgreSQL y MongoDB.",
+      "backendDesc": "APIs REST y servicios en Node, Nest.js, Express, PHP con Laravel y Python con FastAPI. Modelado de datos en MySQL, PostgreSQL y MongoDB.",
       "frontendTitle": "Frontend moderno",
-      "frontendDesc": "Interfaces accesibles y rápidas con React, Next.js, Vue.js y Tailwind. UX cuidada y responsive por defecto.",
+      "frontendDesc": "Interfaces accesibles y rápidas con React, Next.js, Vue.js y Angular sobre TypeScript y Tailwind. UX cuidada y responsive por defecto.",
       "devopsTitle": "Listo para producción",
-      "devopsDesc": "Docker, CI/CD, despliegues en AWS, Google Cloud, Netlify y Vercel. Pruebas, monitoreo y observabilidad básica."
+      "devopsDesc": "Docker, CI/CD y despliegues en AWS, Google Cloud, Netlify, Vercel y Railway. Pruebas end-to-end y análisis estático en cada push.",
+      "aiTitle": "IA aplicada",
+      "aiDesc": "OCR y extracción con LLM, búsqueda semántica con citas y confianza medida por campo. Automatización que se puede auditar."
     },
     "stackTitle": "Stack técnico",
     "stackSubtitle": "Tecnologías con las que trabajo día a día, del backend a la nube."
@@ -49,13 +51,16 @@
     "title": "Sobre mí",
     "lead": "Soy un desarrollador fullstack apasionado por construir software útil y bien hecho.",
     "paragraphs": [
-      "Mi enfoque principal está en el backend con Node, Nest.js, PHP y Laravel, complementado con bases de datos relacionales (MySQL, Oracle, PostgreSQL) y NoSQL (MongoDB). Del lado del cliente trabajo con React, Next.js, Vue.js y Tailwind.",
+      "Mi enfoque principal está en el backend: APIs REST con Node, Nest.js y Express, PHP con Laravel, y Python con FastAPI, Flask y Django. Modelo los datos sobre MySQL, PostgreSQL, Oracle y MongoDB, y contenerizo con Docker para que un proyecto levante igual en cualquier máquina.",
+      "Del lado del cliente trabajo con React, Next.js, Vue.js y Angular sobre TypeScript y Tailwind, cuidando accesibilidad y rendimiento desde el primer commit.",
+      "Últimamente construyo sistemas que integran modelos de lenguaje sin dejar de ser auditables: extracción de datos con la confianza medida campo por campo, búsqueda semántica con citas verificables y suites de pruebas de seguridad alineadas con OWASP. Me interesa que la IA llegue a producción con evidencia, no con promesas.",
       "Me motiva colaborar con equipos, escribir código que otros puedan leer sin esfuerzo, y entregar productos que resuelvan problemas reales."
     ],
     "skillsTitle": "Stack técnico",
     "categories": {
       "frontend": "Frontend",
       "backend": "Backend",
+      "ai": "IA & LLMs",
       "databases": "Bases de datos",
       "cloud": "Cloud",
       "security": "Seguridad",

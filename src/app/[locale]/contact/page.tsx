@@ -23,11 +23,7 @@ export async function generateMetadata({
   });
 }
 
-export default async function ContactPage({
-  params,
-}: {
-  params: Promise<{ locale: Locale }>;
-}) {
+export default async function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "Contact" });
@@ -38,29 +34,27 @@ export default async function ContactPage({
 
       <section className="container-app pb-24">
         <div className="grid gap-10 md:grid-cols-[1fr_320px]">
-          <div className="rounded-xl border border-border/60 bg-card/40 p-6 backdrop-blur md:p-8">
+          <div className="border-border/60 bg-card/40 rounded-xl border p-6 backdrop-blur md:p-8">
             <ContactForm />
           </div>
 
           <aside className="space-y-6">
             <div>
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              <h2 className="text-muted-foreground text-sm font-semibold tracking-wide uppercase">
                 {t("directTitle")}
               </h2>
               <ul className="mt-4 space-y-2">
                 <li>
                   <a
                     href={`mailto:${site.email}`}
-                    className="group flex items-center gap-3 rounded-lg border border-border/60 bg-card/40 p-3 transition-colors hover:border-primary/40"
+                    className="group border-border/60 bg-card/40 hover:border-primary/40 flex items-center gap-3 rounded-lg border p-3 transition-colors"
                   >
-                    <Mail className="size-5 text-primary" />
+                    <Mail className="text-primary size-5" />
                     <div className="min-w-0">
-                      <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                      <p className="text-muted-foreground text-xs tracking-wide uppercase">
                         {t("emailLabel")}
                       </p>
-                      <p className="truncate text-sm font-medium">
-                        {site.email}
-                      </p>
+                      <p className="truncate text-sm font-medium">{site.email}</p>
                     </div>
                   </a>
                 </li>
@@ -69,11 +63,11 @@ export default async function ContactPage({
                     href={site.social.linkedin}
                     target="_blank"
                     rel="noreferrer"
-                    className="group flex items-center gap-3 rounded-lg border border-border/60 bg-card/40 p-3 transition-colors hover:border-primary/40"
+                    className="group border-border/60 bg-card/40 hover:border-primary/40 flex items-center gap-3 rounded-lg border p-3 transition-colors"
                   >
-                    <Linkedin className="size-5 text-primary" />
+                    <Linkedin className="text-primary size-5" />
                     <div>
-                      <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                      <p className="text-muted-foreground text-xs tracking-wide uppercase">
                         {t("linkedinLabel")}
                       </p>
                       <p className="text-sm font-medium">/in/gerardo-amaya</p>
@@ -85,11 +79,11 @@ export default async function ContactPage({
                     href={site.social.github}
                     target="_blank"
                     rel="noreferrer"
-                    className="group flex items-center gap-3 rounded-lg border border-border/60 bg-card/40 p-3 transition-colors hover:border-primary/40"
+                    className="group border-border/60 bg-card/40 hover:border-primary/40 flex items-center gap-3 rounded-lg border p-3 transition-colors"
                   >
-                    <Github className="size-5 text-primary" />
+                    <Github className="text-primary size-5" />
                     <div>
-                      <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                      <p className="text-muted-foreground text-xs tracking-wide uppercase">
                         {t("githubLabel")}
                       </p>
                       <p className="text-sm font-medium">@GerardoAmaya</p>

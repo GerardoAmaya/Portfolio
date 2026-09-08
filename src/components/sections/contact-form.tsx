@@ -78,12 +78,12 @@ export function ContactForm() {
 
   if (status === "success") {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-xl border border-primary/40 bg-primary/5 p-8 text-center">
-        <div className="flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+      <div className="border-primary/40 bg-primary/5 flex flex-col items-center gap-3 rounded-xl border p-8 text-center">
+        <div className="bg-primary/10 text-primary flex size-12 items-center justify-center rounded-full">
           <Check className="size-6" />
         </div>
         <h3 className="text-lg font-semibold">{t("successTitle")}</h3>
-        <p className="text-sm text-muted-foreground">{t("successDesc")}</p>
+        <p className="text-muted-foreground text-sm">{t("successDesc")}</p>
       </div>
     );
   }
@@ -117,7 +117,7 @@ export function ContactForm() {
           aria-describedby={errors.name ? "name-error" : undefined}
         />
         {errors.name ? (
-          <p id="name-error" className="text-xs text-destructive">
+          <p id="name-error" className="text-destructive text-xs">
             {errors.name}
           </p>
         ) : null}
@@ -135,7 +135,7 @@ export function ContactForm() {
           aria-describedby={errors.email ? "email-error" : undefined}
         />
         {errors.email ? (
-          <p id="email-error" className="text-xs text-destructive">
+          <p id="email-error" className="text-destructive text-xs">
             {errors.email}
           </p>
         ) : null}
@@ -152,14 +152,14 @@ export function ContactForm() {
           aria-describedby={errors.message ? "message-error" : undefined}
         />
         {errors.message ? (
-          <p id="message-error" className="text-xs text-destructive">
+          <p id="message-error" className="text-destructive text-xs">
             {errors.message}
           </p>
         ) : null}
       </div>
 
       {status === "error" ? (
-        <div className="flex items-start gap-3 rounded-lg border border-destructive/40 bg-destructive/5 p-4 text-sm text-destructive">
+        <div className="border-destructive/40 bg-destructive/5 text-destructive flex items-start gap-3 rounded-lg border p-4 text-sm">
           <AlertCircle className="mt-0.5 size-4 shrink-0" />
           <div>
             <p className="font-medium">{t("errorTitle")}</p>

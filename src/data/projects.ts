@@ -24,6 +24,84 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    slug: "docu-flow",
+    year: "2026",
+    cover: "/projects/docu-flow.jpg",
+    stack: [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "pgvector",
+      "Celery",
+      "Claude AI",
+      "Next.js",
+      "Docker",
+    ],
+    repoUrl: "https://github.com/GerardoAmaya/docu-flow",
+    liveUrl: "https://docu-flow-nine-xi.vercel.app",
+    featured: true,
+    i18n: {
+      es: {
+        title: "DocuFlow",
+        tagline:
+          "Convierte facturas escaneadas en datos contables verificables: OCR, extracción con LLM y revisión humana con la confianza de cada campo medida, no supuesta — Python · FastAPI · PostgreSQL + pgvector · Celery · Claude AI · Next.js.",
+        role: "Fullstack Developer · AI Engineering",
+        problem:
+          "Una PyME recibe facturas en tres formatos a la vez: PDFs de facturación electrónica, PDFs escaneados y fotos tomadas con el celular. Pasarlas al sistema contable es digitación manual. Automatizarla es fácil de empezar y difícil de terminar, porque tanto el OCR como el modelo se equivocan, y lo hacen sin avisar.",
+        solution:
+          "Construí un pipeline asíncrono con Celery y Redis en el que cada campo extraído lleva su score de confianza y su procedencia: los que no superan el umbral entran a una cola de revisión humana en lugar de contaminar la base. Tesseract con preprocesamiento OpenCV para las fotos con sombra, Claude Haiku 4.5 para la extracción y Claude Sonnet 5 para las respuestas, y PostgreSQL 16 con pgvector para guardar datos estructurados y vectores en un solo motor. El chat separa las preguntas semánticas, que van por búsqueda híbrida y RAG con citas a la página exacta, de las de agregación, que van por SQL: un recuperador top-k solo ve una muestra del corpus y respondería con seguridad sobre un subconjunto.",
+        outcome:
+          "Medido sobre 120 campos con etiquetas de referencia: 93.3% de exactitud cuando el sistema responde y apenas 1.7% de fallos silenciosos, a un costo de 0.0045 USD por documento. Ante documentos ilegibles se abstiene en lugar de inventar, y lo que no resuelve queda en la cola de revisión. Demo pública con 12 facturas ya procesadas.",
+      },
+      en: {
+        title: "DocuFlow",
+        tagline:
+          "Turns scanned invoices into verifiable accounting data: OCR, LLM extraction and human review with per-field confidence measured, not assumed — Python · FastAPI · PostgreSQL + pgvector · Celery · Claude AI · Next.js.",
+        role: "Fullstack Developer · AI Engineering",
+        problem:
+          "A small business receives invoices in three formats at once: e-invoicing PDFs, scanned PDFs and photos taken on a phone. Getting them into the accounting system means manual data entry. Automating it is easy to start and hard to finish, because both the OCR and the model make mistakes, and they make them silently.",
+        solution:
+          "Built an async pipeline on Celery and Redis where every extracted field carries its confidence score and provenance: anything below the threshold goes to a human review queue instead of polluting the database. Tesseract with OpenCV preprocessing for shadowed phone photos, Claude Haiku 4.5 for extraction and Claude Sonnet 5 for answers, and PostgreSQL 16 with pgvector to keep structured data and embeddings in a single engine. The chat splits semantic questions, answered through hybrid search and RAG with citations to the exact page, from aggregation questions, answered with SQL: a top-k retriever only ever sees a sample of the corpus and would answer confidently about a subset.",
+        outcome:
+          "Measured across 120 fields against ground-truth labels: 93.3% accuracy when the system answers and just 1.7% silent failures, at 0.0045 USD per document. Faced with illegible documents it abstains rather than inventing, and whatever it cannot resolve lands in the review queue. Public demo with 12 invoices already processed.",
+      },
+    },
+  },
+  {
+    slug: "real-estate-lead-management",
+    year: "2026",
+    cover: "/projects/real-estate-lead-management.jpg",
+    stack: ["Angular", "TypeScript", "Node.js", "Express", "MongoDB", "Playwright", "Docker"],
+    repoUrl: "https://github.com/GerardoAmaya/real-estate-lead-management",
+    featured: true,
+    i18n: {
+      es: {
+        title: "Real Estate Lead Management",
+        tagline:
+          "Módulo de seguimiento de leads inmobiliarios con un dashboard de métricas resuelto en una sola consulta de agregación — Angular · TypeScript · Node.js · Express · MongoDB · Playwright.",
+        role: "Fullstack Developer",
+        problem:
+          "El módulo necesitaba listado con filtros y paginación, cambio de estado, alta de leads y un dashboard de métricas. El riesgo estaba en el dashboard: resolver total, presupuesto promedio, leads reservados, tasa de conversión y tres desgloses con consultas separadas significa seis viajes a la base y, peor, seis fotos tomadas en momentos distintos.",
+        solution:
+          "El dashboard se resuelve con una única etapa de agregación $facet, y los agrupamientos comparten un subpipeline generado por función, así que añadir un desglose nuevo es una línea. Los índices viven en migraciones y no en el esquema, con autoIndex desactivado, siguiendo el patrón ESR para servir el caso real de la pantalla sin ordenamiento en memoria. La validación es doble: Zod estricto en la API, que cierra de una vez el mass assignment y la inyección de operadores de Mongo, y $jsonSchema en la propia base, para que un script o una conexión directa tampoco puedan insertar datos inválidos.",
+        outcome:
+          "Módulo entregado con pruebas E2E en Playwright, quality gate de SonarCloud en verde y un análisis técnico escrito que cubre el modelo de datos, el diagnóstico de un incidente, la arquitectura en AWS y el plan de migración.",
+      },
+      en: {
+        title: "Real Estate Lead Management",
+        tagline:
+          "Real-estate lead tracking module with a metrics dashboard resolved in a single aggregation query — Angular · TypeScript · Node.js · Express · MongoDB · Playwright.",
+        role: "Fullstack Developer",
+        problem:
+          "The module needed a filtered, paginated list, status changes, lead creation and a metrics dashboard. The risk was in the dashboard: resolving total, average budget, reserved leads, conversion rate and three breakdowns with separate queries means six round trips to the database and, worse, six snapshots taken at different moments.",
+        solution:
+          "The dashboard resolves in a single $facet aggregation stage, and the groupings share a function-generated subpipeline, so adding a new breakdown is one line. Indexes live in migrations rather than the schema, with autoIndex off, following the ESR pattern so the screen's real query is served without an in-memory sort. Validation is layered: strict Zod at the API, which closes mass assignment and Mongo operator injection at once, plus $jsonSchema on the database itself, so a script or a direct connection cannot insert invalid data either.",
+        outcome:
+          "Delivered with Playwright E2E tests, a green SonarCloud quality gate and a written technical analysis covering the data model, an incident diagnosis, the AWS architecture and the migration plan.",
+      },
+    },
+  },
+  {
     slug: "nestjs-ai-pentest-skill",
     year: "2026",
     cover: "/projects/nestjs-ai-pentest-skill.png",
@@ -176,8 +254,7 @@ export const projects: Project[] = [
           "Necesitaba practicar consumo de APIs REST, paginación y búsqueda en una SPA con buen UX.",
         solution:
           "Construí un explorador en React con búsqueda, filtros, paginación y vista detalle. Manejo de estados de carga y error.",
-        outcome:
-          "Aplicación responsiva con UX cuidada, lista para escalar a más fuentes de datos.",
+        outcome: "Aplicación responsiva con UX cuidada, lista para escalar a más fuentes de datos.",
       },
       en: {
         title: "PokeAPI Explorer",
@@ -188,8 +265,7 @@ export const projects: Project[] = [
           "I wanted to practice REST API consumption, pagination and search in a SPA with good UX.",
         solution:
           "Built a React explorer with search, filters, pagination and detail view. Loading and error states handled.",
-        outcome:
-          "Responsive app with thoughtful UX, ready to scale to additional data sources.",
+        outcome: "Responsive app with thoughtful UX, ready to scale to additional data sources.",
       },
     },
   },

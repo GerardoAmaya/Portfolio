@@ -5,13 +5,7 @@ import { Menu } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "./theme-toggle";
 import { LanguageSwitcher } from "./language-switcher";
 import { cn } from "@/lib/utils";
@@ -37,24 +31,25 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 w-full transition-all",
+        "relative sticky top-0 z-40 w-full transition-all",
         scrolled
-          ? "border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+          ? "border-border/60 bg-background/80 supports-[backdrop-filter]:bg-background/60 border-b backdrop-blur"
           : "border-b border-transparent bg-transparent"
       )}
     >
+      <span
+        aria-hidden
+        className="scroll-progress from-primary via-primary/70 to-primary/20 absolute bottom-0 left-0 h-[3px] w-full bg-gradient-to-r"
+      />
       <div className="container-app flex h-16 items-center justify-between gap-4">
-        <Link
-          href="/"
-          className="font-mono text-base font-semibold tracking-tight"
-        >
-          <span className="text-primary">{">"}</span> gerardo<span className="text-muted-foreground">.dev</span>
+        <Link href="/" className="font-mono text-base font-semibold tracking-tight">
+          <span className="text-primary">{">"}</span> gerardo
+          <span className="text-muted-foreground">.dev</span>
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
@@ -85,12 +80,7 @@ export function Header() {
 
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden"
-                aria-label={t("openMenu")}
-              >
+              <Button variant="ghost" size="icon" className="md:hidden" aria-label={t("openMenu")}>
                 <Menu className="size-5" />
               </Button>
             </SheetTrigger>

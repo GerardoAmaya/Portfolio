@@ -8,9 +8,9 @@ export function CtaSection() {
   const t = useTranslations("Contact");
 
   return (
-    <section className="border-t border-border/60 bg-background py-20 md:py-28">
+    <section className="border-border/60 bg-background border-t py-20 md:py-28">
       <div className="container-app">
-        <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br from-card via-card to-primary/10 p-10 text-center md:p-16">
+        <div className="reveal border-border/60 from-card via-card to-primary/10 relative overflow-hidden rounded-2xl border bg-gradient-to-br p-10 text-center md:p-16">
           <div
             className="absolute inset-0 -z-10 opacity-40"
             style={{
@@ -19,12 +19,10 @@ export function CtaSection() {
             }}
             aria-hidden
           />
-          <h2 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
+          <h2 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl md:text-5xl">
             {t("title")}
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-pretty text-muted-foreground">
-            {t("subtitle")}
-          </p>
+          <p className="text-muted-foreground mx-auto mt-4 max-w-xl text-pretty">{t("subtitle")}</p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button asChild size="lg">
               <Link href="/contact">
