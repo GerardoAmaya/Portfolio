@@ -20,6 +20,7 @@ export function TechStack() {
             labels={{
               frontend: tAbout("categories.frontend"),
               backend: tAbout("categories.backend"),
+              ai: tAbout("categories.ai"),
               databases: tAbout("categories.databases"),
               cloud: tAbout("categories.cloud"),
               security: tAbout("categories.security"),

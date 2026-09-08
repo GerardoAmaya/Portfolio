@@ -51,6 +51,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             labels={{
               frontend: t("categories.frontend"),
               backend: t("categories.backend"),
+              ai: t("categories.ai"),
               databases: t("categories.databases"),
               cloud: t("categories.cloud"),
               security: t("categories.security"),

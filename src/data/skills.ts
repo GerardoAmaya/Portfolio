@@ -1,6 +1,7 @@
 export type SkillCategory =
   | "frontend"
   | "backend"
+  | "ai"
   | "databases"
   | "cloud"
   | "security"
@@ -20,6 +21,7 @@ export const skills: Skill[] = [
   { name: "HTML", category: "frontend" },
   { name: "CSS", category: "frontend" },
   { name: "Tailwind CSS", category: "frontend" },
+  { name: "Angular", category: "frontend" },
   { name: "Bootstrap", category: "frontend" },
 
   { name: "PHP", category: "backend" },
@@ -28,17 +30,27 @@ export const skills: Skill[] = [
   { name: "Nest.js", category: "backend" },
   { name: "Express", category: "backend" },
   { name: "Python", category: "backend" },
+  { name: "FastAPI", category: "backend" },
+  { name: "Celery", category: "backend" },
   { name: "REST APIs", category: "backend" },
+
+  { name: "Claude AI", category: "ai" },
+  { name: "LLM & RAG", category: "ai" },
+  { name: "OCR / Tesseract", category: "ai" },
+  { name: "OpenCV", category: "ai" },
 
   { name: "MySQL", category: "databases" },
   { name: "PostgreSQL", category: "databases" },
   { name: "Oracle", category: "databases" },
   { name: "MongoDB", category: "databases" },
+  { name: "Redis", category: "databases" },
+  { name: "pgvector", category: "databases" },
 
   { name: "AWS", category: "cloud" },
   { name: "Google Cloud", category: "cloud" },
   { name: "Netlify", category: "cloud" },
   { name: "Vercel", category: "cloud" },
+  { name: "Railway", category: "cloud" },
 
   { name: "OWASP Top 10", category: "security" },
   { name: "OWASP API Security", category: "security" },
@@ -51,4 +63,7 @@ export const skills: Skill[] = [
   { name: "Postman", category: "tools" },
   { name: "Swagger", category: "tools" },
   { name: "CI/CD", category: "tools" },
+  { name: "Jest", category: "tools" },
+  { name: "Playwright", category: "tools" },
+  { name: "SonarCloud", category: "tools" },
 ];

@@ -11,9 +11,7 @@ import { pageMetadata } from "@/lib/metadata";
 import { routing, type Locale } from "@/i18n/routing";
 
 export function generateStaticParams() {
-  return routing.locales.flatMap((locale) =>
-    projects.map((p) => ({ locale, slug: p.slug }))
-  );
+  return routing.locales.flatMap((locale) => projects.map((p) => ({ locale, slug: p.slug })));
 }
 
 export async function generateMetadata({
@@ -60,18 +58,16 @@ export default async function ProjectDetailPage({
         </Button>
       </div>
 
-      <header className="container-app pb-8 pt-6 md:pb-10">
-        <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+      <header className="container-app pt-6 pb-8 md:pb-10">
+        <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-xs">
           <span>{project.year}</span>
           <span aria-hidden>·</span>
           <span>{i18n.role}</span>
         </div>
-        <h1 className="mt-3 text-balance text-4xl font-bold tracking-tight sm:text-5xl">
+        <h1 className="mt-3 text-4xl font-bold tracking-tight text-balance sm:text-5xl">
           {i18n.title}
         </h1>
-        <p className="mt-4 max-w-2xl text-pretty text-lg text-muted-foreground">
-          {i18n.tagline}
-        </p>
+        <p className="text-muted-foreground mt-4 max-w-2xl text-lg text-pretty">{i18n.tagline}</p>
         <div className="mt-6 flex flex-wrap gap-1.5">
           {project.stack.map((s) => (
             <Badge key={s} variant="outline">
@@ -105,7 +101,7 @@ export default async function ProjectDetailPage({
       </header>
 
       <div className="container-app pb-12">
-        <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-border/60 bg-muted">
+        <div className="border-border/60 bg-muted relative aspect-video w-full overflow-hidden rounded-2xl border">
           <Image
             src={project.cover}
             alt={i18n.title}
@@ -118,37 +114,21 @@ export default async function ProjectDetailPage({
       </div>
 
       <section className="container-app pb-24">
-        <div className="grid gap-10 md:grid-cols-3">
-          <CaseBlock title={locale === "es" ? "Problema" : "Problem"}>
-            {i18n.problem}
-          </CaseBlock>
-          <CaseBlock title={locale === "es" ? "Solución" : "Solution"}>
-            {i18n.solution}
-          </CaseBlock>
-          <CaseBlock title={locale === "es" ? "Resultado" : "Outcome"}>
-            {i18n.outcome}
-          </CaseBlock>
+        <div className="reveal-children grid gap-10 md:grid-cols-3">
+          <CaseBlock title={locale === "es" ? "Problema" : "Problem"}>{i18n.problem}</CaseBlock>
+          <CaseBlock title={locale === "es" ? "Solución" : "Solution"}>{i18n.solution}</CaseBlock>
+          <CaseBlock title={locale === "es" ? "Resultado" : "Outcome"}>{i18n.outcome}</CaseBlock>
         </div>
       </section>
     </article>
   );
 }
 
-function CaseBlock({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function CaseBlock({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-xl border border-border/60 bg-card/40 p-6 backdrop-blur">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">
-        {title}
-      </h2>
-      <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-        {children}
-      </p>
+    <div className="border-border/60 bg-card/40 rounded-xl border p-6 backdrop-blur">
+      <h2 className="text-primary text-sm font-semibold tracking-wide uppercase">{title}</h2>
+      <p className="text-muted-foreground mt-3 text-base leading-relaxed">{children}</p>
     </div>
   );
 }

@@ -5,11 +5,7 @@ import { TechStack } from "@/components/sections/tech-stack";
 import { FeaturedProjects } from "@/components/sections/featured-projects";
 import { CtaSection } from "@/components/sections/cta";
 
-export default async function HomePage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
 
