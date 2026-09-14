@@ -57,6 +57,7 @@ export function Header() {
             <Link
               key={key}
               href={HREFS[key]}
+              aria-current={isActive(HREFS[key]) ? "page" : undefined}
               className={cn(
                 "rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 isActive(HREFS[key])
@@ -93,6 +94,7 @@ export function Header() {
                   <SheetClose asChild key={key}>
                     <Link
                       href={HREFS[key]}
+                      aria-current={isActive(HREFS[key]) ? "page" : undefined}
                       className={cn(
                         "rounded-md px-3 py-2.5 text-base font-medium transition-colors",
                         isActive(HREFS[key])
