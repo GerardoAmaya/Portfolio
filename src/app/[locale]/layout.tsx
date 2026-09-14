@@ -76,8 +76,13 @@ export async function generateMetadata({
       images: ["/og"],
     },
     alternates: localeAlternates(locale, ""),
+    manifest: "/manifest.webmanifest",
     icons: {
-      icon: "/favicon.ico",
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
+      ],
+      apple: [{ url: "/apple-icon.png", type: "image/png", sizes: "180x180" }],
     },
   };
 }
@@ -97,6 +102,8 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
 
+  const t = await getTranslations({ locale, namespace: "Nav" });
+
   return (
     <html lang={locale} suppressHydrationWarning>
       <body
@@ -105,8 +112,16 @@ export default async function LocaleLayout({
         <PersonJsonLd />
         <NextIntlClientProvider>
           <Providers>
+            <a
+              href="#main"
+              className="focus:bg-primary focus:text-primary-foreground focus:ring-ring sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:ring-2 focus:ring-offset-2"
+            >
+              {t("skipToContent")}
+            </a>
             <Header />
-            <main className="flex-1">{children}</main>
+            <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">
+              {children}
+            </main>
             <Footer />
           </Providers>
         </NextIntlClientProvider>

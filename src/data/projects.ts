@@ -3,6 +3,8 @@ import type { Locale } from "@/i18n/routing";
 export type Project = {
   slug: string;
   year: string;
+  /** Fecha ISO del último cambio real al caso de estudio; alimenta el sitemap */
+  updatedAt: string;
   cover: string;
   stack: string[];
   videoUrl?: string;
@@ -24,7 +26,52 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    slug: "waypoint",
+    year: "2026",
+    updatedAt: "2026-09-11",
+    cover: "/projects/waypoint.png",
+    stack: [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "PostGIS",
+      "Claude AI",
+      "Next.js",
+      "Leaflet",
+      "Docker",
+    ],
+    repoUrl: "https://github.com/GerardoAmaya/waypoint",
+    featured: true,
+    i18n: {
+      es: {
+        title: "Waypoint",
+        tagline:
+          "Planificador de viajes conversacional por El Salvador: el modelo traduce la frase del usuario a restricciones y un motor determinista las hace cumplir, sobre lugares y distancias reales — Python · FastAPI · PostgreSQL + PostGIS · Claude AI · Next.js.",
+        role: "Fullstack Developer · AI Engineering",
+        problem:
+          "Armar un viaje de varios días exige cruzar a mano lugares, distancias y horarios. Pedírselo directo a un modelo de lenguaje falla justo en lo que importa: «odio madrugar» se vuelve una sugerencia que a veces ignora, y los lugares que devuelve pueden no existir.",
+        solution:
+          "Partí el problema en dos: el modelo traduce la frase en lenguaje natural a restricciones, y un motor determinista las hace cumplir. Eso lo vuelve medible: dado un conjunto de restricciones se comprueba automáticamente si el itinerario las respeta, y lo que no se pudo cumplir viaja en la respuesta como violación con su magnitud en vez de esconderse. El catálogo sale de OpenStreetMap y se consulta con PostGIS; las distancias vienen de una sola llamada a la matriz de OpenRouteService por itinerario, cacheadas por par, porque el cupo real que reporta la cabecera es la décima parte del que publica la tabla de planes. Un invariante geométrico descarta las celdas donde la ruta por carretera mide menos que la línea recta: tres paradas enganchadas al mismo nodo vial devolvían cero kilómetros marcados como medida real.",
+        outcome:
+          "Sobre un banco de 26 casos: 25 cumplen todas las restricciones duras, cero lugares inventados en 321 paradas generadas y cero de 240 paradas fuera de horario. El factor de desvío (1.45) y las velocidades (35 a 62 km/h según el tramo) se midieron contra 812 pares reales en lugar de elegirse a ojo. Catálogo de 5.786 lugares activos, 743 tests en el backend y 55 en el frontend. Pendiente el despliegue público.",
+      },
+      en: {
+        title: "Waypoint",
+        tagline:
+          "Conversational trip planner for El Salvador: the model turns the user's sentence into constraints and a deterministic engine enforces them, over real places and real distances — Python · FastAPI · PostgreSQL + PostGIS · Claude AI · Next.js.",
+        role: "Fullstack Developer · AI Engineering",
+        problem:
+          "Planning a multi-day trip means cross-referencing places, distances and opening hours by hand. Handing the job straight to a language model fails exactly where it matters: “I hate early mornings” becomes a suggestion it sometimes ignores, and the places it returns may not exist.",
+        solution:
+          "Split the problem in two: the model translates the natural-language request into constraints, and a deterministic engine enforces them. That makes it measurable: given a set of constraints you can check automatically whether the itinerary respects them, and whatever could not be satisfied travels back in the response as a violation with its magnitude instead of being hidden. The catalog comes from OpenStreetMap and is queried with PostGIS; distances come from a single OpenRouteService matrix call per itinerary, cached per pair, because the quota the response header reports is a tenth of the one the plan table advertises. A geometric invariant discards cells where the road route measures less than the straight line: three stops snapped to the same road node were returning zero kilometres flagged as a real measurement.",
+        outcome:
+          "Across a 26-case benchmark: 25 satisfy every hard constraint, zero invented places over 321 generated stops and zero out of 240 stops outside opening or daylight hours. The detour factor (1.45) and the speeds (35 to 62 km/h depending on leg length) were measured against 812 real pairs rather than picked by feel. Catalog of 5,786 active places, 743 backend tests and 55 on the frontend. Public deployment still pending.",
+      },
+    },
+  },
+  {
     slug: "docu-flow",
+    updatedAt: "2026-09-08",
     year: "2026",
     cover: "/projects/docu-flow.jpg",
     stack: [
@@ -69,6 +116,7 @@ export const projects: Project[] = [
   },
   {
     slug: "real-estate-lead-management",
+    updatedAt: "2026-09-08",
     year: "2026",
     cover: "/projects/real-estate-lead-management.jpg",
     stack: ["Angular", "TypeScript", "Node.js", "Express", "MongoDB", "Playwright", "Docker"],
@@ -103,6 +151,7 @@ export const projects: Project[] = [
   },
   {
     slug: "nestjs-ai-pentest-skill",
+    updatedAt: "2026-04-29",
     year: "2026",
     cover: "/projects/nestjs-ai-pentest-skill.png",
     stack: ["Claude AI", "NestJS", "Jest", "Node.js", "OWASP", "TypeScript"],
@@ -137,11 +186,11 @@ export const projects: Project[] = [
   },
   {
     slug: "travel-quote-api",
+    updatedAt: "2026-04-29",
     year: "2025",
     cover: "/projects/travel-quote-api.png",
     stack: ["Node.js", "Express", "Sequelize", "MySQL", "Docker", "REST API"],
     repoUrl: "https://github.com/GerardoAmaya/travel-quote-api",
-    featured: true,
     i18n: {
       es: {
         title: "Travel Quote API",
@@ -171,11 +220,11 @@ export const projects: Project[] = [
   },
   {
     slug: "safe-on-sivar",
+    updatedAt: "2026-04-29",
     year: "2024",
     cover: "/projects/SafeOnSivar.jpg",
     stack: ["Laravel", "PHP", "MySQL", "Bootstrap", "JavaScript"],
     videoUrl: "https://youtu.be/OCd7V5g8RRU",
-    featured: true,
     i18n: {
       es: {
         title: "Safe On Sivar",
@@ -205,11 +254,11 @@ export const projects: Project[] = [
   },
   {
     slug: "flask-shop-api",
+    updatedAt: "2026-04-29",
     year: "2024",
     cover: "/projects/flask-shop-api.png",
     stack: ["Python", "Flask", "SQLAlchemy", "REST API"],
     repoUrl: "https://github.com/GerardoAmaya/flask-shop-api",
-    featured: true,
     i18n: {
       es: {
         title: "Flask Shop API",
@@ -239,11 +288,11 @@ export const projects: Project[] = [
   },
   {
     slug: "pokeapi",
+    updatedAt: "2026-04-29",
     year: "2023",
     cover: "/projects/PokeAPI.jpg",
     stack: ["React", "JavaScript", "REST API", "CSS"],
     videoUrl: "https://youtu.be/fHk05FWcLlQ",
-    featured: true,
     i18n: {
       es: {
         title: "PokeAPI Explorer",
@@ -271,6 +320,7 @@ export const projects: Project[] = [
   },
   {
     slug: "django-company-api",
+    updatedAt: "2026-04-29",
     year: "2024",
     cover: "/projects/django-company-api.png",
     stack: ["Python", "Django", "MySQL", "Auth"],

@@ -14,13 +14,17 @@ import { Textarea } from "@/components/ui/textarea";
 const FORM_ENDPOINT = "/__forms.html";
 
 type Status = "idle" | "submitting" | "success" | "error";
-type Errors = Partial<Record<"name" | "email" | "message", string>>;
+type Field = "name" | "email" | "message";
+type Errors = Partial<Record<Field, string>>;
+
+// Orden de los campos en el DOM: define a cuál se manda el foco al fallar
+const FIELDS: Field[] = ["name", "email", "message"];
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 /** Validación de los tres campos del form, con los mensajes ya traducidos. */
 function validate(
-  data: Record<"name" | "email" | "message", string>,
+  data: Record<Field, string>,
   t: ReturnType<typeof useTranslations<"Contact">>
 ): Errors {
   const errors: Errors = {};
@@ -40,6 +44,7 @@ export function ContactForm() {
   const t = useTranslations("Contact");
   const [status, setStatus] = React.useState<Status>("idle");
   const [errors, setErrors] = React.useState<Errors>({});
+  const fieldRefs = React.useRef<Partial<Record<Field, HTMLElement | null>>>({});
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -58,6 +63,10 @@ export function ContactForm() {
     const fieldErrors = validate(data, t);
     if (Object.keys(fieldErrors).length > 0) {
       setErrors(fieldErrors);
+      // Sin foco explícito el usuario de lector de pantalla se queda en el
+      // botón y nunca llega a los mensajes de error
+      const firstInvalid = FIELDS.find((f) => fieldErrors[f]);
+      if (firstInvalid) fieldRefs.current[firstInvalid]?.focus();
       return;
     }
 
@@ -78,7 +87,11 @@ export function ContactForm() {
 
   if (status === "success") {
     return (
-      <div className="border-primary/40 bg-primary/5 flex flex-col items-center gap-3 rounded-xl border p-8 text-center">
+      <div
+        role="status"
+        aria-live="polite"
+        className="border-primary/40 bg-primary/5 flex flex-col items-center gap-3 rounded-xl border p-8 text-center"
+      >
         <div className="bg-primary/10 text-primary flex size-12 items-center justify-center rounded-full">
           <Check className="size-6" />
         </div>
@@ -111,13 +124,16 @@ export function ContactForm() {
         <Input
           id="name"
           name="name"
+          ref={(el) => {
+            fieldRefs.current.name = el;
+          }}
           placeholder={t("namePlaceholder")}
           autoComplete="name"
           aria-invalid={!!errors.name}
           aria-describedby={errors.name ? "name-error" : undefined}
         />
         {errors.name ? (
-          <p id="name-error" className="text-destructive text-xs">
+          <p id="name-error" role="alert" className="text-destructive text-xs">
             {errors.name}
           </p>
         ) : null}
@@ -129,13 +145,16 @@ export function ContactForm() {
           id="email"
           name="email"
           type="email"
+          ref={(el) => {
+            fieldRefs.current.email = el;
+          }}
           placeholder={t("emailPlaceholder")}
           autoComplete="email"
           aria-invalid={!!errors.email}
           aria-describedby={errors.email ? "email-error" : undefined}
         />
         {errors.email ? (
-          <p id="email-error" className="text-destructive text-xs">
+          <p id="email-error" role="alert" className="text-destructive text-xs">
             {errors.email}
           </p>
         ) : null}
@@ -146,20 +165,26 @@ export function ContactForm() {
         <Textarea
           id="message"
           name="message"
+          ref={(el) => {
+            fieldRefs.current.message = el;
+          }}
           placeholder={t("messagePlaceholder")}
           rows={6}
           aria-invalid={!!errors.message}
           aria-describedby={errors.message ? "message-error" : undefined}
         />
         {errors.message ? (
-          <p id="message-error" className="text-destructive text-xs">
+          <p id="message-error" role="alert" className="text-destructive text-xs">
             {errors.message}
           </p>
         ) : null}
       </div>
 
       {status === "error" ? (
-        <div className="border-destructive/40 bg-destructive/5 text-destructive flex items-start gap-3 rounded-lg border p-4 text-sm">
+        <div
+          role="alert"
+          className="border-destructive/40 bg-destructive/5 text-destructive flex items-start gap-3 rounded-lg border p-4 text-sm"
+        >
           <AlertCircle className="mt-0.5 size-4 shrink-0" />
           <div>
             <p className="font-medium">{t("errorTitle")}</p>

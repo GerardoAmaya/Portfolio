@@ -15,7 +15,8 @@
     "openMenu": "Abrir menú",
     "closeMenu": "Cerrar menú",
     "toggleTheme": "Cambiar tema",
-    "switchLanguage": "Cambiar idioma"
+    "switchLanguage": "Cambiar idioma",
+    "skipToContent": "Saltar al contenido"
   },
   "Home": {
     "eyebrow": "Disponible para nuevos proyectos",
