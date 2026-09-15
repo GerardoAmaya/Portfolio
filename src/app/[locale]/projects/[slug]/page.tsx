@@ -107,7 +107,7 @@ export default async function ProjectDetailPage({
             alt={i18n.title}
             fill
             sizes="(min-width: 1024px) 1024px, 100vw"
-            className="object-cover"
+            className="object-contain"
             priority
           />
         </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Briefcase, GraduationCap } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHeader } from "@/components/page-header";
+import { Certifications } from "@/components/sections/certifications";
 import { education, experiences } from "@/data/experience";
 import { pageMetadata } from "@/lib/metadata";
 import type { Locale } from "@/i18n/routing";
@@ -60,7 +61,7 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
         </ol>
       </section>
 
-      <section className="container-app pb-24">
+      <section className="container-app pb-16">
         <div className="mb-6 flex items-center gap-2">
           <GraduationCap className="text-primary size-5" />
           <h2 className="text-2xl font-semibold tracking-tight">{t("educationTitle")}</h2>
@@ -90,6 +91,8 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
           })}
         </ol>
       </section>
+
+      <Certifications variant="compact" className="container-app pb-24" />
     </>
   );
 }

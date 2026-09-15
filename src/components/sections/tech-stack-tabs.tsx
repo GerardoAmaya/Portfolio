@@ -1,11 +1,20 @@
 "use client";
 
 import { useEffect, useRef, useState, type ComponentType } from "react";
-import { Brain, Database, ScanText, ShieldCheck, TestTube2, Webhook } from "lucide-react";
+import {
+  Brain,
+  Database,
+  MapPinned,
+  ScanText,
+  ShieldCheck,
+  TestTube2,
+  Webhook,
+} from "lucide-react";
 import { FaAws } from "react-icons/fa6";
 import {
   SiAngular,
   SiBootstrap,
+  SiCloudflare,
   SiCelery,
   SiClaude,
   SiCss,
@@ -21,6 +30,7 @@ import {
   SiJest,
   SiJsonwebtokens,
   SiLaravel,
+  SiMaplibre,
   SiMongodb,
   SiMysql,
   SiNestjs,
@@ -32,13 +42,17 @@ import {
   SiPhp,
   SiPostgresql,
   SiPostman,
+  SiPytest,
   SiPython,
   SiRailway,
   SiReact,
   SiRedis,
+  SiShadcnui,
   SiSonarqubecloud,
+  SiSqlalchemy,
   SiSwagger,
   SiTailwindcss,
+  SiTelegram,
   SiTypescript,
   SiVercel,
   SiVuedotjs,
@@ -65,6 +79,8 @@ const TECH_META: Record<string, TechMeta> = {
   CSS: { icon: SiCss, color: "#663399" },
   "Tailwind CSS": { icon: SiTailwindcss, color: "#06B6D4" },
   Bootstrap: { icon: SiBootstrap, color: "#7952B3" },
+  MapLibre: { icon: SiMaplibre, color: "#295DAA" },
+  "shadcn/ui": { icon: SiShadcnui },
   Angular: { icon: SiAngular, color: "#DD0031" },
   PHP: { icon: SiPhp, color: "#777BB4" },
   Laravel: { icon: SiLaravel, color: "#FF2D20" },
@@ -74,6 +90,8 @@ const TECH_META: Record<string, TechMeta> = {
   Python: { icon: SiPython, color: "#3776AB" },
   FastAPI: { icon: SiFastapi, color: "#009688" },
   Celery: { icon: SiCelery, color: "#37814A" },
+  SQLAlchemy: { icon: SiSqlalchemy, color: "#D71F00" },
+  "Telegram Bot API": { icon: SiTelegram, color: "#26A5E4" },
   "REST APIs": { icon: Webhook },
   "Claude AI": { icon: SiClaude, color: "#D97757" },
   "LLM & RAG": { icon: Brain, color: "#A78BFA" },
@@ -84,12 +102,14 @@ const TECH_META: Record<string, TechMeta> = {
   Netlify: { icon: SiNetlify, color: "#00C7B7" },
   Vercel: { icon: SiVercel },
   Railway: { icon: SiRailway },
+  "Cloudflare R2": { icon: SiCloudflare, color: "#F38020" },
   MySQL: { icon: SiMysql, color: "#4479A1" },
   PostgreSQL: { icon: SiPostgresql, color: "#4169E1" },
   Oracle: { icon: Database, color: "#F80000" },
   MongoDB: { icon: SiMongodb, color: "#47A248" },
   Redis: { icon: SiRedis, color: "#FF4438" },
   pgvector: { icon: SiPostgresql, color: "#4169E1" },
+  PostGIS: { icon: MapPinned, color: "#1F6F5C" },
   "OWASP Top 10": { icon: SiOwasp },
   "OWASP API Security": { icon: SiOwasp },
   "Security Testing": { icon: ShieldCheck, color: "#16A34A" },
@@ -102,6 +122,7 @@ const TECH_META: Record<string, TechMeta> = {
   "CI/CD": { icon: SiGithubactions, color: "#2088FF" },
   Jest: { icon: SiJest, color: "#C21325" },
   Playwright: { icon: TestTube2, color: "#2EAD33" },
+  pytest: { icon: SiPytest, color: "#0A9EDC" },
   SonarCloud: { icon: SiSonarqubecloud, color: "#F3702A" },
 };
 

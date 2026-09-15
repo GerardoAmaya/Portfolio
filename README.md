@@ -44,6 +44,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | `npm run lint` | ESLint |
 | `npm run typecheck` | TypeScript check (no emit) |
 | `npm run format` | Prettier write |
+| `npm run credly:sync` | Re-fetch Credly badges: downloads the images and regenerates `src/data/certifications.ts` |
 
 ## Project structure
 
@@ -68,17 +69,28 @@ src/
     sections/          # Page sections
     layout/            # Header, Footer, switchers
   data/                # projects, experience, skills (typed per locale)
+                       # certifications.ts is generated — see scripts/fetch-credly.mjs
   i18n/                # next-intl config
   lib/                 # site config, metadata helpers, utils
   proxy.ts             # next-intl middleware
 messages/
   en.json
   es.json
+scripts/
+  fetch-credly.mjs     # Syncs the public Credly profile into data + images
 public/
+  certifications/      # Credly badge art, kept local on purpose
   projects/            # Case-study covers
   resume.pdf
   __forms.html         # Static form Netlify detects at build time
 ```
+
+Certifications come from the public Credly profile, not from a hand-kept list.
+`npm run credly:sync` pulls the badges, stores the artwork under
+`public/certifications/` and rewrites `src/data/certifications.ts`; the badge
+images live in the repo so the section does not depend on Credly's CDN being up,
+and so no visitor request leaks to a third party. The script aborts without
+touching anything if Credly returns nothing.
 
 Every page builds its own canonical and `hreflang` tags through
 [`src/lib/metadata.ts`](./src/lib/metadata.ts). Next inherits `alternates` and

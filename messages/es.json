@@ -68,6 +68,16 @@
       "tools": "DevOps & Herramientas"
     }
   },
+  "Certifications": {
+    "eyebrow": "Credenciales verificables",
+    "title": "Certificaciones oficiales",
+    "subtitle": "Insignias emitidas por organizaciones reconocidas. Cada una enlaza a su página de verificación en Credly.",
+    "viewProfile": "Ver perfil en Credly",
+    "verify": "Verificar",
+    "skillBadgesLabel": "Insignias de habilidad",
+    "issued": "Emitida {date}",
+    "expires": "Vence {date}"
+  },
   "Projects": {
     "title": "Proyectos",
     "subtitle": "Una selección de cosas que he construido. Cada uno con problema, decisiones técnicas y resultado.",

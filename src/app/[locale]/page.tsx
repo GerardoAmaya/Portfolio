@@ -3,6 +3,7 @@ import { Hero } from "@/components/sections/hero";
 import { Highlights } from "@/components/sections/highlights";
 import { TechStack } from "@/components/sections/tech-stack";
 import { FeaturedProjects } from "@/components/sections/featured-projects";
+import { Certifications } from "@/components/sections/certifications";
 import { CtaSection } from "@/components/sections/cta";
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
@@ -15,6 +16,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <Highlights />
       <TechStack />
       <FeaturedProjects />
+      <Certifications />
       <CtaSection />
     </>
   );

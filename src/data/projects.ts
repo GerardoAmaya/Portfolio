@@ -26,10 +26,56 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    slug: "smart-report-ia",
+    year: "2026",
+    updatedAt: "2026-09-15",
+    cover: "/projects/smart-report-ia.jpg",
+    stack: [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "PostGIS",
+      "Claude AI",
+      "Telegram Bot API",
+      "Next.js",
+      "MapLibre",
+      "Cloudflare R2",
+      "Docker",
+    ],
+    repoUrl: "https://github.com/GerardoAmaya/smart-report-ia",
+    featured: true,
+    i18n: {
+      es: {
+        title: "Smart Report IA",
+        tagline:
+          "Reportes ciudadanos de la vía pública en El Salvador: se reporta por Telegram en menos de un minuto y quien despacha ve los reportes repetidos agrupados, con la evidencia a la vista — Python · FastAPI · PostgreSQL + PostGIS · Claude AI · Next.js.",
+        role: "Fullstack Developer · AI Engineering",
+        problem:
+          "Hay dos personas con necesidades opuestas. Quien reporta está parado frente al hueco, con prisa, y no va a instalar una app. Quien despacha mira el sistema ocho horas y su problema no es recibir reportes, sino saber cuáles son el mismo: cuatro fotos del mismo hueco son cuatro órdenes de trabajo para una sola cuadrilla. Y casi nadie construye la parte que sostiene todo lo demás, el aviso de vuelta, sin el cual nadie reporta una segunda vez.",
+        solution:
+          "El principio es que el modelo propone, el código decide, y lo que no se puede sostener se informa. Claude Haiku 4.5 mira la foto y propone categoría y urgencia con salida por esquema, y el bot pide confirmación antes de aceptarla: clasificar en silencio y equivocarse manda una cuadrilla de agua a arreglar una luminaria. La agrupación no la decide el modelo sino código con umbrales medidos —distancia con PostGIS, huella perceptual de la imagen y semejanza textual—, muestra su evidencia y se puede deshacer, y el umbral se calibra contra el error grave (juntar dos problemas distintos esconde uno) y no contra el promedio. Lo que queda en el límite se marca como dudoso, con el motivo, esperando a una persona. La ubicación se pide con el botón nativo de Telegram porque la compresión de la plataforma borra los metadatos de la foto. Sin Redis y sin bus de mensajes: la cola es una tabla con FOR UPDATE SKIP LOCKED y el tablero se actualiza por SSE sobre LISTEN/NOTIFY de Postgres.",
+        outcome:
+          "El ciclo real está cerrado de punta a punta: un reporte mandado desde un teléfono —calle anegada en Mejicanos— recorrió propuesta de categoría, confirmación, asignación, «en curso» y cierre con foto del arreglo, y los tres avisos llegaron de vuelta; comprobado en los datos y no solo en la pantalla. El cierre no se permite sin foto de evidencia, porque un cierre sin evidencia es una afirmación que nadie puede comprobar. Clasificar una foto cuesta USD 0,0018 medidos, y nueve recorridos de Playwright corren en CI contra el sistema levantado. Las fases de clasificación y agrupación siguen abiertas a propósito: su verificación pide 200 fotos etiquetadas y 200 reportes agrupados a mano, y el código que las mide avisa cuando la muestra no alcanza en vez de dar un número.",
+      },
+      en: {
+        title: "Smart Report IA",
+        tagline:
+          "Citizen reports of street hazards in El Salvador: reporting takes under a minute over Telegram, and dispatchers see duplicate reports already grouped, with the evidence in plain sight — Python · FastAPI · PostgreSQL + PostGIS · Claude AI · Next.js.",
+        role: "Fullstack Developer · AI Engineering",
+        problem:
+          "Two people with opposite needs. Whoever reports is standing in front of the pothole, in a hurry, and will not install an app. Whoever dispatches stares at the system eight hours a day, and their problem is not receiving reports but knowing which ones are the same: four photos of one pothole are four work orders for a single crew. And almost nobody builds the piece that holds the rest up — the notification back — without which no one ever reports twice.",
+        solution:
+          "The principle is that the model proposes, the code decides, and whatever cannot be supported is disclosed. Claude Haiku 4.5 looks at the photo and proposes category and urgency with schema-constrained output, and the bot asks for confirmation before accepting it: classifying silently and getting it wrong sends a water crew to fix a streetlight. Grouping is decided by code rather than the model, with measured thresholds —distance via PostGIS, a perceptual image hash and text similarity— shows its evidence and can be undone, and the threshold is calibrated against the severe error (merging two distinct problems hides one) rather than the average of both. Anything borderline is flagged as doubtful, with the reason, waiting on a human. Location is requested through Telegram's native button because the platform's compression strips the photo's metadata. No Redis and no message bus: the queue is a table with FOR UPDATE SKIP LOCKED, and the dashboard updates over SSE on top of Postgres LISTEN/NOTIFY.",
+        outcome:
+          'The real cycle is closed end to end: a report sent from a phone —a flooded street in Mejicanos— went through category proposal, confirmation, assignment, "in progress" and closure with a photo of the repair, and all three notifications came back; verified in the data, not just on screen. Closing is blocked without evidence photo, because a closure with no evidence is a claim nobody can check. Classifying a photo costs a measured USD 0.0018, and nine Playwright journeys run in CI against the running system. The classification and grouping phases stay open on purpose: their verification needs 200 hand-labeled photos and 200 hand-grouped reports, and the code that measures them reports an insufficient sample instead of producing a number.',
+      },
+    },
+  },
+  {
     slug: "waypoint",
     year: "2026",
-    updatedAt: "2026-09-11",
-    cover: "/projects/waypoint.png",
+    updatedAt: "2026-09-15",
+    cover: "/projects/waypoint-cover.jpg",
     stack: [
       "Python",
       "FastAPI",
@@ -38,9 +84,11 @@ export const projects: Project[] = [
       "Claude AI",
       "Next.js",
       "Leaflet",
+      "Vercel",
       "Docker",
     ],
     repoUrl: "https://github.com/GerardoAmaya/waypoint",
+    liveUrl: "https://frontend-weld-eta-54.vercel.app",
     featured: true,
     i18n: {
       es: {
@@ -53,7 +101,7 @@ export const projects: Project[] = [
         solution:
           "Partí el problema en dos: el modelo traduce la frase en lenguaje natural a restricciones, y un motor determinista las hace cumplir. Eso lo vuelve medible: dado un conjunto de restricciones se comprueba automáticamente si el itinerario las respeta, y lo que no se pudo cumplir viaja en la respuesta como violación con su magnitud en vez de esconderse. El catálogo sale de OpenStreetMap y se consulta con PostGIS; las distancias vienen de una sola llamada a la matriz de OpenRouteService por itinerario, cacheadas por par, porque el cupo real que reporta la cabecera es la décima parte del que publica la tabla de planes. Un invariante geométrico descarta las celdas donde la ruta por carretera mide menos que la línea recta: tres paradas enganchadas al mismo nodo vial devolvían cero kilómetros marcados como medida real.",
         outcome:
-          "Sobre un banco de 26 casos: 25 cumplen todas las restricciones duras, cero lugares inventados en 321 paradas generadas y cero de 240 paradas fuera de horario. El factor de desvío (1.45) y las velocidades (35 a 62 km/h según el tramo) se midieron contra 812 pares reales en lugar de elegirse a ojo. Catálogo de 5.786 lugares activos, 743 tests en el backend y 55 en el frontend. Pendiente el despliegue público.",
+          "Sobre un banco de 26 casos: 25 cumplen todas las restricciones duras, cero lugares inventados en 321 paradas generadas y cero de 240 paradas fuera de horario. El factor de desvío (1.45) y las velocidades (35 a 62 km/h según el tramo) se midieron contra 812 pares reales en lugar de elegirse a ojo. Catálogo de 5.786 lugares activos, 743 tests en el backend y 55 en el frontend. Demo pública en línea.",
       },
       en: {
         title: "Waypoint",
@@ -65,7 +113,7 @@ export const projects: Project[] = [
         solution:
           "Split the problem in two: the model translates the natural-language request into constraints, and a deterministic engine enforces them. That makes it measurable: given a set of constraints you can check automatically whether the itinerary respects them, and whatever could not be satisfied travels back in the response as a violation with its magnitude instead of being hidden. The catalog comes from OpenStreetMap and is queried with PostGIS; distances come from a single OpenRouteService matrix call per itinerary, cached per pair, because the quota the response header reports is a tenth of the one the plan table advertises. A geometric invariant discards cells where the road route measures less than the straight line: three stops snapped to the same road node were returning zero kilometres flagged as a real measurement.",
         outcome:
-          "Across a 26-case benchmark: 25 satisfy every hard constraint, zero invented places over 321 generated stops and zero out of 240 stops outside opening or daylight hours. The detour factor (1.45) and the speeds (35 to 62 km/h depending on leg length) were measured against 812 real pairs rather than picked by feel. Catalog of 5,786 active places, 743 backend tests and 55 on the frontend. Public deployment still pending.",
+          "Across a 26-case benchmark: 25 satisfy every hard constraint, zero invented places over 321 generated stops and zero out of 240 stops outside opening or daylight hours. The detour factor (1.45) and the speeds (35 to 62 km/h depending on leg length) were measured against 812 real pairs rather than picked by feel. Catalog of 5,786 active places, 743 backend tests and 55 on the frontend. Public demo live.",
       },
     },
   },
@@ -191,6 +239,7 @@ export const projects: Project[] = [
     cover: "/projects/travel-quote-api.png",
     stack: ["Node.js", "Express", "Sequelize", "MySQL", "Docker", "REST API"],
     repoUrl: "https://github.com/GerardoAmaya/travel-quote-api",
+    featured: true,
     i18n: {
       es: {
         title: "Travel Quote API",
@@ -259,6 +308,7 @@ export const projects: Project[] = [
     cover: "/projects/flask-shop-api.png",
     stack: ["Python", "Flask", "SQLAlchemy", "REST API"],
     repoUrl: "https://github.com/GerardoAmaya/flask-shop-api",
+    featured: true,
     i18n: {
       es: {
         title: "Flask Shop API",
@@ -325,6 +375,7 @@ export const projects: Project[] = [
     cover: "/projects/django-company-api.png",
     stack: ["Python", "Django", "MySQL", "Auth"],
     repoUrl: "https://github.com/GerardoAmaya/django-company-api",
+    featured: true,
     i18n: {
       es: {
         title: "Django Company API",

@@ -23,6 +23,8 @@ export const skills: Skill[] = [
   { name: "Tailwind CSS", category: "frontend" },
   { name: "Angular", category: "frontend" },
   { name: "Bootstrap", category: "frontend" },
+  { name: "MapLibre", category: "frontend" },
+  { name: "shadcn/ui", category: "frontend" },
 
   { name: "PHP", category: "backend" },
   { name: "Laravel", category: "backend" },
@@ -32,6 +34,8 @@ export const skills: Skill[] = [
   { name: "Python", category: "backend" },
   { name: "FastAPI", category: "backend" },
   { name: "Celery", category: "backend" },
+  { name: "SQLAlchemy", category: "backend" },
+  { name: "Telegram Bot API", category: "backend" },
   { name: "REST APIs", category: "backend" },
 
   { name: "Claude AI", category: "ai" },
@@ -45,12 +49,14 @@ export const skills: Skill[] = [
   { name: "MongoDB", category: "databases" },
   { name: "Redis", category: "databases" },
   { name: "pgvector", category: "databases" },
+  { name: "PostGIS", category: "databases" },
 
   { name: "AWS", category: "cloud" },
   { name: "Google Cloud", category: "cloud" },
   { name: "Netlify", category: "cloud" },
   { name: "Vercel", category: "cloud" },
   { name: "Railway", category: "cloud" },
+  { name: "Cloudflare R2", category: "cloud" },
 
   { name: "OWASP Top 10", category: "security" },
   { name: "OWASP API Security", category: "security" },
@@ -65,5 +71,6 @@ export const skills: Skill[] = [
   { name: "CI/CD", category: "tools" },
   { name: "Jest", category: "tools" },
   { name: "Playwright", category: "tools" },
+  { name: "pytest", category: "tools" },
   { name: "SonarCloud", category: "tools" },
 ];

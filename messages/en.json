@@ -68,6 +68,16 @@
       "tools": "DevOps & Tools"
     }
   },
+  "Certifications": {
+    "eyebrow": "Verifiable credentials",
+    "title": "Official certifications",
+    "subtitle": "{total} badges issued by {issuers} organizations, {certifications, plural, one {# of them a formal certification} other {# of them formal certifications}}. Each one links to its verification page on Credly.",
+    "viewProfile": "View Credly profile",
+    "verify": "Verify",
+    "skillBadgesLabel": "Skill badges",
+    "issued": "Issued {date}",
+    "expires": "Valid until {date}"
+  },
   "Projects": {
     "title": "Projects",
     "subtitle": "A selection of things I've built. Each one with problem, technical decisions and outcome.",

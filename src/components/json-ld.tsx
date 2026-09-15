@@ -1,3 +1,4 @@
+import { certifications } from "@/data/certifications";
 import { site } from "@/lib/site";
 import { SITE_URL } from "@/lib/utils";
 
@@ -40,6 +41,17 @@ export function PersonJsonLd() {
       "Retrieval-Augmented Generation",
       "OCR",
     ],
+    // Las credenciales de Credly, con su página de verificación: es lo que
+    // permite que un buscador las muestre como algo comprobable y no como texto
+    hasCredential: certifications.map((cert) => ({
+      "@type": "EducationalOccupationalCredential",
+      name: cert.name,
+      credentialCategory: cert.isCertification ? "certification" : "badge",
+      url: cert.url,
+      dateCreated: cert.issuedAt,
+      ...(cert.expiresAt ? { expires: cert.expiresAt } : {}),
+      recognizedBy: { "@type": "Organization", name: cert.issuer },
+    })),
   };
 
   return (
