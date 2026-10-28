@@ -133,7 +133,6 @@ export const projects: Project[] = [
       "Docker",
     ],
     repoUrl: "https://github.com/GerardoAmaya/docu-flow",
-    liveUrl: "https://docu-flow-nine-xi.vercel.app",
     featured: true,
     i18n: {
       es: {
