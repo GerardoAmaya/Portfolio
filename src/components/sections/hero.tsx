@@ -2,6 +2,7 @@ import { ArrowRight, Download, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
+import { site } from "@/lib/site";
 
 export function Hero() {
   const t = useTranslations("Home");
@@ -44,7 +45,7 @@ export function Hero() {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline">
-              <a href="/resume.pdf" target="_blank" rel="noreferrer">
+              <a href={site.resumeUrl} target="_blank" rel="noreferrer">
                 <Download /> {t("ctaResume")}
               </a>
             </Button>

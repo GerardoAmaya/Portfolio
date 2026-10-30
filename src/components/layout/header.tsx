@@ -9,6 +9,7 @@ import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/com
 import { ThemeToggle } from "./theme-toggle";
 import { LanguageSwitcher } from "./language-switcher";
 import { cn } from "@/lib/utils";
+import { site } from "@/lib/site";
 
 const NAV_KEYS = ["about", "projects", "experience", "contact"] as const;
 const HREFS: Record<(typeof NAV_KEYS)[number], string> = {
@@ -74,7 +75,7 @@ export function Header() {
           <LanguageSwitcher />
           <ThemeToggle />
           <Button asChild variant="default" size="sm" className="hidden md:inline-flex">
-            <a href="/resume.pdf" target="_blank" rel="noreferrer">
+            <a href={site.resumeUrl} target="_blank" rel="noreferrer">
               {t("resume")}
             </a>
           </Button>
@@ -108,7 +109,7 @@ export function Header() {
                 ))}
               </nav>
               <Button asChild className="mt-2">
-                <a href="/resume.pdf" target="_blank" rel="noreferrer">
+                <a href={site.resumeUrl} target="_blank" rel="noreferrer">
                   {t("resume")}
                 </a>
               </Button>
