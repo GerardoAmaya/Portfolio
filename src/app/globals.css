@@ -476,16 +476,21 @@ html.filter-transition::view-transition-new(root) {
 
 .ask-fab-label {
   opacity: 0;
-  transform: translateX(8px);
+  translate: 8px 0;
   transition:
     opacity 0.25s ease,
-    transform 0.25s ease;
+    translate 0.25s ease;
+}
+
+/* Del lado izquierdo la etiqueta sale hacia la derecha */
+.ask-fab-wrap[data-side="left"] .ask-fab-label {
+  translate: -8px 0;
 }
 
 .ask-fab:hover .ask-fab-label,
 .ask-fab:focus-visible .ask-fab-label {
   opacity: 1;
-  transform: none;
+  translate: 0 0;
 }
 
 /* Al pasar el mouse, el robot "mira" hacia arriba */
