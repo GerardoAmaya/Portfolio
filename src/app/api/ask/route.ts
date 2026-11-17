@@ -77,6 +77,9 @@ export async function POST(request: Request) {
       model: MODEL,
       max_tokens: MAX_OUTPUT_TOKENS,
       stream: true,
+      // Respuestas cortas y factuales: sin razonamiento extendido, que gastaria
+      // el presupuesto de tokens antes de escribir la respuesta
+      thinking: { type: "disabled" },
       system: [
         { type: "text", text: ASK_SYSTEM },
         // El conocimiento es igual en cada petición: se cachea y las
@@ -99,10 +102,19 @@ export async function POST(request: Request) {
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       try {
+        let wroteText = false;
+        let stopReason: string | null = null;
+        const seen = new Set<string>();
         for await (const event of events) {
+          seen.add(event.type === "content_block_delta" ? `delta:${event.delta.type}` : event.type);
+          if (event.type === "message_delta") stopReason = event.delta.stop_reason;
           if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
+            wroteText = true;
             controller.enqueue(encoder.encode(event.delta.text));
           }
+        }
+        if (!wroteText) {
+          console.error("[ask] respuesta vacia", { stopReason, events: [...seen] });
         }
         controller.close();
       } catch (error) {

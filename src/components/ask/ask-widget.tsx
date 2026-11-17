@@ -199,7 +199,12 @@ export function AskWidget() {
               <RobotIcon className="size-6" thinking={loading} />
             </span>
             <div className="min-w-0">
-              <SheetTitle className="text-base">{t("title")}</SheetTitle>
+              <div className="flex flex-wrap items-center gap-2">
+                <SheetTitle className="text-base">{t("title")}</SheetTitle>
+                <span className="border-primary/30 bg-primary/10 text-primary rounded-full border px-2 py-0.5 text-[11px] leading-none font-medium">
+                  {t("model")}
+                </span>
+              </div>
               <SheetDescription>{t("subtitle")}</SheetDescription>
             </div>
           </div>
