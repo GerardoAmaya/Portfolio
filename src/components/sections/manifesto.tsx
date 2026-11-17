@@ -45,32 +45,19 @@ export function Manifesto() {
     () => {
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        const targets = gsap.utils.toArray<HTMLElement>(".mf-word");
-        const glow = gsap.utils.toArray<HTMLElement>(".mf-word[data-hl]");
-        const timeline = gsap.timeline({
-          scrollTrigger: {
-            trigger: section.current,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 0.6,
-          },
-        });
-        timeline
-          .fromTo(
-            targets,
-            { opacity: 0.12, filter: "blur(2px)" },
-            { opacity: 1, filter: "blur(0px)", stagger: 0.12, ease: "none" }
-          )
-          .fromTo(
-            glow,
-            { textShadow: "0 0 0px transparent" },
-            {
-              textShadow: "0 0 28px color-mix(in oklch, var(--primary) 55%, transparent)",
-              stagger: 0.12,
-              ease: "none",
+        // Solo opacidad: es lo único que el navegador anima sin redibujar el
+        // texto. Blur o text-shadow por palabra en cada cuadro del scroll
+        // obligan a repintar y traban el scroll.
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: section.current,
+              start: "top top",
+              end: "bottom bottom",
+              scrub: 0.6,
             },
-            "<"
-          )
+          })
+          .fromTo(".mf-word", { opacity: 0.12 }, { opacity: 1, stagger: 0.12, ease: "none" })
           .fromTo(".mf-progress", { scaleX: 0 }, { scaleX: 1, ease: "none" }, 0)
           // Pausa: la frase completa queda un momento antes de soltar la sección
           .to({}, { duration: 0.8 });
