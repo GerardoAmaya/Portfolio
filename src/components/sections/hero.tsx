@@ -5,7 +5,6 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { resumeUrl } from "@/lib/site";
 import { CountUp } from "@/components/count-up";
-import { Magnetic } from "@/components/motion/magnetic";
 
 export function Hero() {
   const t = useTranslations("Home");
@@ -47,20 +46,16 @@ export function Hero() {
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
-            <Magnetic>
-              <Button asChild size="lg" className="shine">
-                <Link href="/projects">
-                  {t("ctaProjects")} <ArrowRight />
-                </Link>
-              </Button>
-            </Magnetic>
-            <Magnetic>
-              <Button asChild size="lg" variant="outline">
-                <a href={resumeUrl(locale)} target="_blank" rel="noreferrer">
-                  <Download /> {t("ctaResume")}
-                </a>
-              </Button>
-            </Magnetic>
+            <Button asChild size="lg" className="shine">
+              <Link href="/projects">
+                {t("ctaProjects")} <ArrowRight />
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <a href={resumeUrl(locale)} target="_blank" rel="noreferrer">
+                <Download /> {t("ctaResume")}
+              </a>
+            </Button>
           </div>
         </div>
 
