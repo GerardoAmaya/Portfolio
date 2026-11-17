@@ -153,6 +153,8 @@ export function TechStackTabs({ labels, ariaLabel }: TechStackTabsProps) {
     width: number;
     height: number;
   } | null>(null);
+  // Si las pestañas bajan a más de una fila, la píldora pasa a esquinas normales
+  const [wrapped, setWrapped] = useState(false);
   const items = skills.filter((s) => s.category === active);
 
   // El indicador activo se posiciona midiendo la pestaña, para animarlo con
@@ -170,6 +172,8 @@ export function TechStackTabs({ labels, ariaLabel }: TechStackTabsProps) {
         width: el.offsetWidth,
         height: el.offsetHeight,
       });
+      const tops = CATEGORIES.map((c) => tabRefs.current[c]?.offsetTop ?? 0);
+      setWrapped(Math.max(...tops) - Math.min(...tops) > 2);
     };
 
     update();
@@ -202,7 +206,10 @@ export function TechStackTabs({ labels, ariaLabel }: TechStackTabsProps) {
         ref={listRef}
         role="tablist"
         aria-label={ariaLabel}
-        className="border-border/60 bg-card/40 relative inline-flex max-w-full flex-wrap gap-1 rounded-full border p-1 backdrop-blur"
+        className={cn(
+          "border-border/60 bg-card/40 relative inline-flex max-w-full flex-wrap gap-1 border p-1 backdrop-blur",
+          wrapped ? "rounded-2xl" : "rounded-full"
+        )}
       >
         {pill ? (
           <span
