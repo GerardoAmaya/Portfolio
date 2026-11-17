@@ -105,7 +105,10 @@ export function AskWidget() {
       if (!answer.trim()) throw new Error("generic");
     } catch (error) {
       if (controller.signal.aborted) return;
-      const key = error instanceof Error ? error.message : "generic";
+      // Solo claves conocidas: un error de red ("Failed to fetch") cae en genérico
+      const known = ["rate_limit", "daily_limit", "unavailable"] as const;
+      const message = error instanceof Error ? error.message : "";
+      const key = known.find((k) => k === message) ?? "generic";
       setMessages((prev) => {
         const base =
           prev[prev.length - 1]?.role === "assistant" && !prev[prev.length - 1]?.content

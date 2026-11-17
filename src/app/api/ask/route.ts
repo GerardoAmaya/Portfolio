@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import type { RawMessageStreamEvent } from "@anthropic-ai/sdk/resources/messages";
 import { ASK_CONTEXT, ASK_SYSTEM } from "@/lib/ask/context";
 import { checkRateLimit } from "@/lib/ask/rate-limit";
 
@@ -67,32 +68,45 @@ export async function POST(request: Request) {
   const client = new Anthropic({ apiKey });
   const language = parsed.locale === "en" ? "English" : "Spanish";
 
+  // Se espera la respuesta HTTP antes de devolver nada: si Anthropic rechaza la
+  // petición (clave, parámetros, sobrecarga) el visitante recibe un error
+  // limpio en vez de un stream cortado a la mitad
+  let events: AsyncIterable<RawMessageStreamEvent>;
+  try {
+    events = await client.messages.create({
+      model: MODEL,
+      max_tokens: MAX_OUTPUT_TOKENS,
+      stream: true,
+      system: [
+        { type: "text", text: ASK_SYSTEM },
+        // El conocimiento es igual en cada petición: se cachea y las
+        // siguientes preguntas lo pagan a una fracción del precio
+        {
+          type: "text",
+          text: `<knowledge>\n${ASK_CONTEXT}\n</knowledge>`,
+          cache_control: { type: "ephemeral" },
+        },
+        { type: "text", text: `Reply in ${language}.` },
+      ],
+      messages: parsed.turns,
+    });
+  } catch (error) {
+    console.error("[ask] error", error instanceof Error ? error.message : error);
+    return json(502, { error: "unavailable" });
+  }
+
   const encoder = new TextEncoder();
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       try {
-        const response = client.messages.stream({
-          model: MODEL,
-          max_tokens: MAX_OUTPUT_TOKENS,
-          temperature: 0.3,
-          system: [
-            { type: "text", text: ASK_SYSTEM },
-            // El conocimiento es igual en cada petición: se cachea y las
-            // siguientes preguntas lo pagan a una fracción del precio
-            {
-              type: "text",
-              text: `<knowledge>\n${ASK_CONTEXT}\n</knowledge>`,
-              cache_control: { type: "ephemeral" },
-            },
-            { type: "text", text: `Reply in ${language}.` },
-          ],
-          messages: parsed.turns,
-        });
-        response.on("text", (delta) => controller.enqueue(encoder.encode(delta)));
-        await response.finalMessage();
+        for await (const event of events) {
+          if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
+            controller.enqueue(encoder.encode(event.delta.text));
+          }
+        }
         controller.close();
       } catch (error) {
-        console.error("[ask] error", error instanceof Error ? error.message : error);
+        console.error("[ask] stream error", error instanceof Error ? error.message : error);
         controller.error(error);
       }
     },
