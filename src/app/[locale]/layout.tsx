@@ -6,6 +6,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Providers } from "@/components/providers";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { AskWidget } from "@/components/ask/ask-widget";
 import { PersonJsonLd } from "@/components/json-ld";
 import { routing, type Locale } from "@/i18n/routing";
 import { site } from "@/lib/site";
@@ -125,6 +126,7 @@ export default async function LocaleLayout({
               {children}
             </main>
             <Footer />
+            <AskWidget />
           </Providers>
         </NextIntlClientProvider>
       </body>

@@ -141,5 +141,39 @@
     "title": "Página no encontrada",
     "description": "La página que buscas no existe o cambió de dirección.",
     "backHome": "Volver al inicio"
+  },
+  "Ask": {
+    "button": "Pregúntale a mi IA",
+    "badge": "IA",
+    "title": "Asistente de Gerardo",
+    "subtitle": "Pregúntame sobre su experiencia, proyectos y stack.",
+    "disclaimer": "Respuestas generadas con IA a partir del contenido de este sitio. Pueden contener errores.",
+    "placeholder": "Escribe tu pregunta…",
+    "send": "Enviar",
+    "teaser": "¿Tienes preguntas sobre mi experiencia? Pregúntale a mi IA.",
+    "dismiss": "Cerrar aviso",
+    "thinking": "Pensando…",
+    "suggestionsTitle": "Prueba con",
+    "suggestions": [
+      "¿Qué stack domina?",
+      "¿Ha trabajado con IA?",
+      "¿Tiene experiencia con pasarelas de pago?",
+      "¿Qué certificaciones tiene?"
+    ],
+    "errors": {
+      "rate_limit": "Hiciste muchas preguntas seguidas. Intenta de nuevo en un rato o escríbele directamente.",
+      "daily_limit": "El asistente alcanzó su límite de hoy. Puedes escribirle a Gerardo directamente.",
+      "unavailable": "El asistente no está disponible en este momento.",
+      "generic": "No pude responder ahora. Intenta de nuevo o usa el formulario de contacto."
+    },
+    "contactCta": "Ir a contacto",
+    "clear": "Nueva conversación",
+    "refs": {
+      "about": "Sobre mí",
+      "experience": "Experiencia",
+      "projects": "Proyectos",
+      "contact": "Contacto",
+      "cv": "CV"
+    }
   }
 }

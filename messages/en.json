@@ -141,5 +141,39 @@
     "title": "Page not found",
     "description": "The page you're looking for doesn't exist or has moved.",
     "backHome": "Back to home"
+  },
+  "Ask": {
+    "button": "Ask my AI",
+    "badge": "AI",
+    "title": "Gerardo's assistant",
+    "subtitle": "Ask me about his experience, projects and stack.",
+    "disclaimer": "AI-generated answers based on this website's content. They may contain mistakes.",
+    "placeholder": "Type your question…",
+    "send": "Send",
+    "teaser": "Questions about my experience? Ask my AI.",
+    "dismiss": "Dismiss",
+    "thinking": "Thinking…",
+    "suggestionsTitle": "Try asking",
+    "suggestions": [
+      "What is his main stack?",
+      "Has he worked with AI?",
+      "Does he have payment gateway experience?",
+      "Which certifications does he hold?"
+    ],
+    "errors": {
+      "rate_limit": "You asked a lot of questions in a row. Try again later or write to him directly.",
+      "daily_limit": "The assistant reached today's limit. You can write to Gerardo directly.",
+      "unavailable": "The assistant is not available right now.",
+      "generic": "I couldn't answer right now. Try again or use the contact form."
+    },
+    "contactCta": "Go to contact",
+    "clear": "New conversation",
+    "refs": {
+      "about": "About",
+      "experience": "Experience",
+      "projects": "Projects",
+      "contact": "Contact",
+      "cv": "Resume"
+    }
   }
 }

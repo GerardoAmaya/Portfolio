@@ -442,6 +442,101 @@ html.filter-transition::view-transition-new(root) {
   }
 }
 
+/* ------------------------------------------------------------------ */
+/* Asistente "Pregúntale a mi IA" (components/ask)                    */
+/* ------------------------------------------------------------------ */
+
+/* Robot: ojos que parpadean, antena que brilla y puntos al "pensar" */
+.robot-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: robot-blink 4.6s ease-in-out infinite;
+}
+
+.robot-eyes {
+  transition: transform 0.3s ease;
+}
+
+.robot-antenna {
+  animation: robot-antenna 2.4s ease-in-out infinite;
+}
+
+.robot-dot {
+  transform-box: fill-box;
+  animation: robot-dot 0.9s ease-in-out infinite;
+}
+
+/* Botón: anillo que "respira" y etiqueta que aparece al pasar el mouse */
+.ask-fab-ring {
+  animation: ask-ring 2.8s ease-out infinite;
+}
+
+.ask-fab-label {
+  opacity: 0;
+  transform: translateX(8px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.ask-fab:hover .ask-fab-label,
+.ask-fab:focus-visible .ask-fab-label {
+  opacity: 1;
+  transform: none;
+}
+
+/* Al pasar el mouse, el robot "mira" hacia arriba */
+.ask-fab:hover .robot-eyes {
+  transform: translateY(-1.2px);
+}
+
+.ask-teaser {
+  animation: enter-sm 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes robot-blink {
+  0%,
+  90%,
+  100% {
+    transform: scaleY(1);
+  }
+  94% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes robot-antenna {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes robot-dot {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1.6px);
+  }
+}
+
+@keyframes ask-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  70%,
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
 /* Respeta a quien pide menos movimiento */
 @media (prefers-reduced-motion: reduce) {
   .animate-enter,
@@ -454,6 +549,14 @@ html.filter-transition::view-transition-new(root) {
   .timeline-dot,
   .timeline::after {
     transition: none;
+  }
+
+  .robot-eye,
+  .robot-antenna,
+  .robot-dot,
+  .ask-fab-ring,
+  .ask-teaser {
+    animation: none;
   }
 
   html {
