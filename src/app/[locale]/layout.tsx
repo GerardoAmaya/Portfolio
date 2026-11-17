@@ -26,6 +26,8 @@ const geistMono = Geist_Mono({
 });
 
 export const viewport: Viewport = {
+  // Con el teclado abierto el layout se encoge en vez de taparse (chat del asistente)
+  interactiveWidget: "resizes-content",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#0b0a0f" },

@@ -30,6 +30,12 @@ export function AskWidget() {
   const [loading, setLoading] = React.useState(false);
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
+
+  // Solo se enfoca el campo con mouse/trackpad: en pantallas tactiles abriria
+  // el teclado de golpe, tapando la animacion y las preguntas sugeridas
+  const focusInput = React.useCallback(() => {
+    if (window.matchMedia("(pointer: fine)").matches) inputRef.current?.focus();
+  }, []);
   const abortRef = React.useRef<AbortController | null>(null);
 
   // Burbuja de bienvenida: una vez por sesión, a los 6 s, y se va sola
@@ -121,7 +127,7 @@ export function AskWidget() {
       });
     } finally {
       setLoading(false);
-      requestAnimationFrame(() => inputRef.current?.focus());
+      requestAnimationFrame(focusInput);
     }
   }
 
@@ -129,7 +135,7 @@ export function AskWidget() {
     abortRef.current?.abort();
     setMessages([]);
     setLoading(false);
-    inputRef.current?.focus();
+    focusInput();
   }
 
   const waiting = loading && messages[messages.length - 1]?.role === "user";
@@ -188,10 +194,10 @@ export function AskWidget() {
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent
           side="right"
-          className="flex w-full flex-col gap-0 p-0 sm:max-w-md"
+          className="flex h-dvh w-full flex-col gap-0 p-0 sm:max-w-md"
           onOpenAutoFocus={(e) => {
             e.preventDefault();
-            inputRef.current?.focus();
+            focusInput();
           }}
         >
           <div className="border-border/60 flex items-start gap-3 border-b p-5 pr-12">
