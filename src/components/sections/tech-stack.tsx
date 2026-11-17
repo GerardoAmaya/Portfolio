@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { TechStackTabs } from "@/components/sections/tech-stack-tabs";
+import { Rise } from "@/components/motion/rise";
 
 // Sección de stack técnico para la página de inicio
 export function TechStack() {
@@ -10,7 +11,7 @@ export function TechStack() {
     <section className="border-border/60 bg-background border-t py-20 md:py-28">
       <div className="container-app">
         <h2 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-          {t("stackTitle")}
+          <Rise>{t("stackTitle")}</Rise>
         </h2>
         <p className="text-muted-foreground mt-3 max-w-2xl">{t("stackSubtitle")}</p>
 

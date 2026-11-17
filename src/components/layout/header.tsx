@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Menu } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { ScrambleText } from "@/components/motion/scramble-text";
 import { Link, usePathname } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -86,8 +87,8 @@ export function Header() {
       />
       <div className="container-app flex h-16 items-center justify-between gap-4">
         <Link href="/" className="font-mono text-base font-semibold tracking-tight">
-          <span className="text-primary">{">"}</span> gerardo
-          <span className="text-muted-foreground">.dev</span>
+          <span className="text-primary">{">"}</span> <ScrambleText text="gerardo" />
+          <ScrambleText text=".dev" className="text-muted-foreground" />
         </Link>
 
         <nav

@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { site } from "@/lib/site";
+import { Rise } from "@/components/motion/rise";
 
 export function CtaSection() {
   const t = useTranslations("Contact");
@@ -20,7 +21,7 @@ export function CtaSection() {
             aria-hidden
           />
           <h2 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl md:text-5xl">
-            {t("title")}
+            <Rise>{t("title")}</Rise>
           </h2>
           <p className="text-muted-foreground mx-auto mt-4 max-w-xl text-pretty">{t("subtitle")}</p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">

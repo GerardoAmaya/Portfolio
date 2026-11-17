@@ -7,6 +7,7 @@ import { useFormatter, useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { certifications, credlyProfileUrl, type Certification } from "@/data/certifications";
 import { cn } from "@/lib/utils";
+import { Rise } from "@/components/motion/rise";
 
 /** Logo del emisor; los que no estén mapeados caen en un icono genérico */
 const ISSUER_ICON: Record<
@@ -145,7 +146,7 @@ export function Certifications({ variant = "full", className }: CertificationsPr
               {t("eyebrow")}
             </p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-              {t("title")}
+              <Rise>{t("title")}</Rise>
             </h2>
             <p className="text-muted-foreground mt-3 max-w-2xl">
               {t("subtitle", {

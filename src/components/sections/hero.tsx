@@ -48,7 +48,7 @@ export function Hero() {
 
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
             <Magnetic>
-              <Button asChild size="lg">
+              <Button asChild size="lg" className="shine">
                 <Link href="/projects">
                   {t("ctaProjects")} <ArrowRight />
                 </Link>

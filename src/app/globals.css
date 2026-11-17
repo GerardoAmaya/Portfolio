@@ -555,7 +555,8 @@ html.filter-transition::view-transition-new(root) {
   }
 
   .word-in,
-  .gradient-flow {
+  .gradient-flow,
+  .shine::after {
     animation: none;
   }
 
@@ -656,4 +657,58 @@ html.nav-morph::view-transition-new(project-title) {
 /* La página nueva no repite su propia entrada: ya llega con el morph */
 html.nav-morph .page-enter {
   animation-duration: 0s;
+}
+
+/* ------------------------------------------------------------------ */
+/* Títulos que suben al entrar (components/motion/rise)                */
+/* Solo transform: corre en la GPU y se ejecuta una vez por título     */
+/* ------------------------------------------------------------------ */
+
+.rise {
+  display: block;
+  /* Máscara: recorta lo que está por debajo, con margen para g, y, p */
+  clip-path: inset(-0.1em -0.1em -0.25em -0.1em);
+}
+
+.rise-inner {
+  display: inline-block;
+}
+
+.rise-pending .rise-inner {
+  transform: translateY(110%);
+}
+
+.rise-in .rise-inner {
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ------------------------------------------------------------------ */
+/* Destello que cruza el botón principal del hero                      */
+/* Un pseudo-elemento movido con transform cada pocos segundos         */
+/* ------------------------------------------------------------------ */
+
+.shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 30%, oklch(1 0 0 / 0.35) 50%, transparent 70%);
+  transform: translateX(-120%);
+  animation: shine 5s cubic-bezier(0.4, 0, 0.2, 1) 1.5s infinite;
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-120%);
+  }
+  30%,
+  100% {
+    transform: translateX(120%);
+  }
 }

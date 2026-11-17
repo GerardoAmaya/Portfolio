@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { SpotlightGroup } from "@/components/spotlight";
+import { Rise } from "@/components/motion/rise";
 import { ProjectCardLink } from "@/components/motion/project-morph";
 import { projects } from "@/data/projects";
 import type { Locale } from "@/i18n/routing";
@@ -19,7 +20,7 @@ export function FeaturedProjects() {
         <div className="flex items-end justify-between gap-4">
           <div>
             <h2 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-              {t("title")}
+              <Rise>{t("title")}</Rise>
             </h2>
             <p className="text-muted-foreground mt-3 max-w-2xl">{t("subtitle")}</p>
           </div>

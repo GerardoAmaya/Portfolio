@@ -2,6 +2,7 @@ import { Brain, Code2, Database, Rocket } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SpotlightGroup } from "@/components/spotlight";
+import { Rise } from "@/components/motion/rise";
 
 export function Highlights() {
   const t = useTranslations("Home");
@@ -33,7 +34,7 @@ export function Highlights() {
     <section className="border-border/60 bg-background border-t py-20 md:py-28">
       <div className="container-app">
         <h2 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-          {t("highlightsTitle")}
+          <Rise>{t("highlightsTitle")}</Rise>
         </h2>
 
         <SpotlightGroup className="reveal-children mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
