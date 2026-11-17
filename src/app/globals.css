@@ -657,21 +657,3 @@ html.nav-morph::view-transition-new(project-title) {
 html.nav-morph .page-enter {
   animation-duration: 0s;
 }
-
-/* ------------------------------------------------------------------ */
-/* Manifiesto (components/sections/manifesto): GSAP solo anima opacity  */
-/* ------------------------------------------------------------------ */
-
-.mf-word {
-  /* Capa propia: el cambio de opacidad lo compone la GPU sin repintar */
-  will-change: opacity;
-}
-
-/* Brillo fijo en las palabras clave; se "enciende" junto con su opacidad */
-.mf-word[data-hl] {
-  text-shadow: 0 0 28px color-mix(in oklch, var(--primary) 45%, transparent);
-}
-
-.mf-progress {
-  will-change: transform;
-}
