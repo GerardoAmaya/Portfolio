@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { site } from "@/lib/site";
+import { CountUp } from "@/components/count-up";
 
 export function Hero() {
   const t = useTranslations("Home");
@@ -77,7 +78,7 @@ function Stat({ label, value, small }: { label: string; value: string; small?: b
           small ? "text-foreground text-sm font-medium" : "text-foreground text-2xl font-semibold"
         }
       >
-        {value}
+        <CountUp value={value} />
       </p>
       <p className="text-muted-foreground mt-1 text-xs tracking-wide uppercase">{label}</p>
     </div>

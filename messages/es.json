@@ -16,7 +16,10 @@
     "closeMenu": "Cerrar menú",
     "toggleTheme": "Cambiar tema",
     "switchLanguage": "Cambiar idioma",
-    "skipToContent": "Saltar al contenido"
+    "skipToContent": "Saltar al contenido",
+    "themeLight": "Claro",
+    "themeDark": "Oscuro",
+    "themeSystem": "Sistema"
   },
   "Home": {
     "eyebrow": "Disponible para nuevos proyectos",
@@ -88,7 +91,15 @@
     "role": "Rol",
     "year": "Año",
     "backToProjects": "Volver a proyectos",
-    "notFound": "Proyecto no encontrado"
+    "notFound": "Proyecto no encontrado",
+    "filterLabel": "Filtrar por tipo",
+    "filterAll": "Todos",
+    "categories": {
+      "ai": "IA aplicada",
+      "fullstack": "Full stack",
+      "backend": "Backend y APIs",
+      "frontend": "Frontend"
+    }
   },
   "Experience": {
     "title": "Experiencia",

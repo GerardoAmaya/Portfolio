@@ -34,6 +34,42 @@ export function Header() {
 
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
+  // Indicador del menú: una pastilla que se desliza al ítem bajo el mouse y
+  // vuelve al de la página actual. Se mueve por DOM para no re-renderizar.
+  const navRef = React.useRef<HTMLElement>(null);
+  const pillRef = React.useRef<HTMLSpanElement>(null);
+  const placed = React.useRef(false);
+
+  const moveTo = React.useCallback((el: HTMLElement | null | undefined) => {
+    const pill = pillRef.current;
+    if (!pill) return;
+    if (!el) {
+      pill.style.opacity = "0";
+      return;
+    }
+    // La primera vez aparece en su lugar, sin deslizarse desde la izquierda
+    pill.style.transitionDuration = placed.current ? "" : "0s";
+    pill.style.width = `${el.offsetWidth}px`;
+    pill.style.transform = `translateX(${el.offsetLeft}px)`;
+    pill.style.opacity = "1";
+    placed.current = true;
+  }, []);
+
+  const activeLink = React.useCallback(
+    () => navRef.current?.querySelector<HTMLElement>('a[aria-current="page"]'),
+    []
+  );
+
+  React.useEffect(() => {
+    moveTo(activeLink());
+    const onResize = () => {
+      placed.current = false;
+      moveTo(activeLink());
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [pathname, moveTo, activeLink]);
+
   return (
     <header
       className={cn(
@@ -53,14 +89,29 @@ export function Header() {
           <span className="text-muted-foreground">.dev</span>
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
+        <nav
+          ref={navRef}
+          className="relative hidden items-center gap-1 md:flex"
+          aria-label="Primary"
+          onMouseLeave={() => moveTo(activeLink())}
+          onBlur={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget as Node | null)) moveTo(activeLink());
+          }}
+        >
+          <span
+            ref={pillRef}
+            aria-hidden
+            className="nav-pill bg-accent pointer-events-none absolute inset-y-0 left-0 rounded-md opacity-0"
+          />
           {NAV_KEYS.map((key) => (
             <Link
               key={key}
               href={HREFS[key]}
               aria-current={isActive(HREFS[key]) ? "page" : undefined}
+              onMouseEnter={(e) => moveTo(e.currentTarget)}
+              onFocus={(e) => moveTo(e.currentTarget)}
               className={cn(
-                "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                "relative rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 isActive(HREFS[key])
                   ? "text-foreground"
                   : "text-muted-foreground hover:text-foreground"

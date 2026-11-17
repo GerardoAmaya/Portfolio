@@ -1,7 +1,13 @@
 import type { Locale } from "@/i18n/routing";
 
+/** Tipo de proyecto, para los filtros de /projects. Un proyecto puede tener varios. */
+export type ProjectCategory = "ai" | "fullstack" | "backend" | "frontend";
+
+export const PROJECT_CATEGORIES: ProjectCategory[] = ["ai", "fullstack", "backend", "frontend"];
+
 export type Project = {
   slug: string;
+  categories: ProjectCategory[];
   year: string;
   /** Fecha ISO del último cambio real al caso de estudio; alimenta el sitemap */
   updatedAt: string;
@@ -27,6 +33,7 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: "smart-report-ia",
+    categories: ["ai", "fullstack"],
     year: "2026",
     updatedAt: "2026-09-15",
     cover: "/projects/smart-report-ia.jpg",
@@ -73,6 +80,7 @@ export const projects: Project[] = [
   },
   {
     slug: "waypoint",
+    categories: ["ai", "fullstack"],
     year: "2026",
     updatedAt: "2026-09-15",
     cover: "/projects/waypoint-cover.jpg",
@@ -119,6 +127,7 @@ export const projects: Project[] = [
   },
   {
     slug: "docu-flow",
+    categories: ["ai", "fullstack"],
     updatedAt: "2026-09-08",
     year: "2026",
     cover: "/projects/docu-flow.jpg",
@@ -163,6 +172,7 @@ export const projects: Project[] = [
   },
   {
     slug: "real-estate-lead-management",
+    categories: ["fullstack"],
     updatedAt: "2026-09-08",
     year: "2026",
     cover: "/projects/real-estate-lead-management.jpg",
@@ -198,6 +208,7 @@ export const projects: Project[] = [
   },
   {
     slug: "nestjs-ai-pentest-skill",
+    categories: ["ai", "backend"],
     updatedAt: "2026-04-29",
     year: "2026",
     cover: "/projects/nestjs-ai-pentest-skill.png",
@@ -233,6 +244,7 @@ export const projects: Project[] = [
   },
   {
     slug: "travel-quote-api",
+    categories: ["backend"],
     updatedAt: "2026-04-29",
     year: "2025",
     cover: "/projects/travel-quote-api.png",
@@ -268,6 +280,7 @@ export const projects: Project[] = [
   },
   {
     slug: "safe-on-sivar",
+    categories: ["fullstack"],
     updatedAt: "2026-04-29",
     year: "2024",
     cover: "/projects/SafeOnSivar.jpg",
@@ -302,6 +315,7 @@ export const projects: Project[] = [
   },
   {
     slug: "flask-shop-api",
+    categories: ["backend"],
     updatedAt: "2026-04-29",
     year: "2024",
     cover: "/projects/flask-shop-api.png",
@@ -337,6 +351,7 @@ export const projects: Project[] = [
   },
   {
     slug: "pokeapi",
+    categories: ["frontend"],
     updatedAt: "2026-04-29",
     year: "2023",
     cover: "/projects/PokeAPI.jpg",
@@ -369,6 +384,7 @@ export const projects: Project[] = [
   },
   {
     slug: "django-company-api",
+    categories: ["backend"],
     updatedAt: "2026-04-29",
     year: "2024",
     cover: "/projects/django-company-api.png",

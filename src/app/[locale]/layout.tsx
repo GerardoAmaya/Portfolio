@@ -104,8 +104,10 @@ export default async function LocaleLayout({
 
   const t = await getTranslations({ locale, namespace: "Nav" });
 
+  // data-scroll-behavior: Next desactiva el scroll suave mientras navega. Sin
+  // esto, la página nueva queda ~75px más abajo (debajo del header sticky).
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} data-scroll-behavior="smooth" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} flex min-h-dvh flex-col font-sans`}
       >

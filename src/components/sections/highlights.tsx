@@ -1,6 +1,7 @@
 import { Brain, Code2, Database, Rocket } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { SpotlightGroup } from "@/components/spotlight";
 
 export function Highlights() {
   const t = useTranslations("Home");
@@ -35,11 +36,12 @@ export function Highlights() {
           {t("highlightsTitle")}
         </h2>
 
-        <div className="reveal-children mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <SpotlightGroup className="reveal-children mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {items.map(({ icon: Icon, title, desc }) => (
             <Card
               key={title}
-              className="group border-border/60 bg-card/40 hover:border-primary/40 relative overflow-hidden backdrop-blur transition-colors"
+              data-spotlight
+              className="spotlight group border-border/60 bg-card/40 relative overflow-hidden backdrop-blur"
             >
               <CardHeader>
                 <div className="bg-primary/10 text-primary flex size-11 items-center justify-center rounded-lg">
@@ -52,7 +54,7 @@ export function Highlights() {
               </CardContent>
             </Card>
           ))}
-        </div>
+        </SpotlightGroup>
       </div>
     </section>
   );

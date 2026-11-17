@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Briefcase, GraduationCap } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHeader } from "@/components/page-header";
+import { Timeline } from "@/components/timeline";
 import { Certifications } from "@/components/sections/certifications";
 import { education, experiences } from "@/data/experience";
 import { pageMetadata } from "@/lib/metadata";
@@ -38,13 +39,13 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
           <h2 className="text-2xl font-semibold tracking-tight">{t("workTitle")}</h2>
         </div>
 
-        <ol className="reveal-children border-border/60 relative space-y-6 border-l pl-6">
+        <Timeline>
           {experiences.map((e) => {
             const i18n = e.i18n[locale];
             const range = `${e.startDate} — ${e.endDate ?? t("present")}`;
             return (
               <li key={e.id} className="relative">
-                <span className="border-background bg-primary absolute top-1.5 -left-[31px] size-3 rounded-full border-2" />
+                <span className="timeline-dot border-background bg-primary absolute top-1.5 -left-[31px] size-3 rounded-full border-2" />
                 <div className="border-border/60 bg-card/40 rounded-xl border p-5 backdrop-blur">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <h3 className="font-semibold">{i18n.role}</h3>
@@ -58,7 +59,7 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
               </li>
             );
           })}
-        </ol>
+        </Timeline>
       </section>
 
       <section className="container-app pb-16">
@@ -67,13 +68,13 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
           <h2 className="text-2xl font-semibold tracking-tight">{t("educationTitle")}</h2>
         </div>
 
-        <ol className="reveal-children border-border/60 relative space-y-6 border-l pl-6">
+        <Timeline>
           {education.map((ed) => {
             const i18n = ed.i18n[locale];
             const range = `${ed.startDate} — ${ed.endDate}`;
             return (
               <li key={ed.id} className="relative">
-                <span className="border-background bg-primary absolute top-1.5 -left-[31px] size-3 rounded-full border-2" />
+                <span className="timeline-dot border-background bg-primary absolute top-1.5 -left-[31px] size-3 rounded-full border-2" />
                 <div className="border-border/60 bg-card/40 rounded-xl border p-5 backdrop-blur">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <h3 className="font-semibold">{i18n.degree}</h3>
@@ -89,7 +90,7 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
               </li>
             );
           })}
-        </ol>
+        </Timeline>
       </section>
 
       <Certifications variant="compact" className="container-app pb-24" />

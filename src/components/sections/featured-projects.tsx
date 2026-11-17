@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
+import { SpotlightGroup } from "@/components/spotlight";
 import { projects } from "@/data/projects";
 import type { Locale } from "@/i18n/routing";
 
@@ -29,14 +30,15 @@ export function FeaturedProjects() {
           </Link>
         </div>
 
-        <div className="reveal-children mt-10 grid gap-6 md:grid-cols-2">
+        <SpotlightGroup className="reveal-children mt-10 grid gap-6 md:grid-cols-2">
           {featured.map((p) => {
             const i18n = p.i18n[locale];
             return (
               <Link
                 key={p.slug}
                 href={`/projects/${p.slug}`}
-                className="group border-border/60 bg-card/40 hover:border-primary/40 relative flex flex-col overflow-hidden rounded-xl border transition-all hover:shadow-lg"
+                data-spotlight
+                className="spotlight group border-border/60 bg-card/40 relative flex flex-col overflow-hidden rounded-xl border transition-shadow hover:shadow-lg"
               >
                 <div className="bg-muted relative aspect-video w-full overflow-hidden">
                   <Image
@@ -64,7 +66,7 @@ export function FeaturedProjects() {
               </Link>
             );
           })}
-        </div>
+        </SpotlightGroup>
       </div>
     </section>
   );

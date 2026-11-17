@@ -116,7 +116,10 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1,
+      "ss01" 1;
   }
 
   ::selection {
@@ -124,7 +127,7 @@
   }
 
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-ring;
+    @apply outline-ring outline-2 outline-offset-2;
   }
 }
 
@@ -138,7 +141,7 @@
   }
 
   .gradient-text {
-    @apply bg-gradient-to-br from-foreground via-foreground to-primary bg-clip-text text-transparent;
+    @apply from-foreground via-foreground to-primary bg-gradient-to-br bg-clip-text text-transparent;
   }
 
   .grid-bg {
@@ -245,11 +248,212 @@
   }
 }
 
+/* ------------------------------------------------------------------ */
+/* Cambio de tema: círculo que se expande desde el botón (lib/circle-transition) */
+/* ------------------------------------------------------------------ */
+
+/* Solo durante el cambio de tema: sin el fundido por defecto, para que el
+   clip-path circular sea la única animación. Las navegaciones no se tocan. */
+html.circle-transition::view-transition-old(root),
+html.circle-transition::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+html.circle-transition::view-transition-new(root) {
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------------ */
+/* Transición entre páginas (app/[locale]/template.tsx)               */
+/* ------------------------------------------------------------------ */
+
+.page-enter {
+  animation: page-enter 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Cambio de idioma: fundido del contenido (layout/language-switcher) */
+/* ------------------------------------------------------------------ */
+
+main,
+footer {
+  transition:
+    opacity 0.18s ease,
+    filter 0.18s ease;
+}
+
+html.locale-fading main,
+html.locale-fading footer {
+  opacity: 0;
+  filter: blur(3px);
+}
+
+/* Mientras está oculto no corre la entrada; al quitar la clase arranca y hace
+   el fundido de vuelta (opacidad + leve subida). */
+html.locale-fading .page-enter,
+html.locale-fading .animate-enter,
+html.locale-fading .animate-enter-sm {
+  animation: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Línea de tiempo que se dibuja con el scroll (components/timeline)  */
+/* ------------------------------------------------------------------ */
+
+/* Riel gris de fondo */
+.timeline::before,
+.timeline::after {
+  content: "";
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  pointer-events: none;
+}
+
+.timeline::before {
+  background: var(--border);
+}
+
+/* Trazo de color. Sin JS --timeline-progress no existe y se ve completo */
+.timeline::after {
+  left: -0.5px;
+  width: 2px;
+  border-radius: 9999px;
+  background: linear-gradient(to bottom, var(--primary), oklch(from var(--primary) l c h / 0.35));
+  transform-origin: top;
+  transform: scaleY(var(--timeline-progress, 1));
+  transition: transform 0.15s linear;
+}
+
+.timeline-dot {
+  z-index: 1;
+  transition:
+    background-color 0.35s ease,
+    box-shadow 0.35s ease,
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.timeline[data-animated] > li:not([data-reached]) .timeline-dot {
+  background-color: var(--muted);
+  box-shadow: 0 0 0 1px var(--border);
+  transform: scale(0.85);
+}
+
+.timeline[data-animated] > li[data-reached] .timeline-dot {
+  box-shadow: 0 0 0 4px oklch(from var(--primary) l c h / 0.18);
+}
+
+/* ------------------------------------------------------------------ */
+/* Proyectos filtrables (sections/projects-explorer)                  */
+/* ------------------------------------------------------------------ */
+
+html.filter-transition::view-transition-group(*) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* El resto de la página no hace fundido: solo se mueven los proyectos */
+html.filter-transition::view-transition-old(root),
+html.filter-transition::view-transition-new(root) {
+  animation: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Indicador deslizante del menú (layout/header)                      */
+/* ------------------------------------------------------------------ */
+
+.nav-pill {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease;
+}
+
+/* ------------------------------------------------------------------ */
+/* Spotlight: brillo que sigue al cursor en las tarjetas (spotlight)  */
+/* ------------------------------------------------------------------ */
+
+.spotlight {
+  isolation: isolate;
+  transition: border-color 0.3s ease;
+}
+
+/* Halo de fondo */
+.spotlight::before,
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.spotlight::before {
+  z-index: -1;
+  background: radial-gradient(
+    320px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    oklch(from var(--primary) l c h / 0.12),
+    transparent 65%
+  );
+}
+
+/* Borde de color que se ilumina cerca del cursor */
+.spotlight::after {
+  padding: 1px;
+  background: radial-gradient(
+    220px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    oklch(from var(--primary) l c h / 0.7),
+    transparent 70%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .spotlight:hover::before,
+  .spotlight:hover::after {
+    opacity: 1;
+  }
+}
+
+/* En pantallas táctiles queda el realce de borde de siempre */
+@media (hover: none) {
+  .spotlight:active {
+    border-color: oklch(from var(--primary) l c h / 0.5);
+  }
+}
+
 /* Respeta a quien pide menos movimiento */
 @media (prefers-reduced-motion: reduce) {
   .animate-enter,
-  .animate-enter-sm {
+  .animate-enter-sm,
+  .page-enter {
     animation: none;
+  }
+
+  .nav-pill,
+  .timeline-dot,
+  .timeline::after {
+    transition: none;
   }
 
   html {
