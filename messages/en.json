@@ -1,7 +1,7 @@
 {
   "Metadata": {
-    "siteName": "Gerardo Amaya — Fullstack Developer",
-    "defaultTitle": "Gerardo Amaya — Fullstack Developer",
+    "siteName": "Gerardo Amaya · Fullstack Developer",
+    "defaultTitle": "Gerardo Amaya · Fullstack Developer",
     "titleTemplate": "%s · Gerardo Amaya",
     "description": "Fullstack developer with experience in Node, Nest.js, PHP, Laravel, Python, React, Next.js and Angular. I build solid, accessible, well-tested web applications and integrate LLMs in an auditable way."
   },

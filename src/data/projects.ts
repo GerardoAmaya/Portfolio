@@ -55,26 +55,26 @@ export const projects: Project[] = [
       es: {
         title: "Smart Report IA",
         tagline:
-          "Reportes ciudadanos de la vía pública en El Salvador: se reporta por Telegram en menos de un minuto y quien despacha ve los reportes repetidos agrupados, con la evidencia a la vista — Python · FastAPI · PostgreSQL + PostGIS · Claude AI · Next.js.",
+          "Reportes ciudadanos de la vía pública en El Salvador: se reporta por Telegram en menos de un minuto y quien despacha ve los reportes repetidos agrupados, con la evidencia a la vista.",
         role: "Fullstack Developer · AI Engineering",
         problem:
           "Hay dos personas con necesidades opuestas. Quien reporta está parado frente al hueco, con prisa, y no va a instalar una app. Quien despacha mira el sistema ocho horas y su problema no es recibir reportes, sino saber cuáles son el mismo: cuatro fotos del mismo hueco son cuatro órdenes de trabajo para una sola cuadrilla. Y casi nadie construye la parte que sostiene todo lo demás, el aviso de vuelta, sin el cual nadie reporta una segunda vez.",
         solution:
-          "El principio es que el modelo propone, el código decide, y lo que no se puede sostener se informa. Claude Haiku 4.5 mira la foto y propone categoría y urgencia con salida por esquema, y el bot pide confirmación antes de aceptarla: clasificar en silencio y equivocarse manda una cuadrilla de agua a arreglar una luminaria. La agrupación no la decide el modelo sino código con umbrales medidos —distancia con PostGIS, huella perceptual de la imagen y semejanza textual—, muestra su evidencia y se puede deshacer, y el umbral se calibra contra el error grave (juntar dos problemas distintos esconde uno) y no contra el promedio. Lo que queda en el límite se marca como dudoso, con el motivo, esperando a una persona. La ubicación se pide con el botón nativo de Telegram porque la compresión de la plataforma borra los metadatos de la foto. Sin Redis y sin bus de mensajes: la cola es una tabla con FOR UPDATE SKIP LOCKED y el tablero se actualiza por SSE sobre LISTEN/NOTIFY de Postgres.",
+          "El principio es que el modelo propone, el código decide, y lo que no se puede sostener se informa. Claude Haiku 4.5 mira la foto y propone categoría y urgencia con salida por esquema, y el bot pide confirmación antes de aceptarla: clasificar en silencio y equivocarse manda una cuadrilla de agua a arreglar una luminaria. La agrupación no la decide el modelo sino código con umbrales medidos (distancia con PostGIS, huella perceptual de la imagen y semejanza textual), muestra su evidencia y se puede deshacer, y el umbral se calibra contra el error grave (juntar dos problemas distintos esconde uno) y no contra el promedio. Lo que queda en el límite se marca como dudoso, con el motivo, esperando a una persona. La ubicación se pide con el botón nativo de Telegram porque la compresión de la plataforma borra los metadatos de la foto. Sin Redis y sin bus de mensajes: la cola es una tabla con FOR UPDATE SKIP LOCKED y el tablero se actualiza por SSE sobre LISTEN/NOTIFY de Postgres.",
         outcome:
-          "El ciclo real está cerrado de punta a punta: un reporte mandado desde un teléfono —calle anegada en Mejicanos— recorrió propuesta de categoría, confirmación, asignación, «en curso» y cierre con foto del arreglo, y los tres avisos llegaron de vuelta; comprobado en los datos y no solo en la pantalla. El cierre no se permite sin foto de evidencia, porque un cierre sin evidencia es una afirmación que nadie puede comprobar. Clasificar una foto cuesta USD 0,0018 medidos, y nueve recorridos de Playwright corren en CI contra el sistema levantado. Las fases de clasificación y agrupación siguen abiertas a propósito: su verificación pide 200 fotos etiquetadas y 200 reportes agrupados a mano, y el código que las mide avisa cuando la muestra no alcanza en vez de dar un número.",
+          "El ciclo real está cerrado de punta a punta: un reporte mandado desde un teléfono (calle anegada en Mejicanos) recorrió propuesta de categoría, confirmación, asignación, «en curso» y cierre con foto del arreglo, y los tres avisos llegaron de vuelta; comprobado en los datos y no solo en la pantalla. El cierre no se permite sin foto de evidencia, porque un cierre sin evidencia es una afirmación que nadie puede comprobar. Clasificar una foto cuesta USD 0,0018 medidos, y nueve recorridos de Playwright corren en CI contra el sistema levantado. Las fases de clasificación y agrupación siguen abiertas a propósito: su verificación pide 200 fotos etiquetadas y 200 reportes agrupados a mano, y el código que las mide avisa cuando la muestra no alcanza en vez de dar un número.",
       },
       en: {
         title: "Smart Report IA",
         tagline:
-          "Citizen reports of street hazards in El Salvador: reporting takes under a minute over Telegram, and dispatchers see duplicate reports already grouped, with the evidence in plain sight — Python · FastAPI · PostgreSQL + PostGIS · Claude AI · Next.js.",
+          "Citizen reports of street hazards in El Salvador: reporting takes under a minute over Telegram, and dispatchers see duplicate reports already grouped, with the evidence in plain sight.",
         role: "Fullstack Developer · AI Engineering",
         problem:
-          "Two people with opposite needs. Whoever reports is standing in front of the pothole, in a hurry, and will not install an app. Whoever dispatches stares at the system eight hours a day, and their problem is not receiving reports but knowing which ones are the same: four photos of one pothole are four work orders for a single crew. And almost nobody builds the piece that holds the rest up — the notification back — without which no one ever reports twice.",
+          "Two people with opposite needs. Whoever reports is standing in front of the pothole, in a hurry, and will not install an app. Whoever dispatches stares at the system eight hours a day, and their problem is not receiving reports but knowing which ones are the same: four photos of one pothole are four work orders for a single crew. And almost nobody builds the piece that holds the rest up (the notification back), without which no one ever reports twice.",
         solution:
-          "The principle is that the model proposes, the code decides, and whatever cannot be supported is disclosed. Claude Haiku 4.5 looks at the photo and proposes category and urgency with schema-constrained output, and the bot asks for confirmation before accepting it: classifying silently and getting it wrong sends a water crew to fix a streetlight. Grouping is decided by code rather than the model, with measured thresholds —distance via PostGIS, a perceptual image hash and text similarity— shows its evidence and can be undone, and the threshold is calibrated against the severe error (merging two distinct problems hides one) rather than the average of both. Anything borderline is flagged as doubtful, with the reason, waiting on a human. Location is requested through Telegram's native button because the platform's compression strips the photo's metadata. No Redis and no message bus: the queue is a table with FOR UPDATE SKIP LOCKED, and the dashboard updates over SSE on top of Postgres LISTEN/NOTIFY.",
+          "The principle is that the model proposes, the code decides, and whatever cannot be supported is disclosed. Claude Haiku 4.5 looks at the photo and proposes category and urgency with schema-constrained output, and the bot asks for confirmation before accepting it: classifying silently and getting it wrong sends a water crew to fix a streetlight. Grouping is decided by code rather than the model, with measured thresholds (distance via PostGIS, a perceptual image hash and text similarity) shows its evidence and can be undone, and the threshold is calibrated against the severe error (merging two distinct problems hides one) rather than the average of both. Anything borderline is flagged as doubtful, with the reason, waiting on a human. Location is requested through Telegram's native button because the platform's compression strips the photo's metadata. No Redis and no message bus: the queue is a table with FOR UPDATE SKIP LOCKED, and the dashboard updates over SSE on top of Postgres LISTEN/NOTIFY.",
         outcome:
-          'The real cycle is closed end to end: a report sent from a phone —a flooded street in Mejicanos— went through category proposal, confirmation, assignment, "in progress" and closure with a photo of the repair, and all three notifications came back; verified in the data, not just on screen. Closing is blocked without evidence photo, because a closure with no evidence is a claim nobody can check. Classifying a photo costs a measured USD 0.0018, and nine Playwright journeys run in CI against the running system. The classification and grouping phases stay open on purpose: their verification needs 200 hand-labeled photos and 200 hand-grouped reports, and the code that measures them reports an insufficient sample instead of producing a number.',
+          'The real cycle is closed end to end: a report sent from a phone (a flooded street in Mejicanos) went through category proposal, confirmation, assignment, "in progress" and closure with a photo of the repair, and all three notifications came back; verified in the data, not just on screen. Closing is blocked without evidence photo, because a closure with no evidence is a claim nobody can check. Classifying a photo costs a measured USD 0.0018, and nine Playwright journeys run in CI against the running system. The classification and grouping phases stay open on purpose: their verification needs 200 hand-labeled photos and 200 hand-grouped reports, and the code that measures them reports an insufficient sample instead of producing a number.',
       },
     },
   },
@@ -102,7 +102,7 @@ export const projects: Project[] = [
       es: {
         title: "Waypoint",
         tagline:
-          "Planificador de viajes conversacional por El Salvador: el modelo traduce la frase del usuario a restricciones y un motor determinista las hace cumplir, sobre lugares y distancias reales — Python · FastAPI · PostgreSQL + PostGIS · Claude AI · Next.js.",
+          "Planificador de viajes conversacional por El Salvador: el modelo traduce la frase del usuario a restricciones y un motor determinista las hace cumplir, sobre lugares y distancias reales.",
         role: "Fullstack Developer · AI Engineering",
         problem:
           "Armar un viaje de varios días exige cruzar a mano lugares, distancias y horarios. Pedírselo directo a un modelo de lenguaje falla justo en lo que importa: «odio madrugar» se vuelve una sugerencia que a veces ignora, y los lugares que devuelve pueden no existir.",
@@ -114,7 +114,7 @@ export const projects: Project[] = [
       en: {
         title: "Waypoint",
         tagline:
-          "Conversational trip planner for El Salvador: the model turns the user's sentence into constraints and a deterministic engine enforces them, over real places and real distances — Python · FastAPI · PostgreSQL + PostGIS · Claude AI · Next.js.",
+          "Conversational trip planner for El Salvador: the model turns the user's sentence into constraints and a deterministic engine enforces them, over real places and real distances.",
         role: "Fullstack Developer · AI Engineering",
         problem:
           "Planning a multi-day trip means cross-referencing places, distances and opening hours by hand. Handing the job straight to a language model fails exactly where it matters: “I hate early mornings” becomes a suggestion it sometimes ignores, and the places it returns may not exist.",
@@ -147,7 +147,7 @@ export const projects: Project[] = [
       es: {
         title: "DocuFlow",
         tagline:
-          "Convierte facturas escaneadas en datos contables verificables: OCR, extracción con LLM y revisión humana con la confianza de cada campo medida, no supuesta — Python · FastAPI · PostgreSQL + pgvector · Celery · Claude AI · Next.js.",
+          "Convierte facturas escaneadas en datos contables verificables: OCR, extracción con LLM y revisión humana con la confianza de cada campo medida, no supuesta.",
         role: "Fullstack Developer · AI Engineering",
         problem:
           "Una PyME recibe facturas en tres formatos a la vez: PDFs de facturación electrónica, PDFs escaneados y fotos tomadas con el celular. Pasarlas al sistema contable es digitación manual. Automatizarla es fácil de empezar y difícil de terminar, porque tanto el OCR como el modelo se equivocan, y lo hacen sin avisar.",
@@ -159,7 +159,7 @@ export const projects: Project[] = [
       en: {
         title: "DocuFlow",
         tagline:
-          "Turns scanned invoices into verifiable accounting data: OCR, LLM extraction and human review with per-field confidence measured, not assumed — Python · FastAPI · PostgreSQL + pgvector · Celery · Claude AI · Next.js.",
+          "Turns scanned invoices into verifiable accounting data: OCR, LLM extraction and human review with per-field confidence measured, not assumed.",
         role: "Fullstack Developer · AI Engineering",
         problem:
           "A small business receives invoices in three formats at once: e-invoicing PDFs, scanned PDFs and photos taken on a phone. Getting them into the accounting system means manual data entry. Automating it is easy to start and hard to finish, because both the OCR and the model make mistakes, and they make them silently.",
@@ -183,7 +183,7 @@ export const projects: Project[] = [
       es: {
         title: "Real Estate Lead Management",
         tagline:
-          "Módulo de seguimiento de leads inmobiliarios con un dashboard de métricas resuelto en una sola consulta de agregación — Angular · TypeScript · Node.js · Express · MongoDB · Playwright.",
+          "Módulo de seguimiento de leads inmobiliarios con un dashboard de métricas resuelto en una sola consulta de agregación.",
         role: "Fullstack Developer",
         problem:
           "El módulo necesitaba listado con filtros y paginación, cambio de estado, alta de leads y un dashboard de métricas. El riesgo estaba en el dashboard: resolver total, presupuesto promedio, leads reservados, tasa de conversión y tres desgloses con consultas separadas significa seis viajes a la base y, peor, seis fotos tomadas en momentos distintos.",
@@ -195,7 +195,7 @@ export const projects: Project[] = [
       en: {
         title: "Real Estate Lead Management",
         tagline:
-          "Real-estate lead tracking module with a metrics dashboard resolved in a single aggregation query — Angular · TypeScript · Node.js · Express · MongoDB · Playwright.",
+          "Real-estate lead tracking module with a metrics dashboard resolved in a single aggregation query.",
         role: "Fullstack Developer",
         problem:
           "The module needed a filtered, paginated list, status changes, lead creation and a metrics dashboard. The risk was in the dashboard: resolving total, average budget, reserved leads, conversion rate and three breakdowns with separate queries means six round trips to the database and, worse, six snapshots taken at different moments.",
@@ -219,24 +219,24 @@ export const projects: Project[] = [
       es: {
         title: "NestJS AI Pentest Skill",
         tagline:
-          "Skill de Claude AI que lee proyectos NestJS y genera una suite Jest de pentest grado profesional, con reportes HTML/Excel auditables — Claude AI · NestJS · Jest · Node.js · OWASP.",
+          "Skill de Claude AI que lee proyectos NestJS y genera una suite Jest de pentest grado profesional, con reportes HTML/Excel auditables.",
         role: "AI Skill Author · Security Engineering",
         problem:
           "Auditar la seguridad de una API NestJS suele requerir un especialista, varias herramientas y semanas de trabajo manual. No existía una forma rápida de mapear toda la superficie de seguridad de un proyecto y traducirla a evidencia accionable que un equipo de cumplimiento pueda revisar.",
         solution:
-          "Construí una skill de Claude Code que mapea exhaustivamente controllers, DTOs, guards, pipes, interceptors, filters, middleware y entidades, y genera una suite Jest con tags OWASP Top 10 (2021), API Security Top 10 (2023) y un checklist propio de 60 ítems. Cada test guarda evidencia input/output en JSON, severidad, y N/A justificados con grep. El reporter empaqueta todo en un HTML auditable + Excel — sin servidor, sin dependencias externas.",
+          "Construí una skill de Claude Code que mapea exhaustivamente controllers, DTOs, guards, pipes, interceptors, filters, middleware y entidades, y genera una suite Jest con tags OWASP Top 10 (2021), API Security Top 10 (2023) y un checklist propio de 60 ítems. Cada test guarda evidencia input/output en JSON, severidad, y N/A justificados con grep. El reporter empaqueta todo en un HTML auditable + Excel: sin servidor, sin dependencias externas.",
         outcome:
           "Cualquier equipo NestJS puede correr una auditoría de seguridad alineada con OWASP en minutos, no semanas. El reporte es un archivo único listo para enviarse por correo, adjuntarse a un ticket o anexarse a una entrega de cumplimiento.",
       },
       en: {
         title: "NestJS AI Pentest Skill",
         tagline:
-          "Claude AI skill that reads NestJS projects and generates a pentest-grade Jest suite with auditable HTML/Excel reports — Claude AI · NestJS · Jest · Node.js · OWASP.",
+          "Claude AI skill that reads NestJS projects and generates a pentest-grade Jest suite with auditable HTML/Excel reports.",
         role: "AI Skill Author · Security Engineering",
         problem:
           "Auditing the security of a NestJS API typically requires a specialist, multiple tools and weeks of manual work. There was no quick way to map a project's full security surface and turn it into actionable evidence a compliance team can review.",
         solution:
-          "Built a Claude Code skill that exhaustively maps controllers, DTOs, guards, pipes, interceptors, filters, middleware and entities, and generates a Jest suite tagged with OWASP Top 10 (2021), API Security Top 10 (2023) and a custom 60-item checklist. Each test captures input/output JSON evidence, severity, and grep-justified N/A items. The bundled reporter wraps everything into a single auditable HTML + Excel — no server, no external dependencies.",
+          "Built a Claude Code skill that exhaustively maps controllers, DTOs, guards, pipes, interceptors, filters, middleware and entities, and generates a Jest suite tagged with OWASP Top 10 (2021), API Security Top 10 (2023) and a custom 60-item checklist. Each test captures input/output JSON evidence, severity, and grep-justified N/A items. The bundled reporter wraps everything into a single auditable HTML + Excel: no server, no external dependencies.",
         outcome:
           "Any NestJS team can run an OWASP-aligned security audit in minutes instead of weeks. The report is a single file ready to email, attach to a ticket or annex to a compliance delivery.",
       },
@@ -255,7 +255,7 @@ export const projects: Project[] = [
       es: {
         title: "Travel Quote API",
         tagline:
-          "API REST de cotizaciones para transporte turístico con arquitectura limpia y contenerizada — Node.js · Express · Sequelize · MySQL · Docker.",
+          "API REST de cotizaciones para transporte turístico con arquitectura limpia y contenerizada.",
         role: "Backend Developer",
         problem:
           "Una empresa de transporte turístico necesitaba un servicio robusto para gestionar cotizaciones que incluyera usuarios, lugares, vehículos, proveedores, coberturas, precios y categorías, con relaciones complejas entre entidades.",
@@ -267,7 +267,7 @@ export const projects: Project[] = [
       en: {
         title: "Travel Quote API",
         tagline:
-          "REST API for tourism transport quotations with a clean, containerized architecture — Node.js · Express · Sequelize · MySQL · Docker.",
+          "REST API for tourism transport quotations with a clean, containerized architecture.",
         role: "Backend Developer",
         problem:
           "A tourism transport company needed a robust service to manage quotations involving users, places, vehicles, providers, coverages, prices and categories, with complex relationships between entities.",
@@ -289,8 +289,7 @@ export const projects: Project[] = [
     i18n: {
       es: {
         title: "Safe On Sivar",
-        tagline:
-          "Plataforma para reportar y consultar incidentes de seguridad en El Salvador — Laravel · PHP · MySQL · Bootstrap · JavaScript.",
+        tagline: "Plataforma para reportar y consultar incidentes de seguridad en El Salvador.",
         role: "Fullstack Developer",
         problem:
           "La información de seguridad ciudadana en El Salvador está dispersa y es difícil de consultar. Se necesitaba una herramienta que centralizara reportes y los hiciera accesibles.",
@@ -301,8 +300,7 @@ export const projects: Project[] = [
       },
       en: {
         title: "Safe On Sivar",
-        tagline:
-          "Platform to report and browse security incidents in El Salvador — Laravel · PHP · MySQL · Bootstrap · JavaScript.",
+        tagline: "Platform to report and browse security incidents in El Salvador.",
         role: "Fullstack Developer",
         problem:
           "Public-safety data in El Salvador is scattered and hard to query. A tool was needed to centralize reports and make them accessible.",
@@ -325,8 +323,7 @@ export const projects: Project[] = [
     i18n: {
       es: {
         title: "Flask Shop API",
-        tagline:
-          "API de e-commerce construida con Flask y SQLAlchemy ORM — Python · Flask · SQLAlchemy · REST.",
+        tagline: "API de e-commerce construida con Flask y SQLAlchemy ORM.",
         role: "Backend Developer",
         problem:
           "Necesitaba ampliar mi caja de herramientas backend hacia Python con un caso de negocio realista: gestión de productos, órdenes y clientes para un comercio electrónico.",
@@ -337,8 +334,7 @@ export const projects: Project[] = [
       },
       en: {
         title: "Flask Shop API",
-        tagline:
-          "E-commerce API built with Flask and SQLAlchemy ORM — Python · Flask · SQLAlchemy · REST.",
+        tagline: "E-commerce API built with Flask and SQLAlchemy ORM.",
         role: "Backend Developer",
         problem:
           "I wanted to expand my backend toolbox into Python with a realistic business case: managing products, orders and customers for an online store.",
@@ -360,8 +356,7 @@ export const projects: Project[] = [
     i18n: {
       es: {
         title: "PokeAPI Explorer",
-        tagline:
-          "Catálogo interactivo consumiendo la PokeAPI pública — React · JavaScript · REST API · CSS.",
+        tagline: "Catálogo interactivo consumiendo la PokeAPI pública.",
         role: "Frontend Developer",
         problem:
           "Necesitaba practicar consumo de APIs REST, paginación y búsqueda en una SPA con buen UX.",
@@ -371,8 +366,7 @@ export const projects: Project[] = [
       },
       en: {
         title: "PokeAPI Explorer",
-        tagline:
-          "Interactive catalog consuming the public PokeAPI — React · JavaScript · REST API · CSS.",
+        tagline: "Interactive catalog consuming the public PokeAPI.",
         role: "Frontend Developer",
         problem:
           "I wanted to practice REST API consumption, pagination and search in a SPA with good UX.",
@@ -394,8 +388,7 @@ export const projects: Project[] = [
     i18n: {
       es: {
         title: "Django Company API",
-        tagline:
-          "Aplicación Django con autenticación completa y persistencia en MySQL — Python · Django · MySQL · Auth.",
+        tagline: "Aplicación Django con autenticación completa y persistencia en MySQL.",
         role: "Backend Developer",
         problem:
           "Quería profundizar en Django como framework backend de Python, implementando flujos de autenticación reales: registro, login, logout y recuperación de contraseña.",
@@ -406,8 +399,7 @@ export const projects: Project[] = [
       },
       en: {
         title: "Django Company API",
-        tagline:
-          "Django app with full authentication and MySQL persistence — Python · Django · MySQL · Auth.",
+        tagline: "Django app with full authentication and MySQL persistence.",
         role: "Backend Developer",
         problem:
           "I wanted to dive deeper into Django as a Python backend framework, implementing real auth flows: register, login, logout and password recovery.",

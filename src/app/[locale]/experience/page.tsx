@@ -42,7 +42,7 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
         <Timeline>
           {experiences.map((e) => {
             const i18n = e.i18n[locale];
-            const range = `${e.startDate} — ${e.endDate ?? t("present")}`;
+            const range = `${e.startDate} - ${e.endDate ?? t("present")}`;
             return (
               <li key={e.id} className="relative">
                 <span className="timeline-dot border-background bg-primary absolute top-1.5 -left-[31px] size-3 rounded-full border-2" />
@@ -71,7 +71,7 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
         <Timeline>
           {education.map((ed) => {
             const i18n = ed.i18n[locale];
-            const range = `${ed.startDate} — ${ed.endDate}`;
+            const range = `${ed.startDate} - ${ed.endDate}`;
             return (
               <li key={ed.id} className="relative">
                 <span className="timeline-dot border-background bg-primary absolute top-1.5 -left-[31px] size-3 rounded-full border-2" />

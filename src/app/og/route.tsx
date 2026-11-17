@@ -22,10 +22,10 @@ function size(value: string | null, fallback: number, min: number, max: number) 
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const title = text(url.searchParams.get("title"), "Gerardo Amaya — Fullstack Developer", 90);
+  const title = text(url.searchParams.get("title"), "Gerardo Amaya · Fullstack Developer", 90);
   const subtitle = text(
     url.searchParams.get("subtitle"),
-    "Building solid web products with Node, Nest.js, Python, Laravel, React and Next.js — and integrating LLMs you can audit.",
+    "Building solid web products with Node, Nest.js, Python, Laravel, React and Next.js, and integrating LLMs you can audit.",
     170
   );
   const eyebrow = text(url.searchParams.get("eyebrow"), "PROJECT", 40);
@@ -61,7 +61,7 @@ export async function GET(request: Request) {
         }}
       >
         <span>{">"} gerardo.dev</span>
-        <span style={{ color: "#3f3f46" }}>—</span>
+        <span style={{ color: "#3f3f46" }}>·</span>
         <span style={{ color: "#71717a", letterSpacing: "0.12em" }}>{eyebrow}</span>
       </div>
 
