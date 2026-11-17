@@ -1,12 +1,13 @@
 import { ArrowRight, Download, Sparkles } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
-import { site } from "@/lib/site";
+import { resumeUrl } from "@/lib/site";
 import { CountUp } from "@/components/count-up";
 
 export function Hero() {
   const t = useTranslations("Home");
+  const locale = useLocale();
 
   return (
     <section className="relative overflow-hidden">
@@ -46,7 +47,7 @@ export function Hero() {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline">
-              <a href={site.resumeUrl} target="_blank" rel="noreferrer">
+              <a href={resumeUrl(locale)} target="_blank" rel="noreferrer">
                 <Download /> {t("ctaResume")}
               </a>
             </Button>
