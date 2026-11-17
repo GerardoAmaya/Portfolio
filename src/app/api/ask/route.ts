@@ -61,11 +61,14 @@ export async function POST(request: Request) {
     request.headers.get("x-nf-client-connection-ip") ||
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     "unknown";
+  const started = Date.now();
   const limit = await checkRateLimit(ip);
+  const limitMs = Date.now() - started;
   if (!limit.ok)
     return json(429, { error: limit.reason === "daily" ? "daily_limit" : "rate_limit" });
 
-  const client = new Anthropic({ apiKey });
+  // Sin esperas largas: Netlify corta la función a los ~30 s
+  const client = new Anthropic({ apiKey, timeout: 15_000, maxRetries: 1 });
   const language = parsed.locale === "en" ? "English" : "Spanish";
 
   // Se espera la respuesta HTTP antes de devolver nada: si Anthropic rechaza la
@@ -93,8 +96,9 @@ export async function POST(request: Request) {
       ],
       messages: parsed.turns,
     });
+    console.log("[ask] ok", { limitMs, anthropicMs: Date.now() - started - limitMs });
   } catch (error) {
-    console.error("[ask] error", error instanceof Error ? error.message : error);
+    console.error("[ask] error", { limitMs }, error instanceof Error ? error.message : error);
     return json(502, { error: "unavailable" });
   }
 

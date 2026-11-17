@@ -13,13 +13,24 @@ export const PER_IP_LIMIT = 10; // preguntas por hora y por IP
 export const DAILY_LIMIT = 300; // preguntas por día en todo el sitio
 
 type Bucket = { count: number; resetAt: number };
+
+// Blobs nunca debe bloquear la respuesta: si tarda, se usa la memoria
+const BLOBS_TIMEOUT_MS = 2000;
+function withTimeout<T>(promise: Promise<T>, ms = BLOBS_TIMEOUT_MS): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) => setTimeout(() => reject(new Error("blobs timeout")), ms)),
+  ]);
+}
 const memory = new Map<string, Bucket>();
+// Si Blobs falla una vez, esta instancia deja de intentarlo (no suma esperas)
+let blobsDisabled = false;
 
 async function bump(key: string, limit: number, windowMs: number) {
   const now = Date.now();
   let store: ReturnType<typeof getStore> | null = null;
   try {
-    store = getStore("ask-rate-limit");
+    store = blobsDisabled ? null : getStore("ask-rate-limit");
   } catch {
     store = null;
   }
@@ -27,8 +38,10 @@ async function bump(key: string, limit: number, windowMs: number) {
   let bucket: Bucket | null = null;
   if (store) {
     try {
-      bucket = (await store.get(key, { type: "json" })) as Bucket | null;
-    } catch {
+      bucket = (await withTimeout(store.get(key, { type: "json" }))) as Bucket | null;
+    } catch (error) {
+      console.warn("[ask] blobs get", error instanceof Error ? error.message : error);
+      blobsDisabled = true;
       store = null;
     }
   }
@@ -40,8 +53,10 @@ async function bump(key: string, limit: number, windowMs: number) {
   bucket.count += 1;
   if (store) {
     try {
-      await store.setJSON(key, bucket);
-    } catch {
+      await withTimeout(store.setJSON(key, bucket));
+    } catch (error) {
+      console.warn("[ask] blobs set", error instanceof Error ? error.message : error);
+      blobsDisabled = true;
       memory.set(key, bucket);
     }
   } else {
