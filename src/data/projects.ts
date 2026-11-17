@@ -32,6 +32,43 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    slug: "portfolio-ai-assistant",
+    categories: ["ai", "fullstack"],
+    year: "2026",
+    updatedAt: "2026-11-17",
+    cover: "/projects/portfolio-ai-assistant.jpg",
+    stack: ["Next.js", "TypeScript", "Claude API", "Netlify Functions", "Netlify Blobs", "Motion"],
+    repoUrl: "https://github.com/GerardoAmaya/Portfolio",
+    liveUrl: "https://gerardoamayacv.netlify.app",
+    featured: true,
+    i18n: {
+      es: {
+        title: "Asistente IA del portafolio",
+        tagline:
+          "Un chat dentro de este mismo sitio que responde las preguntas de un reclutador sobre mi experiencia, usando solo el contenido de mi CV y del portafolio. Pruébalo con el robot de la esquina.",
+        role: "Fullstack Developer · AI Engineering",
+        problem:
+          "Un reclutador tiene minutos, no horas: no va a leer un CV completo para saber si alguien ha trabajado con pagos o qué stack domina. Un chat genérico resolvería eso inventando, que es peor que no responder. Y un endpoint público que llama a un modelo es una invitación a abusar de él y a gastar dinero ajeno, así que el asistente tenía que ser útil, honesto sobre lo que no sabe y barato de mantener abierto.",
+        solution:
+          "El modelo solo puede responder desde un bloque de conocimiento armado con los mismos datos del sitio (proyectos, experiencia, certificaciones y un perfil extendido sin teléfono ni referencias), y cita de dónde sale cada dato con marcas como [[project:waypoint]] que el chat convierte en enlaces; las referencias que no existen se descartan en el cliente. Corre sobre Claude Haiku 5.5 con respuesta en streaming, y ese bloque de conocimiento va con prompt caching porque es idéntico en cada pregunta. El endpoint valida origen y forma del cuerpo, limita la pregunta a 500 caracteres y la conversación a 8 turnos, ignora instrucciones que intenten cambiar su papel, y aplica un límite de 10 preguntas por hora por IP (guardada solo como hash) y 300 al día para todo el sitio. Es bilingüe, el botón se puede arrastrar a cualquier borde y en el celular no abre el teclado de golpe.",
+        outcome:
+          "Funciona en producción y responde en unos 3 a 4 segundos, medidos desde el navegador. Llegar ahí fue depurar tres fallas que en local no aparecían: Haiku 5.5 rechaza el parámetro temperature; con el razonamiento extendido activo gastaba todos los tokens pensando y devolvía una respuesta vacía, así que se desactiva y se registra el motivo cuando una respuesta sale vacía; y en Netlify la función se quedaba colgada 30 segundos hasta que la plataforma la cortaba, por lo que cada paso externo (almacenamiento del límite y llamada al modelo) tiene ahora un tiempo máximo y un registro de cuánto tardó. El costo es menos de una milésima de dólar por pregunta, estimado con los precios publicados del modelo y aún no medido con el uso real.",
+      },
+      en: {
+        title: "Portfolio AI Assistant",
+        tagline:
+          "A chat inside this very site that answers a recruiter's questions about my background, using only the content of my resume and portfolio. Try it with the robot in the corner.",
+        role: "Fullstack Developer · AI Engineering",
+        problem:
+          "A recruiter has minutes, not hours: they will not read a full resume to find out whether someone has worked with payments or which stack they know. A generic chatbot would answer by making things up, which is worse than not answering. And a public endpoint that calls a model invites abuse and spending someone else's money, so the assistant had to be useful, honest about what it does not know, and cheap to keep open.",
+        solution:
+          "The model can only answer from a knowledge block built from the same data that powers the site (projects, experience, certifications and an extended profile with no phone number or references), and it cites where each fact comes from with markers like [[project:waypoint]] that the chat turns into links; references that do not exist are dropped on the client. It runs on Claude Haiku 5.5 with streamed responses, and that knowledge block uses prompt caching because it is identical on every question. The endpoint checks origin and body shape, caps questions at 500 characters and conversations at 8 turns, ignores instructions that try to change its role, and enforces 10 questions per hour per IP (stored only as a hash) and 300 per day site-wide. It is bilingual, the button can be dragged to either edge, and on phones it does not pop the keyboard open on entry.",
+        outcome:
+          "It runs in production and answers in about 3 to 4 seconds, measured from the browser. Getting there meant debugging three failures that never showed up locally: Haiku 5.5 rejects the temperature parameter; with extended thinking on it spent every token reasoning and returned an empty answer, so thinking is disabled and an empty answer now logs its reason; and on Netlify the function hung for 30 seconds until the platform killed it, so every external step (rate-limit storage and the model call) now has a timeout and logs how long it took. Cost is under a tenth of a cent per question, estimated from the model's published prices and not yet measured against real usage.",
+      },
+    },
+  },
+  {
     slug: "smart-report-ia",
     categories: ["ai", "fullstack"],
     year: "2026",
