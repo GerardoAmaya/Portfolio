@@ -41,7 +41,7 @@ export function Highlights() {
             <Card
               key={title}
               data-spotlight
-              className="spotlight group border-border/60 bg-card/40 relative overflow-hidden backdrop-blur"
+              className="spotlight tilt group border-border/60 bg-card/40 relative overflow-hidden backdrop-blur"
             >
               <CardHeader>
                 <div className="bg-primary/10 text-primary flex size-11 items-center justify-center rounded-lg">

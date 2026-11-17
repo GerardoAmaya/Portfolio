@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { ArrowUp, RotateCcw, Sparkles, X } from "lucide-react";
+import { motion } from "motion/react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
@@ -13,6 +14,7 @@ import { RobotIcon } from "./robot-icon";
 type Message = { role: "user" | "assistant"; content: string; error?: boolean };
 
 const TEASER_KEY = "ask-teaser-seen";
+const MESSAGE_SPRING = { type: "spring", stiffness: 380, damping: 26 } as const;
 const REF_PATTERN = /\[\[([a-z0-9:-]+)\]\]/gi;
 
 /**
@@ -162,8 +164,10 @@ export function AskWidget() {
           </div>
         ) : null}
 
-        <button
+        <motion.button
           type="button"
+          whileTap={{ scale: 0.9 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
           onClick={() => {
             dismissTeaser();
             setOpen(true);
@@ -180,14 +184,14 @@ export function AskWidget() {
               aria-hidden
               className="ask-fab-ring bg-primary/40 absolute inset-0 rounded-full"
             />
-            <span className="from-primary shadow-primary/30 relative flex size-14 items-center justify-center rounded-full bg-gradient-to-br to-fuchsia-500 text-white shadow-lg transition-transform duration-300 group-hover:scale-105 group-active:scale-95">
+            <span className="from-primary shadow-primary/30 relative flex size-14 items-center justify-center rounded-full bg-gradient-to-br to-fuchsia-500 text-white shadow-lg transition-transform duration-300 group-hover:scale-105">
               <RobotIcon className="ask-fab-robot size-8" />
             </span>
             <span className="bg-background text-primary border-primary/40 absolute -top-1 -right-1 rounded-full border px-1.5 text-[0.6rem] leading-4 font-bold">
               {t("badge")}
             </span>
           </span>
-        </button>
+        </motion.button>
       </div>
 
       {/* Panel */}
@@ -238,13 +242,27 @@ export function AskWidget() {
 
             {messages.map((m, i) =>
               m.role === "user" ? (
-                <div key={i} className="flex justify-end">
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 12, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={MESSAGE_SPRING}
+                  style={{ transformOrigin: "100% 100%" }}
+                  className="flex justify-end"
+                >
                   <p className="bg-primary text-primary-foreground max-w-[85%] rounded-2xl rounded-br-sm px-3.5 py-2 text-sm">
                     {m.content}
                   </p>
-                </div>
+                </motion.div>
               ) : (
-                <div key={i} className="flex items-start gap-2.5">
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 12, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={MESSAGE_SPRING}
+                  style={{ transformOrigin: "0% 0%" }}
+                  className="flex items-start gap-2.5"
+                >
                   <span className="bg-primary/10 text-primary mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full">
                     <RobotIcon className="size-4.5" />
                   </span>
@@ -265,7 +283,7 @@ export function AskWidget() {
                       </Link>
                     ) : null}
                   </div>
-                </div>
+                </motion.div>
               )
             )}
 

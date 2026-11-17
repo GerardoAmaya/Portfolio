@@ -37,6 +37,10 @@
       "stackLabel": "Core stack",
       "stackValue": "Node · Nest.js · Python · React · Next.js · Laravel"
     },
+    "manifesto": {
+      "eyebrow": "What drives me",
+      "text": "I build software that moves *real payments* and *government services*, and integrate *AI* that reaches production with *evidence*, not promises."
+    },
     "highlightsTitle": "What I do",
     "highlights": {
       "backendTitle": "Solid backends",

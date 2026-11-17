@@ -559,10 +559,6 @@ html.filter-transition::view-transition-new(root) {
     animation: none;
   }
 
-  .tilt {
-    transform: none;
-  }
-
   .robot-eye,
   .robot-antenna,
   .robot-dot,
@@ -623,16 +619,14 @@ html.filter-transition::view-transition-new(root) {
 
 /* ------------------------------------------------------------------ */
 /* Tarjetas que se inclinan con el mouse (components/spotlight)        */
+/* El giro lo anima Motion con un resorte; aquí solo la sombra          */
 /* ------------------------------------------------------------------ */
 
-@media (hover: hover) and (pointer: fine) {
-  .tilt {
-    transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
-    transition:
-      transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 0.2s ease,
-      border-color 0.3s ease;
-  }
+.tilt {
+  transform-style: preserve-3d;
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.3s ease;
 }
 
 /* ------------------------------------------------------------------ */
