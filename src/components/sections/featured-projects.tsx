@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { SpotlightGroup } from "@/components/spotlight";
+import { ProjectCardLink } from "@/components/motion/project-morph";
 import { projects } from "@/data/projects";
 import type { Locale } from "@/i18n/routing";
 
@@ -34,13 +35,16 @@ export function FeaturedProjects() {
           {featured.map((p) => {
             const i18n = p.i18n[locale];
             return (
-              <Link
+              <ProjectCardLink
                 key={p.slug}
                 href={`/projects/${p.slug}`}
                 data-spotlight
-                className="spotlight group border-border/60 bg-card/40 relative flex flex-col overflow-hidden rounded-xl border transition-shadow hover:shadow-lg"
+                className="spotlight tilt group border-border/60 bg-card/40 relative flex flex-col overflow-hidden rounded-xl border transition-shadow hover:shadow-lg"
               >
-                <div className="bg-muted relative aspect-video w-full overflow-hidden">
+                <div
+                  data-morph="cover"
+                  className="bg-muted relative aspect-video w-full overflow-hidden"
+                >
                   <Image
                     src={p.cover}
                     alt={i18n.title}
@@ -51,7 +55,9 @@ export function FeaturedProjects() {
                 </div>
                 <div className="flex flex-1 flex-col gap-3 p-5">
                   <div className="flex items-center justify-between gap-2">
-                    <h3 className="leading-tight font-semibold">{i18n.title}</h3>
+                    <h3 data-morph="title" className="leading-tight font-semibold">
+                      {i18n.title}
+                    </h3>
                     <span className="text-muted-foreground text-xs">{p.year}</span>
                   </div>
                   <p className="text-muted-foreground text-sm">{i18n.tagline}</p>
@@ -63,7 +69,7 @@ export function FeaturedProjects() {
                     ))}
                   </div>
                 </div>
-              </Link>
+              </ProjectCardLink>
             );
           })}
         </SpotlightGroup>

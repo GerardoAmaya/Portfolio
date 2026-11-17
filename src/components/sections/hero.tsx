@@ -1,3 +1,4 @@
+import * as React from "react";
 import { ArrowRight, Download, Sparkles } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -8,6 +9,7 @@ import { CountUp } from "@/components/count-up";
 export function Hero() {
   const t = useTranslations("Home");
   const locale = useLocale();
+  const lead = t("titleLead").split(" ").length;
 
   return (
     <section className="relative overflow-hidden">
@@ -32,8 +34,11 @@ export function Hero() {
           </span>
 
           <h1 className="mt-6 text-4xl font-bold tracking-tight text-balance sm:text-5xl md:text-6xl lg:text-7xl">
-            {t("titleLead")} <span className="gradient-text">{t("titleHighlight")}</span>{" "}
-            {t("titleTail")}
+            <Words text={t("titleLead")} start={0} />{" "}
+            <span className="word-in" style={{ "--i": lead } as React.CSSProperties}>
+              <span className="gradient-text gradient-flow">{t("titleHighlight")}</span>
+            </span>{" "}
+            <Words text={t("titleTail")} start={lead + 1} />
           </h1>
 
           <p className="text-muted-foreground mt-6 max-w-2xl text-base text-pretty sm:text-lg">
@@ -69,6 +74,19 @@ export function Hero() {
       </div>
     </section>
   );
+}
+
+/** Cada palabra entra por separado, escalonada por --i (ver .word-in). */
+function Words({ text, start }: { text: string; start: number }) {
+  const words = text.split(" ");
+  return words.map((word, i) => (
+    <React.Fragment key={i}>
+      <span className="word-in" style={{ "--i": start + i } as React.CSSProperties}>
+        {word}
+      </span>
+      {i < words.length - 1 ? " " : null}
+    </React.Fragment>
+  ));
 }
 
 function Stat({ label, value, small }: { label: string; value: string; small?: boolean }) {

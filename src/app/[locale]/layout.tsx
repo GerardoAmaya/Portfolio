@@ -7,6 +7,7 @@ import { Providers } from "@/components/providers";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { AskWidget } from "@/components/ask/ask-widget";
+import { NavigationWatcher } from "@/components/motion/project-morph";
 import { PersonJsonLd } from "@/components/json-ld";
 import { routing, type Locale } from "@/i18n/routing";
 import { site } from "@/lib/site";
@@ -129,6 +130,7 @@ export default async function LocaleLayout({
             </main>
             <Footer />
             <AskWidget />
+            <NavigationWatcher />
           </Providers>
         </NextIntlClientProvider>
       </body>

@@ -208,14 +208,16 @@
   }
 }
 
+/* Con `translate` y no `transform`: así la inclinación 3D de las tarjetas
+   (.tilt, que usa transform) no choca con la aparición */
 @keyframes reveal {
   from {
     opacity: 0;
-    transform: translateY(22px);
+    translate: 0 22px;
   }
   to {
     opacity: 1;
-    transform: none;
+    translate: none;
   }
 }
 
@@ -304,7 +306,8 @@ html.locale-fading footer {
    el fundido de vuelta (opacidad + leve subida). */
 html.locale-fading .page-enter,
 html.locale-fading .animate-enter,
-html.locale-fading .animate-enter-sm {
+html.locale-fading .animate-enter-sm,
+html.locale-fading .word-in {
   animation: none;
 }
 
@@ -551,6 +554,15 @@ html.filter-transition::view-transition-new(root) {
     transition: none;
   }
 
+  .word-in,
+  .gradient-flow {
+    animation: none;
+  }
+
+  .tilt {
+    transform: none;
+  }
+
   .robot-eye,
   .robot-antenna,
   .robot-dot,
@@ -562,4 +574,92 @@ html.filter-transition::view-transition-new(root) {
   html {
     scroll-behavior: auto;
   }
+}
+
+/* ------------------------------------------------------------------ */
+/* Hero: el título entra palabra por palabra (components/sections/hero) */
+/* ------------------------------------------------------------------ */
+
+.word-in {
+  display: inline-block;
+  animation: word-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 40ms + 80ms);
+}
+
+@keyframes word-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.35em);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* Degradado que se desplaza lento sobre "Fullstack Developer" */
+.gradient-flow {
+  background-image: linear-gradient(
+    110deg,
+    var(--foreground) 10%,
+    var(--primary) 40%,
+    oklch(0.667 0.295 322.15) 60%,
+    var(--foreground) 90%
+  );
+  background-size: 250% 100%;
+  animation: gradient-flow 9s ease-in-out infinite alternate;
+}
+
+@keyframes gradient-flow {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Tarjetas que se inclinan con el mouse (components/spotlight)        */
+/* ------------------------------------------------------------------ */
+
+@media (hover: hover) and (pointer: fine) {
+  .tilt {
+    transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+    transition:
+      transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.2s ease,
+      border-color 0.3s ease;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Morph de tarjeta de proyecto a su detalle (motion/project-morph)    */
+/* ------------------------------------------------------------------ */
+
+html.nav-morph::view-transition-group(project-cover),
+html.nav-morph::view-transition-group(project-title) {
+  animation-duration: 0.55s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.nav-morph::view-transition-old(root),
+html.nav-morph::view-transition-new(root) {
+  animation-duration: 0.3s;
+}
+
+/* El texto no se deforma: se escala completo y se funde entre tamaños */
+html.nav-morph::view-transition-old(project-title),
+html.nav-morph::view-transition-new(project-title) {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  object-position: left top;
+}
+
+/* La página nueva no repite su propia entrada: ya llega con el morph */
+html.nav-morph .page-enter {
+  animation-duration: 0s;
 }

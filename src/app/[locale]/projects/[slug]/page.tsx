@@ -64,7 +64,10 @@ export default async function ProjectDetailPage({
           <span aria-hidden>·</span>
           <span>{i18n.role}</span>
         </div>
-        <h1 className="mt-3 text-4xl font-bold tracking-tight text-balance sm:text-5xl">
+        <h1
+          className="mt-3 text-4xl font-bold tracking-tight text-balance sm:text-5xl"
+          style={{ viewTransitionName: "project-title" }}
+        >
           {i18n.title}
         </h1>
         <p className="text-muted-foreground mt-4 max-w-2xl text-lg text-pretty">{i18n.tagline}</p>
@@ -101,7 +104,10 @@ export default async function ProjectDetailPage({
       </header>
 
       <div className="container-app pb-12">
-        <div className="border-border/60 bg-muted relative aspect-video w-full overflow-hidden rounded-2xl border">
+        <div
+          className="border-border/60 bg-muted relative aspect-video w-full overflow-hidden rounded-2xl border"
+          style={{ viewTransitionName: "project-cover" }}
+        >
           <Image
             src={project.cover}
             alt={i18n.title}
