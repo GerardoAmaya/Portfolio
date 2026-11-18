@@ -68,7 +68,9 @@ export function TimelineItem({
       <div className="border-border/60 bg-card/40 rounded-xl border p-5 backdrop-blur">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h3 className="font-semibold">{title}</h3>
-          {period ? <span className="text-muted-foreground text-xs">{period}</span> : null}
+          {period ? (
+            <span className="text-muted-foreground font-mono text-xs">{period}</span>
+          ) : null}
         </div>
         {subtitle ? <p className="text-primary mt-1 text-sm font-medium">{subtitle}</p> : null}
         {children}

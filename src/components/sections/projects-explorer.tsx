@@ -106,12 +106,16 @@ export function ProjectsExplorer() {
                   <h3 data-morph="title" className="text-lg leading-tight font-semibold">
                     {i18n.title}
                   </h3>
-                  <span className="text-muted-foreground text-xs">{p.year}</span>
+                  <span className="text-muted-foreground font-mono text-xs">{p.year}</span>
                 </div>
                 <p className="text-muted-foreground text-sm">{i18n.tagline}</p>
                 <div className="mt-auto flex flex-wrap gap-1.5 pt-2">
                   {p.stack.map((s) => (
-                    <Badge key={s} variant="secondary">
+                    <Badge
+                      key={s}
+                      variant="secondary"
+                      className="font-mono text-[11px] font-normal"
+                    >
                       {s}
                     </Badge>
                   ))}

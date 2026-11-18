@@ -99,7 +99,8 @@
       "fullstack": "Full stack",
       "backend": "Backend and APIs",
       "frontend": "Frontend"
-    }
+    },
+    "viewAll": "See all {count} projects"
   },
   "Experience": {
     "title": "Experience",
@@ -140,7 +141,8 @@
   "NotFound": {
     "title": "Page not found",
     "description": "The page you're looking for doesn't exist or has moved.",
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "noSuchFile": "No such file or directory"
   },
   "Ask": {
     "button": "Ask my AI",

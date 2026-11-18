@@ -60,7 +60,7 @@ export default async function ProjectDetailPage({
 
       <header className="container-app pt-6 pb-8 md:pb-10">
         <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-xs">
-          <span>{project.year}</span>
+          <span className="font-mono">{project.year}</span>
           <span aria-hidden>·</span>
           <span>{i18n.role}</span>
         </div>
@@ -73,7 +73,7 @@ export default async function ProjectDetailPage({
         <p className="text-muted-foreground mt-4 max-w-2xl text-lg text-pretty">{i18n.tagline}</p>
         <div className="mt-6 flex flex-wrap gap-1.5">
           {project.stack.map((s) => (
-            <Badge key={s} variant="outline">
+            <Badge key={s} variant="outline" className="font-mono text-[11px] font-normal">
               {s}
             </Badge>
           ))}

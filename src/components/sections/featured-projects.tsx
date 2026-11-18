@@ -1,18 +1,22 @@
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { SpotlightGroup } from "@/components/spotlight";
 import { Rise } from "@/components/motion/rise";
 import { ProjectCardLink } from "@/components/motion/project-morph";
 import { projects } from "@/data/projects";
 import type { Locale } from "@/i18n/routing";
 
+const HOME_LIMIT = 6;
+
 export function FeaturedProjects() {
   const t = useTranslations("Projects");
   const locale = useLocale() as Locale;
-  const featured = projects.filter((p) => p.featured);
+  // La portada muestra los primeros 6 destacados; el resto vive en /projects
+  const featured = projects.filter((p) => p.featured).slice(0, HOME_LIMIT);
 
   return (
     <section className="border-border/60 bg-background border-t py-20 md:py-28">
@@ -28,11 +32,11 @@ export function FeaturedProjects() {
             href="/projects"
             className="text-primary hidden items-center gap-1 text-sm font-medium hover:underline sm:inline-flex"
           >
-            {t("viewCase")} <ArrowUpRight className="size-4" />
+            {t("viewAll", { count: projects.length })} <ArrowUpRight className="size-4" />
           </Link>
         </div>
 
-        <SpotlightGroup className="reveal-children mt-10 grid gap-6 md:grid-cols-2">
+        <SpotlightGroup className="reveal-children mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {featured.map((p) => {
             const i18n = p.i18n[locale];
             return (
@@ -59,12 +63,16 @@ export function FeaturedProjects() {
                     <h3 data-morph="title" className="leading-tight font-semibold">
                       {i18n.title}
                     </h3>
-                    <span className="text-muted-foreground text-xs">{p.year}</span>
+                    <span className="text-muted-foreground font-mono text-xs">{p.year}</span>
                   </div>
                   <p className="text-muted-foreground text-sm">{i18n.tagline}</p>
                   <div className="mt-auto flex flex-wrap gap-1.5 pt-2">
                     {p.stack.slice(0, 4).map((s) => (
-                      <Badge key={s} variant="secondary">
+                      <Badge
+                        key={s}
+                        variant="secondary"
+                        className="font-mono text-[11px] font-normal"
+                      >
                         {s}
                       </Badge>
                     ))}
@@ -74,6 +82,14 @@ export function FeaturedProjects() {
             );
           })}
         </SpotlightGroup>
+
+        <div className="mt-10 flex justify-center">
+          <Button asChild variant="outline" size="lg">
+            <Link href="/projects">
+              {t("viewAll", { count: projects.length })} <ArrowRight />
+            </Link>
+          </Button>
+        </div>
       </div>
     </section>
   );

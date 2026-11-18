@@ -99,7 +99,8 @@
       "fullstack": "Full stack",
       "backend": "Backend y APIs",
       "frontend": "Frontend"
-    }
+    },
+    "viewAll": "Ver los {count} proyectos"
   },
   "Experience": {
     "title": "Experiencia",
@@ -140,7 +141,8 @@
   "NotFound": {
     "title": "Página no encontrada",
     "description": "La página que buscas no existe o cambió de dirección.",
-    "backHome": "Volver al inicio"
+    "backHome": "Volver al inicio",
+    "noSuchFile": "No existe el archivo o el directorio"
   },
   "Ask": {
     "button": "Pregúntale a mi IA",

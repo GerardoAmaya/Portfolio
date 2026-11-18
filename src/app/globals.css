@@ -560,6 +560,7 @@ html.filter-transition::view-transition-new(root) {
   }
 
   .word-in,
+  .hero-caret,
   .gradient-flow,
   .shine::after {
     animation: none;
@@ -715,5 +716,38 @@ html.nav-morph .page-enter {
   30%,
   100% {
     transform: translateX(120%);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Cursor de terminal al final del título del hero                     */
+/* Aparece cuando terminan de entrar las palabras y parpadea (opacity) */
+/* ------------------------------------------------------------------ */
+
+.hero-caret {
+  display: inline-block;
+  width: 0.4em;
+  height: 0.8em;
+  margin-left: 0.12em;
+  vertical-align: -0.02em;
+  border-radius: 2px;
+  background: var(--primary);
+  opacity: 0;
+  animation: caret-blink 1.1s steps(1) 1s infinite;
+}
+
+@keyframes caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-caret {
+    opacity: 1;
   }
 }

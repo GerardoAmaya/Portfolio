@@ -24,7 +24,7 @@ export function Hero() {
       />
 
       <div className="container-app relative pt-20 pb-20 sm:pt-28 md:pt-36 md:pb-28">
-        <div className="animate-enter mx-auto flex max-w-3xl flex-col items-center text-center">
+        <div className="animate-enter mx-auto flex max-w-5xl flex-col items-center text-center">
           <span className="border-border bg-background/60 text-muted-foreground inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium backdrop-blur">
             <span className="relative flex size-2">
               <span className="bg-primary/60 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
@@ -38,7 +38,7 @@ export function Hero() {
             <span className="word-in" style={{ "--i": lead } as React.CSSProperties}>
               <span className="gradient-text gradient-flow">{t("titleHighlight")}</span>
             </span>{" "}
-            <Words text={t("titleTail")} start={lead + 1} />
+            <Words text={t("titleTail")} start={lead + 1} caret />
           </h1>
 
           <p className="text-muted-foreground mt-6 max-w-2xl text-base text-pretty sm:text-lg">
@@ -77,12 +77,14 @@ export function Hero() {
 }
 
 /** Cada palabra entra por separado, escalonada por --i (ver .word-in). */
-function Words({ text, start }: { text: string; start: number }) {
+function Words({ text, start, caret }: { text: string; start: number; caret?: boolean }) {
   const words = text.split(" ");
   return words.map((word, i) => (
     <React.Fragment key={i}>
       <span className="word-in" style={{ "--i": start + i } as React.CSSProperties}>
         {word}
+        {/* Cursor de terminal pegado a la última palabra, para que no baje solo a otra línea */}
+        {caret && i === words.length - 1 ? <span aria-hidden className="hero-caret" /> : null}
       </span>
       {i < words.length - 1 ? " " : null}
     </React.Fragment>
@@ -94,7 +96,9 @@ function Stat({ label, value, small }: { label: string; value: string; small?: b
     <div className="border-border/60 bg-card/40 rounded-xl border p-4 text-center backdrop-blur">
       <p
         className={
-          small ? "text-foreground text-sm font-medium" : "text-foreground text-2xl font-semibold"
+          small
+            ? "text-foreground text-sm font-medium"
+            : "text-foreground font-mono text-2xl font-semibold"
         }
       >
         <CountUp value={value} />
