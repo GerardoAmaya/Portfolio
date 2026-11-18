@@ -47,6 +47,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
+  // Tarjeta de la portada al compartir: nombre, rol y ventana de código
+  const homeOg = `/og?${new URLSearchParams({
+    v: "home",
+    eyebrow: "EL SALVADOR",
+    subtitle: t("ogTagline"),
+  }).toString()}`;
 
   return {
     metadataBase: new URL(SITE_URL),
@@ -65,20 +71,13 @@ export async function generateMetadata({
       title: t("defaultTitle"),
       description: t("description"),
       url: `/${locale}`,
-      images: [
-        {
-          url: "/og",
-          width: 1200,
-          height: 630,
-          alt: t("defaultTitle"),
-        },
-      ],
+      images: [{ url: homeOg, width: 1200, height: 630, alt: t("defaultTitle") }],
     },
     twitter: {
       card: "summary_large_image",
       title: t("defaultTitle"),
       description: t("description"),
-      images: ["/og"],
+      images: [homeOg],
     },
     alternates: localeAlternates(locale, ""),
     manifest: "/manifest.webmanifest",

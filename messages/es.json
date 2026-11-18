@@ -3,7 +3,8 @@
     "siteName": "Gerardo Amaya · Fullstack Developer",
     "defaultTitle": "Gerardo Amaya · Fullstack Developer",
     "titleTemplate": "%s · Gerardo Amaya",
-    "description": "Desarrollador fullstack con experiencia en Node, Nest.js, PHP, Laravel, Python, React, Next.js y Angular. Construyo aplicaciones web sólidas, accesibles y bien testeadas, e integro LLMs de forma auditable."
+    "description": "Desarrollador fullstack con experiencia en Node, Nest.js, PHP, Laravel, Python, React, Next.js y Angular. Construyo aplicaciones web sólidas, accesibles y bien testeadas, e integro LLMs de forma auditable.",
+    "ogTagline": "Construyo productos web sólidos e integro IA que se puede auditar."
   },
   "Nav": {
     "home": "Inicio",
