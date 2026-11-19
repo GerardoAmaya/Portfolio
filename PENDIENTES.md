@@ -2,27 +2,29 @@
 
 Resultado de la revisión del proyecto del 2026-11-19. El estado de partida está en verde: `typecheck`, `lint` y `build` pasan sin avisos, y `npm audit` no reporta vulnerabilidades.
 
-Los puntos están ordenados por prioridad. Al cerrar uno, se marca la casilla y se anota el commit.
+Los puntos están ordenados por prioridad. Al cerrar uno, se marca la casilla y se anota el commit. Los arreglos están en la rama `chore/pendientes-revision`.
 
-| #   | Pendiente                                                          | Prioridad | Esfuerzo | Estado |
-| --- | ------------------------------------------------------------------ | --------- | -------- | ------ |
-| 1   | Una IP agota el tope diario del asistente                          | Alta      | Bajo     | Hecho  |
-| 2   | `Origin: null` produce un error 500 en `/api/ask`                  | Media     | Bajo     | Hecho  |
-| 3   | Todos los casos de estudio se envían al navegador en cada página   | Media     | Bajo     | Hecho  |
-| 4   | Node 20 sin soporte en Netlify y CI                                | Media     | Bajo     | Hecho  |
-| 5   | README desactualizado                                              | Media     | Bajo     | Hecho  |
-| 6   | Tests de las funciones puras                                       | Media     | Medio    | Hecho  |
-| 7   | El límite del asistente no es atómico ni compartido si Blobs falla | Baja      | Medio    | Hecho  |
-| 8   | El cliente puede inventar turnos del asistente                     | Baja      | Bajo     | —      |
-| 9   | `/og` genera imágenes con cualquier texto                          | Baja      | Medio    | —      |
-| 10  | El honeypot no se envía desde el formulario con JS                 | Baja      | Bajo     | Hecho  |
-| 11  | Dependencias con versiones nuevas                                  | Baja      | Variable | —      |
+**Fuera de esta lista:** 14 archivos (los de `src/components/ui/`, `src/i18n/`, `src/lib/utils.ts`, `tsconfig.json` y otros) ya no seguían el formato de Prettier antes de la revisión. `npm run format` los arregla; conviene hacerlo en un commit aparte y agregar `prettier --check` a CI.
+
+| #   | Pendiente                                                          | Prioridad | Esfuerzo | Estado     |
+| --- | ------------------------------------------------------------------ | --------- | -------- | ---------- |
+| 1   | Una IP agota el tope diario del asistente                          | Alta      | Bajo     | Hecho      |
+| 2   | `Origin: null` produce un error 500 en `/api/ask`                  | Media     | Bajo     | Hecho      |
+| 3   | Todos los casos de estudio se envían al navegador en cada página   | Media     | Bajo     | Hecho      |
+| 4   | Node 20 sin soporte en Netlify y CI                                | Media     | Bajo     | Hecho      |
+| 5   | README desactualizado                                              | Media     | Bajo     | Hecho      |
+| 6   | Tests de las funciones puras                                       | Media     | Medio    | Hecho      |
+| 7   | El límite del asistente no es atómico ni compartido si Blobs falla | Baja      | Medio    | Hecho      |
+| 8   | El cliente puede inventar turnos del asistente                     | Baja      | Bajo     | Descartado |
+| 9   | `/og` genera imágenes con cualquier texto                          | Baja      | Medio    | Hecho      |
+| 10  | El honeypot no se envía desde el formulario con JS                 | Baja      | Bajo     | Hecho      |
+| 11  | Dependencias con versiones nuevas                                  | Baja      | Variable | Parcial    |
 
 ---
 
 ## 1. Una IP agota el tope diario del asistente
 
-- [x] Hecho (2026-11-19, sin commit todavía)
+- [x] Hecho (2026-11-19, commit `1388e57`)
 
 **Resuelto:** `checkRateLimit` cuenta primero la IP y solo después el global. Test en [`rate-limit.test.ts`](src/lib/ask/rate-limit.test.ts), comprobado que falla con el código anterior.
 
@@ -38,7 +40,7 @@ Los puntos están ordenados por prioridad. Al cerrar uno, se marca la casilla y 
 
 ## 2. `Origin: null` produce un error 500 en `/api/ask`
 
-- [x] Hecho (2026-11-19, sin commit todavía)
+- [x] Hecho (2026-11-19, commit `de98ccc`)
 
 **Resuelto:** `isSameOrigin()` en [`src/lib/ask/request.ts`](src/lib/ask/request.ts) responde 403 cuando el Origin no es una URL. Probado con `curl` contra `next start`.
 
@@ -54,7 +56,7 @@ Los puntos están ordenados por prioridad. Al cerrar uno, se marca la casilla y 
 
 ## 3. Todos los casos de estudio se envían al navegador en cada página
 
-- [x] Hecho (2026-11-19, sin commit todavía)
+- [x] Hecho (2026-11-19, commit `e181109`)
 
 **Resuelto:** el layout le pasa a `AskWidget` solo `{ slug, title }` del idioma actual. Después del build, el texto de los casos de estudio solo aparece en el JS de `/projects`.
 
@@ -72,7 +74,7 @@ Los puntos están ordenados por prioridad. Al cerrar uno, se marca la casilla y 
 
 ## 4. Node 20 sin soporte en Netlify y CI
 
-- [x] Hecho (2026-11-19, sin commit todavía)
+- [x] Hecho (2026-11-19, commit `455e336`)
 
 **Resuelto:** Node 24 en `netlify.toml`, `.nvmrc` (CI lo lee con `node-version-file`) y `engines: >=22` en `package.json`.
 
@@ -88,7 +90,7 @@ Los puntos están ordenados por prioridad. Al cerrar uno, se marca la casilla y 
 
 ## 5. README desactualizado
 
-- [x] Hecho (2026-11-19, sin commit todavía)
+- [x] Hecho (2026-11-19, commit `87059b4`)
 
 **Resuelto:** se corrigieron los seis puntos de abajo y se agregó una sección sobre el asistente IA.
 
@@ -107,7 +109,7 @@ Cosas a corregir:
 
 ## 6. Tests de las funciones puras
 
-- [x] Hecho (2026-11-19, sin commit todavía)
+- [x] Hecho (2026-11-19, commit `fcc834c`)
 
 **Resuelto:** Vitest 5.0.5 con 28 tests, `npm test` y un paso en CI. `parse()`, el parser de respuestas y los parámetros de `/og` se movieron a módulos propios (`src/lib/ask/request.ts`, `src/lib/ask/answer.ts`, `src/app/og/params.ts`), porque Next no permite exportar funciones extra desde un `route.ts`.
 
@@ -127,7 +129,7 @@ Cosas a corregir:
 
 ## 7. El límite del asistente no es atómico ni compartido si Blobs falla
 
-- [x] Hecho (2026-11-19, sin commit todavía)
+- [x] Hecho (2026-11-19, commit `1388e57`)
 
 **Resuelto:** cada incremento lee con consistencia fuerte y escribe con `onlyIfMatch` / `onlyIfNew`, con hasta 4 reintentos. Si Blobs falla, la instancia usa memoria durante 5 minutos y luego vuelve a intentarlo. Si el entorno no ofrece lectura fuerte, vuelve a la escritura simple. **Falta verificarlo en Netlify:** revisar en los logs de la función que no aparezca `[ask] blobs`.
 
@@ -146,7 +148,9 @@ Cosas a corregir:
 
 ## 8. El cliente puede inventar turnos del asistente
 
-- [ ] Hecho
+- [x] Descartado (2026-11-19)
+
+**Decisión:** se deja como está. Acortar o quitar los turnos del asistente le resta contexto a las preguntas de seguimiento, y el riesgo ya está acotado por el system prompt, el límite de 450 tokens de salida y el límite de uso.
 
 **Dónde:** [`src/app/api/ask/route.ts:27`](src/app/api/ask/route.ts#L27)
 
@@ -158,7 +162,9 @@ Cosas a corregir:
 
 ## 9. `/og` genera imágenes con cualquier texto
 
-- [ ] Hecho
+- [x] Hecho (2026-11-19, commit `aa48455`)
+
+**Resuelto con la opción B:** `/og` solo acepta `locale` y `page` o `project` (`/og?locale=en&project=waypoint`), y los textos salen de `messages/` y `src/data` ([`src/app/og/cards.ts`](src/app/og/cards.ts)). Cualquier otro parámetro, incluidos los `?title=` viejos, recibe la tarjeta de la portada. Probado contra `next start`: las imágenes se ven igual que antes.
 
 **Dónde:** [`src/app/og/route.tsx:196`](src/app/og/route.tsx#L196)
 
@@ -175,7 +181,7 @@ La opción B es más simple y además acorta las URL.
 
 ## 10. El honeypot no se envía desde el formulario con JS
 
-- [x] Hecho (2026-11-19, sin commit todavía)
+- [x] Hecho (2026-11-19, commit `49048b9`)
 
 **Resuelto:** el `fetch` envía `bot-field` y el campo oculto tiene `tabIndex={-1}` y `autoComplete="off"`.
 
@@ -189,18 +195,20 @@ La opción B es más simple y además acorta las URL.
 
 ## 11. Dependencias con versiones nuevas
 
-- [ ] Hecho
+- [ ] Hecho: actualizaciones menores listas (2026-11-19, commit `501ba9e`); mayores pendientes
+
+**Criterio:** solo versiones con al menos dos semanas publicadas. Por eso `next-intl` quedó en 4.14.9 (no 4.15.3), Tailwind en 4.3.4 (no 4.3.5), PostCSS en 8.5.32, Prettier en 3.9.10 y `@anthropic-ai/sdk` sigue en 1.9.0 (1.10 y 1.11 salieron esta semana). Se pueden subir en la próxima revisión.
 
 Salida de `npm outdated` el 2026-11-19.
 
 **Versiones menores (actualizar juntas, bajo riesgo):**
 
-- [ ] `next-intl` 4.11 → 4.15
-- [ ] `react` / `react-dom` 19.2 → 19.3
-- [ ] `@radix-ui/*` (dialog 1.3, dropdown-menu 2.2, label 2.1.17, slot 1.5)
-- [ ] `tailwindcss` / `@tailwindcss/postcss` 4.2 → 4.3
-- [ ] `@anthropic-ai/sdk` 1.9 → 1.11
-- [ ] `tailwind-merge`, `postcss`, `prettier`, `@types/*`
+- [x] `next-intl` 4.11 → 4.14.9 (4.15 cuando tenga dos semanas)
+- [x] `react` / `react-dom` 19.2 → 19.3
+- [x] `@radix-ui/*` (dialog 1.3, dropdown-menu 2.2, label 2.1.17, slot 1.5)
+- [x] `tailwindcss` / `@tailwindcss/postcss` 4.2 → 4.3.4
+- [ ] `@anthropic-ai/sdk` 1.9 → 1.11 (esperar a que 1.11 tenga dos semanas)
+- [x] `tailwind-merge`, `postcss`, `prettier`, `@types/*`
 
 **Versiones mayores (cada una por separado, revisando el changelog):**
 
