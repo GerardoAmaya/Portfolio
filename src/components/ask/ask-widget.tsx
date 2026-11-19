@@ -6,24 +6,26 @@ import { animate, motion, useMotionValue } from "motion/react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
-import { projects } from "@/data/projects";
+import { cleanRefs, isValidRef, parseAnswerBlocks, REF_PATTERN } from "@/lib/ask/answer";
 import { resumeUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { RobotIcon } from "./robot-icon";
 
 type Message = { role: "user" | "assistant"; content: string; error?: boolean };
 
+/** Lo único que el widget necesita de cada proyecto, ya en el idioma de la página. */
+export type AskProject = { slug: string; title: string };
+
 const TEASER_KEY = "ask-teaser-seen";
 const FAB_KEY = "ask-fab-position";
 const MESSAGE_SPRING = { type: "spring", stiffness: 380, damping: 26 } as const;
-const REF_PATTERN = /\[\[([a-z0-9:-]+)\]\]/gi;
 
 /**
  * Asistente "Pregúntale a mi IA": botón flotante con robot y panel de chat.
  * Las respuestas llegan en streaming desde /api/ask y las referencias
  * [[...]] se convierten en enlaces a las secciones del sitio.
  */
-export function AskWidget() {
+export function AskWidget({ projects }: { projects: AskProject[] }) {
   const t = useTranslations("Ask");
   const locale = useLocale();
   const [open, setOpen] = React.useState(false);
@@ -388,7 +390,12 @@ export function AskWidget() {
                       m.error && "border-destructive/40 border"
                     )}
                   >
-                    <Answer text={m.content} locale={locale} onNavigate={() => setOpen(false)} />
+                    <Answer
+                      text={m.content}
+                      locale={locale}
+                      projects={projects}
+                      onNavigate={() => setOpen(false)}
+                    />
                     {m.error ? (
                       <Link
                         href="/contact"
@@ -470,78 +477,50 @@ export function AskWidget() {
 /* ------------------------------ Respuesta ------------------------------ */
 
 /** Texto con **negritas**, viñetas "- " y referencias [[...]] como enlaces. */
-function Answer({
-  text,
-  locale,
-  onNavigate,
-}: {
-  text: string;
-  locale: string;
-  onNavigate: () => void;
-}) {
-  const lines = text.split("\n");
-  const blocks: { type: "p" | "ul"; lines: string[] }[] = [];
-  for (const raw of lines) {
-    const line = raw.trimEnd();
-    if (!line.trim()) {
-      blocks.push({ type: "p", lines: [] });
-      continue;
-    }
-    const isItem = /^\s*[-*•]\s+/.test(line);
-    const last = blocks[blocks.length - 1];
-    if (isItem) {
-      const item = line.replace(/^\s*[-*•]\s+/, "");
-      if (last?.type === "ul") last.lines.push(item);
-      else blocks.push({ type: "ul", lines: [item] });
-    } else if (last?.type === "p" && last.lines.length) last.lines.push(line);
-    else blocks.push({ type: "p", lines: [line] });
-  }
-
+function Answer({ text, ...rest }: { text: string } & InlineProps) {
   return (
     <div className="space-y-2">
-      {blocks
-        .filter((b) => b.lines.length)
-        .map((b, i) =>
-          b.type === "ul" ? (
-            <ul key={i} className="list-disc space-y-1 pl-4">
-              {b.lines.map((l, j) => (
-                <li key={j}>
-                  <Inline text={l} locale={locale} onNavigate={onNavigate} />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p key={i}>
-              <Inline text={b.lines.join(" ")} locale={locale} onNavigate={onNavigate} />
-            </p>
-          )
-        )}
+      {parseAnswerBlocks(text).map((b, i) =>
+        b.type === "ul" ? (
+          <ul key={i} className="list-disc space-y-1 pl-4">
+            {b.lines.map((l, j) => (
+              <li key={j}>
+                <Inline text={l} {...rest} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p key={i}>
+            <Inline text={b.lines.join(" ")} {...rest} />
+          </p>
+        )
+      )}
     </div>
   );
 }
 
-function Inline({
-  text,
-  locale,
-  onNavigate,
-}: {
-  text: string;
-  locale: string;
-  onNavigate: () => void;
-}) {
+type InlineProps = { locale: string; projects: AskProject[]; onNavigate: () => void };
+
+function Inline({ text, locale, projects, onNavigate }: { text: string } & InlineProps) {
   const t = useTranslations("Ask");
-  // Una etiqueta a medio llegar ("[[proj") no se muestra hasta completarse, y
-  // las referencias inventadas se quitan junto con el espacio que las precede
-  const clean = text
-    .replace(/\[\[[a-z0-9:-]*$/i, "")
-    .replace(/\s*\[\[([a-z0-9:-]+)\]\]/gi, (match, id: string) => (isValidRef(id) ? match : ""));
+  const slugs = projects.map((p) => p.slug);
+  const clean = cleanRefs(text, (id) => isValidRef(id, slugs));
   const parts = clean.split(REF_PATTERN);
 
   return (
     <>
       {parts.map((part, i) => {
         if (i % 2 === 1)
-          return <RefChip key={i} id={part} locale={locale} onNavigate={onNavigate} t={t} />;
+          return (
+            <RefChip
+              key={i}
+              id={part}
+              locale={locale}
+              projects={projects}
+              onNavigate={onNavigate}
+              t={t}
+            />
+          );
         return part.split(/(\*\*[^*]+\*\*)/g).map((seg, j) =>
           seg.startsWith("**") && seg.endsWith("**") && seg.length > 4 ? (
             <strong key={`${i}-${j}`} className="font-semibold">
@@ -563,22 +542,16 @@ const SECTION_HREF: Record<string, string> = {
   contact: "/contact",
 };
 
-function isValidRef(id: string) {
-  if (id === "cv" || id in SECTION_HREF) return true;
-  return id.startsWith("project:") && projects.some((p) => p.slug === id.slice(8));
-}
-
 function RefChip({
   id,
   locale,
+  projects,
   onNavigate,
   t,
 }: {
   id: string;
-  locale: string;
-  onNavigate: () => void;
   t: ReturnType<typeof useTranslations<"Ask">>;
-}) {
+} & InlineProps) {
   const chip =
     "bg-primary/10 text-primary hover:bg-primary/20 mx-0.5 inline-flex items-center rounded-md px-1.5 py-px align-baseline text-xs font-medium no-underline transition-colors";
 
@@ -590,12 +563,11 @@ function RefChip({
     );
   }
   if (id.startsWith("project:")) {
-    const project = projects.find((p) => p.slug === id.slice(8));
+    const project = projects.find((p) => p.slug === id.slice("project:".length));
     if (!project) return null;
-    const title = project.i18n[locale === "en" ? "en" : "es"].title;
     return (
       <Link href={`/projects/${project.slug}`} onClick={onNavigate} className={chip}>
-        {title}
+        {project.title}
       </Link>
     );
   }

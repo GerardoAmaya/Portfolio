@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { routing, type Locale } from "@/i18n/routing";
+import { ogQuery } from "@/app/og/cards";
 
 // Open Graph exige language_TERRITORY, no solo el código de idioma
 const OG_LOCALES: Record<Locale, string> = {
@@ -27,20 +28,12 @@ export function localeAlternates(
   return { canonical: `/${locale}${path}`, languages };
 }
 
-/** URL de la imagen OG generada en /og para una página concreta. */
-export function ogImageUrl({
-  title,
-  subtitle,
-  eyebrow,
-}: {
-  title: string;
-  subtitle?: string;
-  eyebrow?: string;
-}) {
-  const params = new URLSearchParams({ title });
-  if (subtitle) params.set("subtitle", subtitle);
-  if (eyebrow) params.set("eyebrow", eyebrow);
-  return `/og?${params.toString()}`;
+/**
+ * URL de la imagen OG generada en /og para una ruta ("" = portada). Solo lleva
+ * el idioma y la página: los textos los resuelve /og (ver src/app/og/cards.ts).
+ */
+export function ogImageUrl(locale: Locale, path: string) {
+  return `/og?${ogQuery(locale, path)}`;
 }
 
 type PageMetadataArgs = {
@@ -49,8 +42,6 @@ type PageMetadataArgs = {
   path: string;
   title: string;
   description: string;
-  /** Etiqueta superior de la imagen OG generada */
-  eyebrow?: string;
   type?: "website" | "article";
 };
 
@@ -65,12 +56,11 @@ export async function pageMetadata({
   path,
   title,
   description,
-  eyebrow,
   type = "website",
 }: PageMetadataArgs): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: "Metadata" });
   const fullTitle = t("titleTemplate").replace("%s", title);
-  const image = ogImageUrl({ title, subtitle: description, eyebrow });
+  const image = ogImageUrl(locale, path);
 
   return {
     title,

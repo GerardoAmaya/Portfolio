@@ -75,7 +75,13 @@ export function ContactForm() {
       const res = await fetch(FORM_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: encode({ "form-name": "contact", ...data }),
+        // bot-field viaja aunque vaya vacío: si un bot lo rellenó, Netlify
+        // descarta el envío en silencio
+        body: encode({
+          "form-name": "contact",
+          "bot-field": String(formData.get("bot-field") ?? ""),
+          ...data,
+        }),
       });
       if (!res.ok) throw new Error("Network error");
       setStatus("success");
@@ -113,9 +119,9 @@ export function ContactForm() {
       className="space-y-5"
     >
       <input type="hidden" name="form-name" value="contact" />
-      <p className="hidden">
+      <p className="hidden" aria-hidden>
         <label>
-          Don&apos;t fill this out: <input name="bot-field" />
+          Don&apos;t fill this out: <input name="bot-field" tabIndex={-1} autoComplete="off" />
         </label>
       </p>
 

@@ -28,7 +28,6 @@ export async function generateMetadata({
     path: `/projects/${project.slug}`,
     title: i18n.title,
     description: i18n.tagline,
-    eyebrow: locale === "es" ? "PROYECTO" : "PROJECT",
     type: "article",
   });
 }

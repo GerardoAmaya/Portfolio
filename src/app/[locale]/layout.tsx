@@ -10,9 +10,10 @@ import { AskWidget } from "@/components/ask/ask-widget";
 import { NavigationWatcher } from "@/components/motion/project-morph";
 import { RiseObserver } from "@/components/motion/rise";
 import { PersonJsonLd } from "@/components/json-ld";
+import { projects } from "@/data/projects";
 import { routing, type Locale } from "@/i18n/routing";
 import { site } from "@/lib/site";
-import { localeAlternates, ogLocale } from "@/lib/metadata";
+import { localeAlternates, ogImageUrl, ogLocale } from "@/lib/metadata";
 import { SITE_URL } from "@/lib/utils";
 
 const geistSans = Geist({
@@ -48,11 +49,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
   // Tarjeta de la portada al compartir: nombre, rol y ventana de código
-  const homeOg = `/og?${new URLSearchParams({
-    v: "home",
-    eyebrow: "EL SALVADOR",
-    subtitle: t("ogTagline"),
-  }).toString()}`;
+  const homeOg = ogImageUrl(locale, "");
 
   return {
     metadataBase: new URL(SITE_URL),
@@ -129,7 +126,10 @@ export default async function LocaleLayout({
               {children}
             </main>
             <Footer />
-            <AskWidget />
+            {/* Solo slug y título: el resto de los casos de estudio no viaja al navegador */}
+            <AskWidget
+              projects={projects.map((p) => ({ slug: p.slug, title: p.i18n[locale].title }))}
+            />
             <NavigationWatcher />
             <RiseObserver />
           </Providers>

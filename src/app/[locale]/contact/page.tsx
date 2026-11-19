@@ -19,7 +19,6 @@ export async function generateMetadata({
     path: "/contact",
     title: t("title"),
     description: t("subtitle"),
-    eyebrow: t("title").toUpperCase(),
   });
 }
 
