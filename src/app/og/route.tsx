@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
+import { clampSize, fitText } from "./params";
 
 export const contentType = "image/png";
 
@@ -16,28 +17,6 @@ const MUTED = "#a1a1aa";
 const SUBTLE = "#52525b";
 const BORDER = "#27222f";
 const STACK = ["Node", "NestJS", "Next.js", "PostgreSQL", "GCP", "Claude API"];
-
-/** Recorta el texto para que no desborde la tarjeta ni infle el render. */
-function text(value: string | null, fallback: string, max: number) {
-  const raw = (value ?? fallback).trim() || fallback;
-  if (raw.length <= max) return raw;
-  // Se corta en el último espacio para no dejar palabras a medias
-  const cut = raw.slice(0, max - 1);
-  const lastSpace = cut.lastIndexOf(" ");
-  return `${(lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut).replace(/[\s,.;:]+$/, "")}…`;
-}
-
-/**
- * Acota las dimensiones: un `?w=20000` no debe poder tumbar la función.
- * Sin parámetro se usa el valor por defecto (Number(null) es 0 y antes
- * acababa en el mínimo, 600×315, cortando la tarjeta).
- */
-function size(value: string | null, fallback: number, min: number, max: number) {
-  if (value === null || value.trim() === "") return fallback;
-  const n = Number(value);
-  if (!Number.isFinite(n)) return fallback;
-  return Math.min(Math.max(Math.round(n), min), max);
-}
 
 // Geist, la misma tipografía del sitio (licencia OFL, ver fonts/OFL-LICENSE.txt)
 const fontsDir = join(process.cwd(), "src/app/og/fonts");
@@ -193,15 +172,15 @@ function CodeWindow() {
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const home = url.searchParams.get("v") === "home";
-  const title = text(url.searchParams.get("title"), "Gerardo Amaya", 90);
-  const subtitle = text(
+  const title = fitText(url.searchParams.get("title"), "Gerardo Amaya", 90);
+  const subtitle = fitText(
     url.searchParams.get("subtitle"),
     "Building solid web products and integrating AI you can audit.",
     home ? 110 : 150
   );
-  const eyebrow = text(url.searchParams.get("eyebrow"), "", 40);
-  const width = size(url.searchParams.get("w"), 1200, 600, 2400);
-  const height = size(url.searchParams.get("h"), 630, 315, 1260);
+  const eyebrow = fitText(url.searchParams.get("eyebrow"), "", 40);
+  const width = clampSize(url.searchParams.get("w"), 1200, 600, 2400);
+  const height = clampSize(url.searchParams.get("h"), 630, 315, 1260);
   const fonts = await loadFonts();
 
   return new ImageResponse(
