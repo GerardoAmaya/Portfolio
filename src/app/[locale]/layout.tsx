@@ -10,6 +10,7 @@ import { AskWidget } from "@/components/ask/ask-widget";
 import { NavigationWatcher } from "@/components/motion/project-morph";
 import { RiseObserver } from "@/components/motion/rise";
 import { PersonJsonLd } from "@/components/json-ld";
+import { projects } from "@/data/projects";
 import { routing, type Locale } from "@/i18n/routing";
 import { site } from "@/lib/site";
 import { localeAlternates, ogLocale } from "@/lib/metadata";
@@ -129,7 +130,10 @@ export default async function LocaleLayout({
               {children}
             </main>
             <Footer />
-            <AskWidget />
+            {/* Solo slug y título: el resto de los casos de estudio no viaja al navegador */}
+            <AskWidget
+              projects={projects.map((p) => ({ slug: p.slug, title: p.i18n[locale].title }))}
+            />
             <NavigationWatcher />
             <RiseObserver />
           </Providers>
