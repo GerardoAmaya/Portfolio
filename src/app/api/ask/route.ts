@@ -2,42 +2,16 @@ import Anthropic from "@anthropic-ai/sdk";
 import type { RawMessageStreamEvent } from "@anthropic-ai/sdk/resources/messages";
 import { ASK_CONTEXT, ASK_SYSTEM } from "@/lib/ask/context";
 import { checkRateLimit } from "@/lib/ask/rate-limit";
+import { isSameOrigin, parseAskRequest } from "@/lib/ask/request";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const MODEL = process.env.ASK_MODEL || "claude-haiku-5-5";
-const MAX_QUESTION = 500;
-const MAX_TURNS = 8; // 4 preguntas y 4 respuestas de historial
 const MAX_OUTPUT_TOKENS = 450;
-
-type Turn = { role: "user" | "assistant"; content: string };
 
 function json(status: number, body: Record<string, unknown>) {
   return Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
-}
-
-/** Valida el cuerpo sin confiar en nada de lo que manda el navegador. */
-function parse(body: unknown): { locale: "es" | "en"; turns: Turn[] } | null {
-  if (!body || typeof body !== "object") return null;
-  const { locale, messages } = body as { locale?: unknown; messages?: unknown };
-  if (!Array.isArray(messages) || messages.length === 0) return null;
-
-  const turns: Turn[] = [];
-  for (const m of messages.slice(-MAX_TURNS)) {
-    if (!m || typeof m !== "object") return null;
-    const { role, content } = m as { role?: unknown; content?: unknown };
-    if ((role !== "user" && role !== "assistant") || typeof content !== "string") return null;
-    const text = content.trim().slice(0, role === "user" ? MAX_QUESTION : 2000);
-    if (!text) return null;
-    turns.push({ role, content: text });
-  }
-  // La API exige empezar con "user" y alternar; la última debe ser la pregunta
-  while (turns.length && turns[0]!.role !== "user") turns.shift();
-  if (!turns.length || turns[turns.length - 1]!.role !== "user") return null;
-  for (let i = 1; i < turns.length; i++) if (turns[i]!.role === turns[i - 1]!.role) return null;
-
-  return { locale: locale === "en" ? "en" : "es", turns };
 }
 
 export async function POST(request: Request) {
@@ -45,13 +19,13 @@ export async function POST(request: Request) {
   if (!apiKey) return json(503, { error: "unavailable" });
 
   // Solo desde el propio sitio (frena el uso del endpoint desde otros dominios)
-  const origin = request.headers.get("origin");
-  const host = request.headers.get("host");
-  if (origin && host && new URL(origin).host !== host) return json(403, { error: "forbidden" });
+  if (!isSameOrigin(request.headers.get("origin"), request.headers.get("host"))) {
+    return json(403, { error: "forbidden" });
+  }
 
-  let parsed: ReturnType<typeof parse>;
+  let parsed: ReturnType<typeof parseAskRequest>;
   try {
-    parsed = parse(await request.json());
+    parsed = parseAskRequest(await request.json());
   } catch {
     parsed = null;
   }
