@@ -1,11 +1,5 @@
 export type SkillCategory =
-  | "frontend"
-  | "backend"
-  | "ai"
-  | "databases"
-  | "cloud"
-  | "security"
-  | "tools";
+  "frontend" | "backend" | "ai" | "databases" | "cloud" | "security" | "tools";
 
 export type Skill = {
   name: string;
