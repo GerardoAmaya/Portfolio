@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
+import { resolveOgCard } from "./cards";
 import { clampSize, fitText } from "./params";
 
 export const contentType = "image/png";
@@ -171,14 +172,16 @@ function CodeWindow() {
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const home = url.searchParams.get("v") === "home";
-  const title = fitText(url.searchParams.get("title"), "Gerardo Amaya", 90);
+  // Los textos no vienen en la URL: se resuelven a partir de la página pedida
+  const card = resolveOgCard(url.searchParams);
+  const home = card.home;
+  const title = fitText(card.title, "Gerardo Amaya", 90);
   const subtitle = fitText(
-    url.searchParams.get("subtitle"),
+    card.subtitle,
     "Building solid web products and integrating AI you can audit.",
     home ? 110 : 150
   );
-  const eyebrow = fitText(url.searchParams.get("eyebrow"), "", 40);
+  const eyebrow = fitText(card.eyebrow, "", 40);
   const width = clampSize(url.searchParams.get("w"), 1200, 600, 2400);
   const height = clampSize(url.searchParams.get("h"), 630, 315, 1260);
   const fonts = await loadFonts();

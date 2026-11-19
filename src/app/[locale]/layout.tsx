@@ -13,7 +13,7 @@ import { PersonJsonLd } from "@/components/json-ld";
 import { projects } from "@/data/projects";
 import { routing, type Locale } from "@/i18n/routing";
 import { site } from "@/lib/site";
-import { localeAlternates, ogLocale } from "@/lib/metadata";
+import { localeAlternates, ogImageUrl, ogLocale } from "@/lib/metadata";
 import { SITE_URL } from "@/lib/utils";
 
 const geistSans = Geist({
@@ -49,11 +49,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
   // Tarjeta de la portada al compartir: nombre, rol y ventana de código
-  const homeOg = `/og?${new URLSearchParams({
-    v: "home",
-    eyebrow: "EL SALVADOR",
-    subtitle: t("ogTagline"),
-  }).toString()}`;
+  const homeOg = ogImageUrl(locale, "");
 
   return {
     metadataBase: new URL(SITE_URL),

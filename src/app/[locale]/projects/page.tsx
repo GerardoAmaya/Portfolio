@@ -17,7 +17,6 @@ export async function generateMetadata({
     path: "/projects",
     title: t("title"),
     description: t("subtitle"),
-    eyebrow: t("title").toUpperCase(),
   });
 }
 
