@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink, Github, Play } from "lucide-react";
+import { ArrowLeft, ExternalLink, Github, KeyRound, Play } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
@@ -99,7 +99,24 @@ export default async function ProjectDetailPage({
               </a>
             </Button>
           ) : null}
+          {project.extraLinks?.map((link) => (
+            <Button key={link.href} asChild size="sm" variant="outline">
+              <a href={link.href} target="_blank" rel="noreferrer">
+                <ExternalLink className="size-4" /> {link.label[locale]}
+              </a>
+            </Button>
+          ))}
         </div>
+        {project.demoLogin ? (
+          <p className="text-muted-foreground mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm">
+            <KeyRound className="size-4 shrink-0" aria-hidden />
+            {project.demoLogin.hint[locale]}
+            {/* select-all: un clic selecciona la contraseña entera para copiarla */}
+            <code className="bg-muted text-foreground rounded px-1.5 py-0.5 font-mono text-xs select-all">
+              {project.demoLogin.password}
+            </code>
+          </p>
+        ) : null}
       </header>
 
       <div className="container-app pb-12">

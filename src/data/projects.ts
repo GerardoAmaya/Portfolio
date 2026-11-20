@@ -16,6 +16,13 @@ export type Project = {
   videoUrl?: string;
   repoUrl?: string;
   liveUrl?: string;
+  /** Enlaces adicionales al repo y a la demo (por ejemplo, un bot), con su etiqueta por idioma */
+  extraLinks?: { href: string; label: Record<Locale, string> }[];
+  /**
+   * Acceso de prueba a la demo, para que quien visita no se quede en el login.
+   * Solo para cuentas de solo lectura cuya contraseña ya es pública.
+   */
+  demoLogin?: { hint: Record<Locale, string>; password: string };
   featured?: boolean;
   i18n: Record<
     Locale,
@@ -35,7 +42,7 @@ export const projects: Project[] = [
     slug: "smart-report-ia",
     categories: ["ai", "fullstack"],
     year: "2026",
-    updatedAt: "2026-09-15",
+    updatedAt: "2026-11-20",
     cover: "/projects/smart-report-ia.jpg",
     stack: [
       "Python",
@@ -48,8 +55,25 @@ export const projects: Project[] = [
       "MapLibre",
       "Cloudflare R2",
       "Docker",
+      "Oracle Cloud",
+      "Playwright",
     ],
     repoUrl: "https://github.com/GerardoAmaya/smart-report-ia",
+    liveUrl: "https://smart-report-sv.duckdns.org",
+    extraLinks: [
+      {
+        href: "https://t.me/smartreport_sv_bot",
+        label: { es: "Probar el bot", en: "Try the bot" },
+      },
+    ],
+    // Usuario de solo lectura; la contraseña es pública en el README del proyecto
+    demoLogin: {
+      hint: {
+        es: "Tablero con usuario de prueba de solo lectura: en «Usuario de prueba», contraseña",
+        en: "Read-only demo access to the dashboard: under “Usuario de prueba”, password",
+      },
+      password: "demo-Are2G6f1pOvg",
+    },
     featured: true,
     i18n: {
       es: {
@@ -60,9 +84,9 @@ export const projects: Project[] = [
         problem:
           "Hay dos personas con necesidades opuestas. Quien reporta está parado frente al hueco, con prisa, y no va a instalar una app. Quien despacha mira el sistema ocho horas y su problema no es recibir reportes, sino saber cuáles son el mismo: cuatro fotos del mismo hueco son cuatro órdenes de trabajo para una sola cuadrilla. Y casi nadie construye la parte que sostiene todo lo demás, el aviso de vuelta, sin el cual nadie reporta una segunda vez.",
         solution:
-          "El principio es que el modelo propone, el código decide, y lo que no se puede sostener se informa. Claude Haiku 4.5 mira la foto y propone categoría y urgencia con salida por esquema, y el bot pide confirmación antes de aceptarla: clasificar en silencio y equivocarse manda una cuadrilla de agua a arreglar una luminaria. La agrupación no la decide el modelo sino código con umbrales medidos (distancia con PostGIS, huella perceptual de la imagen y semejanza textual), muestra su evidencia y se puede deshacer, y el umbral se calibra contra el error grave (juntar dos problemas distintos esconde uno) y no contra el promedio. Lo que queda en el límite se marca como dudoso, con el motivo, esperando a una persona. La ubicación se pide con el botón nativo de Telegram porque la compresión de la plataforma borra los metadatos de la foto. Sin Redis y sin bus de mensajes: la cola es una tabla con FOR UPDATE SKIP LOCKED y el tablero se actualiza por SSE sobre LISTEN/NOTIFY de Postgres.",
+          "El principio es que el modelo propone, el código decide, y lo que no se puede sostener se informa. Claude Haiku 4.5 mira la foto y propone categoría y urgencia con salida por esquema, y el bot pide confirmación antes de aceptarla: clasificar en silencio y equivocarse manda una cuadrilla de agua a arreglar una luminaria. La agrupación no la decide el modelo sino código: se agrupa por la categoría que confirmó una persona y por la distancia medida con PostGIS, y la huella perceptual de la foto se anota como evidencia pero no fuerza la unión, porque una imagen idéntica a 60 m puede ser un reenvío. Hay tres salidas y no dos (agrupado, dudoso o solo), porque separar dos reportes del mismo caso es molesto, pero juntar dos problemas distintos esconde uno: lo que queda en el límite se marca como dudoso, con el motivo, esperando a una persona. La ubicación se pide con el botón nativo de Telegram porque la compresión de la plataforma borra los metadatos de la foto, y si el modelo falla o se queda sin saldo, el bot pide la categoría con botones y el reporte entra igual. Sin Redis y sin bus de mensajes: la cola es una tabla con FOR UPDATE SKIP LOCKED y el tablero se actualiza por SSE sobre LISTEN/NOTIFY de Postgres.",
         outcome:
-          "El ciclo real está cerrado de punta a punta: un reporte mandado desde un teléfono (calle anegada en Mejicanos) recorrió propuesta de categoría, confirmación, asignación, «en curso» y cierre con foto del arreglo, y los tres avisos llegaron de vuelta; comprobado en los datos y no solo en la pantalla. El cierre no se permite sin foto de evidencia, porque un cierre sin evidencia es una afirmación que nadie puede comprobar. Clasificar una foto cuesta USD 0,0018 medidos, y nueve recorridos de Playwright corren en CI contra el sistema levantado. Las fases de clasificación y agrupación siguen abiertas a propósito: su verificación pide 200 fotos etiquetadas y 200 reportes agrupados a mano, y el código que las mide avisa cuando la muestra no alcanza en vez de dar un número.",
+          "Está en producción y se puede probar: el bot de Telegram y el tablero, con un usuario de prueba de solo lectura. Corre en una sola máquina ARM de Oracle Cloud Always Free con Docker Compose y Caddy, y todo lo que la rodea (Cloudflare R2, DuckDNS, OpenFreeMap, GitHub Actions) está en niveles gratuitos permanentes: la infraestructura cuesta USD 0 al mes y el único costo es el modelo, USD 0,0018 medidos por foto, porque se le manda la miniatura y no el original. El ciclo real está cerrado de punta a punta en producción: un reporte mandado desde un teléfono (calle anegada en Mejicanos) recorrió propuesta de categoría, confirmación, asignación, «en curso» y cierre con foto del arreglo, y los avisos llegaron de vuelta; comprobado en los datos y no solo en la pantalla. El cierre no se permite sin foto de evidencia, porque un cierre sin evidencia es una afirmación que nadie puede comprobar. 250 pruebas y nueve recorridos de Playwright corren en CI contra el sistema levantado. Las fases de clasificación y agrupación siguen abiertas a propósito: su verificación pide 200 fotos etiquetadas y 200 reportes agrupados a mano, y el código que las mide avisa cuando la muestra no alcanza en vez de dar un número.",
       },
       en: {
         title: "Smart Report IA",
@@ -72,9 +96,9 @@ export const projects: Project[] = [
         problem:
           "Two people with opposite needs. Whoever reports is standing in front of the pothole, in a hurry, and will not install an app. Whoever dispatches stares at the system eight hours a day, and their problem is not receiving reports but knowing which ones are the same: four photos of one pothole are four work orders for a single crew. And almost nobody builds the piece that holds the rest up (the notification back), without which no one ever reports twice.",
         solution:
-          "The principle is that the model proposes, the code decides, and whatever cannot be supported is disclosed. Claude Haiku 4.5 looks at the photo and proposes category and urgency with schema-constrained output, and the bot asks for confirmation before accepting it: classifying silently and getting it wrong sends a water crew to fix a streetlight. Grouping is decided by code rather than the model, with measured thresholds (distance via PostGIS, a perceptual image hash and text similarity) shows its evidence and can be undone, and the threshold is calibrated against the severe error (merging two distinct problems hides one) rather than the average of both. Anything borderline is flagged as doubtful, with the reason, waiting on a human. Location is requested through Telegram's native button because the platform's compression strips the photo's metadata. No Redis and no message bus: the queue is a table with FOR UPDATE SKIP LOCKED, and the dashboard updates over SSE on top of Postgres LISTEN/NOTIFY.",
+          "The principle is that the model proposes, the code decides, and whatever cannot be supported is disclosed. Claude Haiku 4.5 looks at the photo and proposes category and urgency with schema-constrained output, and the bot asks for confirmation before accepting it: classifying silently and getting it wrong sends a water crew to fix a streetlight. Grouping is decided by code, not the model: reports are grouped by the category a person confirmed and by distance measured with PostGIS, and the photo's perceptual hash is recorded as evidence but never forces a merge, because an identical image 60 m away may be a resend. There are three outcomes rather than two (grouped, doubtful or alone), because splitting two reports of the same case is annoying but merging two distinct problems hides one: anything borderline is flagged as doubtful, with the reason, waiting on a human. Location is requested through Telegram's native button because the platform's compression strips the photo's metadata, and if the model fails or runs out of credit, the bot asks for the category with buttons and the report still gets in. No Redis and no message bus: the queue is a table with FOR UPDATE SKIP LOCKED, and the dashboard updates over SSE on top of Postgres LISTEN/NOTIFY.",
         outcome:
-          'The real cycle is closed end to end: a report sent from a phone (a flooded street in Mejicanos) went through category proposal, confirmation, assignment, "in progress" and closure with a photo of the repair, and all three notifications came back; verified in the data, not just on screen. Closing is blocked without evidence photo, because a closure with no evidence is a claim nobody can check. Classifying a photo costs a measured USD 0.0018, and nine Playwright journeys run in CI against the running system. The classification and grouping phases stay open on purpose: their verification needs 200 hand-labeled photos and 200 hand-grouped reports, and the code that measures them reports an insufficient sample instead of producing a number.',
+          'It is in production and can be tried: the Telegram bot and the dashboard, with a read-only demo user. It runs on a single Oracle Cloud Always Free ARM machine with Docker Compose and Caddy, and everything around it (Cloudflare R2, DuckDNS, OpenFreeMap, GitHub Actions) sits on permanent free tiers: infrastructure costs USD 0 a month and the only cost is the model, a measured USD 0.0018 per photo, because it receives the thumbnail rather than the original. The real cycle is closed end to end in production: a report sent from a phone (a flooded street in Mejicanos) went through category proposal, confirmation, assignment, "in progress" and closure with a photo of the repair, and the notifications came back; verified in the data, not just on screen. Closing is blocked without an evidence photo, because a closure with no evidence is a claim nobody can check. 250 tests and nine Playwright journeys run in CI against the running system. The classification and grouping phases stay open on purpose: their verification needs 200 hand-labeled photos and 200 hand-grouped reports, and the code that measures them reports an insufficient sample instead of producing a number.',
       },
     },
   },

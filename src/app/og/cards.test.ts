@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import es from "../../../messages/es.json";
 import en from "../../../messages/en.json";
 import { getProject } from "@/data/projects";
-import { ogQuery, resolveOgCard } from "./cards";
+import { fitStack, ogQuery, resolveOgCard } from "./cards";
 
 const card = (query: string) => resolveOgCard(new URLSearchParams(query));
 
@@ -26,6 +26,7 @@ describe("resolveOgCard", () => {
       title: en.About.title,
       subtitle: en.About.lead,
       eyebrow: en.About.title.toUpperCase(),
+      stack: null,
     });
     expect(card("locale=es&page=contact").subtitle).toBe(es.Contact.subtitle);
   });
@@ -37,6 +38,7 @@ describe("resolveOgCard", () => {
       title: project.i18n.en.title,
       subtitle: project.i18n.en.tagline,
       eyebrow: "PROJECT",
+      stack: fitStack(project.stack),
     });
   });
 
@@ -51,5 +53,22 @@ describe("resolveOgCard", () => {
     expect(card("locale=es&page=admin").home).toBe(true);
     expect(card("locale=es&project=no-existe").home).toBe(true);
     expect(card("locale=fr&page=about").title).toBe(es.About.title);
+  });
+});
+
+describe("fitStack", () => {
+  it("toma las primeras tecnologías hasta llenar la fila, sin cortar ninguna", () => {
+    expect(
+      fitStack(["Python", "FastAPI", "PostgreSQL", "PostGIS", "Claude AI", "Telegram Bot API"])
+    ).toEqual(["Python", "FastAPI", "PostgreSQL", "PostGIS", "Claude AI"]);
+  });
+
+  it("no pasa de seis etiquetas aunque sean cortas", () => {
+    expect(fitStack(["a", "b", "c", "d", "e", "f", "g"])).toHaveLength(6);
+  });
+
+  it("todos los proyectos muestran al menos una tecnología", async () => {
+    const { projects } = await import("@/data/projects");
+    for (const p of projects) expect(fitStack(p.stack).length).toBeGreaterThan(0);
   });
 });
