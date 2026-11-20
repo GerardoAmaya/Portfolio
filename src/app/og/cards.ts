@@ -19,7 +19,26 @@ export type OgCard = {
   title: string | null;
   subtitle: string | null;
   eyebrow: string | null;
+  /** Etiquetas de tecnología; null usa el stack general del perfil */
+  stack: string[] | null;
 };
+
+// La fila de etiquetas comparte el ancho con la dirección del sitio: el stack
+// general (Node, NestJS, Next.js, PostgreSQL, GCP, Claude API) suma 40 letras
+const STACK_MAX_CHARS = 40;
+const STACK_MAX_ITEMS = 6;
+
+/** Las primeras tecnologías del proyecto que caben en la fila, sin cortar ninguna. */
+export function fitStack(stack: readonly string[]) {
+  const fitted: string[] = [];
+  let chars = 0;
+  for (const item of stack) {
+    if (fitted.length === STACK_MAX_ITEMS || chars + item.length > STACK_MAX_CHARS) break;
+    fitted.push(item);
+    chars += item.length;
+  }
+  return fitted;
+}
 
 /** Query string de /og para una ruta sin prefijo de idioma ("" = portada). */
 export function ogQuery(locale: Locale, path: string) {
@@ -41,7 +60,7 @@ function pageCard(locale: Locale, page: OgPage): OgCard {
         : page === "projects"
           ? { title: m.Projects.title, subtitle: m.Projects.subtitle }
           : { title: m.Contact.title, subtitle: m.Contact.subtitle };
-  return { home: false, title, subtitle, eyebrow: title.toUpperCase() };
+  return { home: false, title, subtitle, eyebrow: title.toUpperCase(), stack: null };
 }
 
 /** Resuelve la tarjeta; lo que no se reconoce cae en la de la portada. */
@@ -60,6 +79,7 @@ export function resolveOgCard(params: URLSearchParams): OgCard {
       title: i18n.title,
       subtitle: i18n.tagline,
       eyebrow: locale === "es" ? "PROYECTO" : "PROJECT",
+      stack: fitStack(project.stack),
     };
   }
 
@@ -73,5 +93,6 @@ export function resolveOgCard(params: URLSearchParams): OgCard {
     title: null,
     subtitle: MESSAGES[locale].Metadata.ogTagline,
     eyebrow: "EL SALVADOR",
+    stack: null,
   };
 }

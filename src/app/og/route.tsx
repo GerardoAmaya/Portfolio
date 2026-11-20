@@ -182,6 +182,7 @@ export async function GET(request: Request) {
     home ? 110 : 150
   );
   const eyebrow = fitText(card.eyebrow, "", 40);
+  const stack = card.stack ?? STACK;
   const width = clampSize(url.searchParams.get("w"), 1200, 600, 2400);
   const height = clampSize(url.searchParams.get("h"), 630, 315, 1260);
   const fonts = await loadFonts();
@@ -296,7 +297,7 @@ export async function GET(request: Request) {
       {/* Abajo: stack y dirección */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ display: "flex", gap: 10 }}>
-          {STACK.map((item) => (
+          {stack.map((item) => (
             <div
               key={item}
               style={{
