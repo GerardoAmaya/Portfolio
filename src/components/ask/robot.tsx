@@ -20,12 +20,13 @@ import {
   AnimatePresence,
   animate,
   motion,
+  useDragControls,
   useMotionValue,
   useReducedMotion,
   useSpring,
   type MotionValue,
 } from "motion/react";
-import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { cn } from "@/lib/utils";
 
@@ -83,22 +84,11 @@ function savePlacement(p: Placement) {
   }
 }
 
-// Arrastrar es solo para mouse: en pantallas táctiles el dedo que hace scroll
-// pasando sobre el robot lo arrastraba (y la página no bajaba), y un toque con
-// un temblor mínimo lo ladeaba como si lo hubieran agarrado.
-const FINE_POINTER = "(hover: hover) and (pointer: fine)";
-function subscribeFinePointer(onChange: () => void) {
-  const query = window.matchMedia(FINE_POINTER);
-  query.addEventListener("change", onChange);
-  return () => query.removeEventListener("change", onChange);
-}
-function useFinePointer() {
-  return useSyncExternalStore(
-    subscribeFinePointer,
-    () => window.matchMedia(FINE_POINTER).matches,
-    () => false
-  );
-}
+// En pantallas táctiles se arrastra manteniéndolo presionado: si el dedo se
+// mueve antes, es un scroll y la página baja como siempre. Antes el robot se
+// arrastraba con cualquier roce y el scroll que pasaba por encima lo movía.
+const LONG_PRESS_MS = 280;
+const SCROLL_SLOP_PX = 10;
 
 /** Margen al borde de la ventana, el mismo de las clases right-4 / sm:right-6. */
 const edgeMargin = () => (window.innerWidth >= 640 ? 24 : 16);
@@ -119,7 +109,7 @@ export function Robot({
   bubbles: string[];
 }) {
   const reduced = !!useReducedMotion();
-  const canDrag = useFinePointer();
+  const dragControls = useDragControls();
   const [hover, setHover] = useState(false);
   const [blink, setBlink] = useState(false);
   const [asleep, setAsleep] = useState(false);
@@ -312,7 +302,7 @@ export function Robot({
 
   // Al soltarlo: se pega al borde más cercano con un muelle y se recuerda. Si
   // cae cerca de su esquina de siempre, vuelve a ser "su sitio".
-  const drop = () => {
+  const drop = useCallback(() => {
     setDragging(false);
     const b = button.current;
     if (!b) return;
@@ -323,7 +313,92 @@ export function Robot({
     setPlacement(next);
     savePlacement(next);
     place(next, true);
-  };
+  }, [dy, place]);
+
+  // Arrastre táctil: mantener presionado lo levanta (con una vibración corta
+  // donde el navegador la permite) y entonces sigue al dedo; al soltarlo se
+  // pega al borde como con el mouse. Va con eventos nativos porque hace falta
+  // cancelar el scroll (preventDefault) y React registra touchmove como pasivo.
+  useEffect(() => {
+    const el = button.current;
+    if (!el) return;
+    type TouchDrag = {
+      x: number;
+      y: number;
+      fromX: number;
+      fromY: number;
+      armed: boolean;
+      timer: ReturnType<typeof setTimeout>;
+      bounds: { minX: number; maxX: number; minY: number; maxY: number };
+    };
+    let state: TouchDrag | null = null;
+    const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
+
+    const onStart = (e: TouchEvent) => {
+      const t = e.touches[0];
+      if (!t || e.touches.length > 1) return;
+      const r = el.getBoundingClientRect();
+      const m = edgeMargin();
+      state = {
+        x: t.clientX,
+        y: t.clientY,
+        fromX: dx.get(),
+        fromY: dy.get(),
+        armed: false,
+        bounds: {
+          minX: -(r.left - m),
+          maxX: window.innerWidth - m - r.right,
+          minY: -(r.top - TOP_LIMIT_PX),
+          maxY: window.innerHeight - m - r.bottom,
+        },
+        timer: setTimeout(() => {
+          if (!state) return;
+          state.armed = true;
+          // Lo que siga ya no es un toque: al soltar no abre el chat
+          dragged.current = true;
+          setDragging(true);
+          navigator.vibrate?.(12);
+        }, LONG_PRESS_MS),
+      };
+    };
+    const onMove = (e: TouchEvent) => {
+      const t = e.touches[0];
+      if (!state || !t) return;
+      const ox = t.clientX - state.x;
+      const oy = t.clientY - state.y;
+      if (!state.armed) {
+        // Se movió antes de tiempo: es un scroll, que siga su curso
+        if (Math.hypot(ox, oy) > SCROLL_SLOP_PX) {
+          clearTimeout(state.timer);
+          state = null;
+        }
+        return;
+      }
+      e.preventDefault();
+      const { minX, maxX, minY, maxY } = state.bounds;
+      dx.set(state.fromX + clamp(ox, minX, maxX));
+      dy.set(state.fromY + clamp(oy, minY, maxY));
+    };
+    const onEnd = () => {
+      if (!state) return;
+      clearTimeout(state.timer);
+      const armed = state.armed;
+      state = null;
+      if (armed) drop();
+    };
+
+    el.addEventListener("touchstart", onStart, { passive: true });
+    el.addEventListener("touchmove", onMove, { passive: false });
+    el.addEventListener("touchend", onEnd);
+    el.addEventListener("touchcancel", onEnd);
+    return () => {
+      if (state) clearTimeout(state.timer);
+      el.removeEventListener("touchstart", onStart);
+      el.removeEventListener("touchmove", onMove);
+      el.removeEventListener("touchend", onEnd);
+      el.removeEventListener("touchcancel", onEnd);
+    };
+  }, [dx, dy, drop]);
 
   // El clic: estrellas en los ojos y un "boing", y el chat se abre a los
   // 220 ms, antes de que acabe la celebración. Sin movimiento, abre al instante.
@@ -333,6 +408,7 @@ export function Robot({
       dragged.current = false;
       return;
     }
+    setHover(false);
     if (reduced) return onOpen();
     setReaction(true);
     setTimeout(onOpen, OPEN_AFTER_MS);
@@ -363,12 +439,16 @@ export function Robot({
         <motion.div
           className="relative"
           style={{ x: dx, y: dy }}
-          drag={canDrag}
+          drag
+          // Con el mouse arrastra Motion; el dedo va por el efecto de arriba
+          dragListener={false}
+          dragControls={dragControls}
           dragConstraints={bounds}
           dragElastic={0.06}
           dragMomentum={false}
-          onPointerDown={() => {
+          onPointerDown={(e) => {
             dragged.current = false;
+            if (e.pointerType === "mouse") dragControls.start(e);
           }}
           onDragStart={() => setDragging(true)}
           onDrag={(_, info) => {
@@ -429,16 +509,16 @@ export function Robot({
             // sin pointerleave y el robot se quedaba saludando
             onPointerEnter={(e) => setHover(e.pointerType === "mouse")}
             onPointerLeave={() => setHover(false)}
-            // Y el foco solo cuando llega con teclado: al cerrar el chat el foco
-            // vuelve aquí y lo dejaba feliz hasta hacer clic en otra parte
-            onFocus={(e) => setHover(e.currentTarget.matches(":focus-visible"))}
-            onBlur={() => setHover(false)}
+            // Sin onFocus: el foco se queda en el botón tras un clic, un arrastre
+            // o al cerrar el chat, y el robot seguía saludando con el mouse lejos.
+            // Con teclado se ve el anillo de foco, que es lo que hace falta.
             className={cn(
               "group focus-visible:ring-primary focus-visible:ring-offset-background relative block size-18 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-offset-2 sm:size-21",
-              canDrag
-                ? cn("touch-none", dragging ? "cursor-grabbing" : "cursor-grab")
-                : "cursor-pointer"
+              // Sin menú contextual ni selección al mantenerlo presionado
+              "select-none [-webkit-touch-callout:none]",
+              dragging ? "cursor-grabbing" : "cursor-grab"
             )}
+            onContextMenu={(e) => e.preventDefault()}
             // El "boing" del clic.
             animate={reaction ? { scale: [1, 0.86, 1.12, 1] } : { scale: 1 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
@@ -455,12 +535,12 @@ export function Robot({
               className="relative size-full"
               animate={
                 float
-                  ? { y: [0, -6, 0], rotate: 0 }
+                  ? { y: [0, -6, 0], rotate: 0, scale: 1 }
                   : dragging && !reduced
-                    ? // Agarrado: colgando ladeado del dedo.
-                      { y: -4, rotate: 12 }
+                    ? // Agarrado: se levanta un poco, sin ladearse.
+                      { y: -6, rotate: 0, scale: 1.06 }
                     : // Al acercarse alguien, un saltito de saludo.
-                      { y: hover && !reduced ? -9 : 0, rotate: 0 }
+                      { y: hover && !reduced ? -9 : 0, rotate: 0, scale: 1 }
               }
               transition={
                 float
@@ -549,6 +629,7 @@ export function RobotMini({ thinking, className }: { thinking: boolean; classNam
 // Paleta del portafolio: violeta (primary) y fucsia. El cuerpo cambia con el
 // tema para contrastar con el fondo (ver --robot-body-* en globals.css).
 const BODY_TOP = "var(--robot-body-top)";
+const BODY_MID = "var(--robot-body-mid)";
 const BODY_BOTTOM = "var(--robot-body-bottom)";
 const BODY_EDGE = "var(--robot-body-edge)";
 const EYE = "#c4b5fd";
@@ -586,6 +667,7 @@ function RobotDrawing({
       <defs>
         <linearGradient id={id("body")} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor={BODY_TOP} />
+          <stop offset="0.55" stopColor={BODY_MID} />
           <stop offset="1" stopColor={BODY_BOTTOM} />
         </linearGradient>
         <linearGradient id={id("helmet")} x1="0" y1="0" x2="0" y2="1">
