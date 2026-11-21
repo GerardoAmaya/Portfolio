@@ -20,13 +20,19 @@ import {
   AnimatePresence,
   animate,
   motion,
-  useDragControls,
   useMotionValue,
   useReducedMotion,
   useSpring,
   type MotionValue,
 } from "motion/react";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { cn } from "@/lib/utils";
 
@@ -84,11 +90,36 @@ function savePlacement(p: Placement) {
   }
 }
 
-// En pantallas táctiles se arrastra manteniéndolo presionado: si el dedo se
-// mueve antes, es un scroll y la página baja como siempre. Antes el robot se
-// arrastraba con cualquier roce y el scroll que pasaba por encima lo movía.
-const LONG_PRESS_MS = 280;
-const SCROLL_SLOP_PX = 10;
+// Tras un cambio de tamaño de la ventana se espera a que se quede quieta antes
+// de reacomodar el robot: al deslizar rápido en el celular la barra del
+// navegador aparece y se oculta varias veces por segundo.
+const RESIZE_SETTLE_MS = 150;
+
+const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
+
+/**
+ * El desplazamiento vertical permitido para un botón de alto `h`: nunca por
+ * debajo de su sitio (0) ni por encima del encabezado. Con el tamaño de la
+ * ventana y no midiendo la pantalla, así no depende del momento de un scroll.
+ */
+function clampY(y: number, h: number) {
+  const homeTop = window.innerHeight - edgeMargin() - h;
+  return Math.min(0, Math.max(y, TOP_LIMIT_PX - homeTop));
+}
+
+/** Un arrastre en curso, con mouse o con dedo. */
+type PointerDrag = {
+  id: number;
+  startX: number;
+  startY: number;
+  fromX: number;
+  fromY: number;
+  /** Ya pasó del umbral: es arrastre y no toque */
+  moving: boolean;
+  /** Límites del desplazamiento; el máximo de los dos ejes es su esquina (0) */
+  minX: number;
+  minY: number;
+};
 
 /** Margen al borde de la ventana, el mismo de las clases right-4 / sm:right-6. */
 const edgeMargin = () => (window.innerWidth >= 640 ? 24 : 16);
@@ -109,7 +140,6 @@ export function Robot({
   bubbles: string[];
 }) {
   const reduced = !!useReducedMotion();
-  const dragControls = useDragControls();
   const [hover, setHover] = useState(false);
   const [blink, setBlink] = useState(false);
   const [asleep, setAsleep] = useState(false);
@@ -122,8 +152,8 @@ export function Robot({
     typeof window === "undefined" ? null : readPlacement()
   );
   const button = useRef<HTMLButtonElement>(null);
-  const bounds = useRef<HTMLDivElement>(null);
   const dragged = useRef(false);
+  const pointer = useRef<PointerDrag | null>(null);
 
   // Desplazamiento respecto de su sitio de siempre: en x, pegado a un lado o
   // al otro; en y, lo que eligió la persona.
@@ -270,17 +300,16 @@ export function Robot({
   }, [reduced, open]);
 
   // Coloca el robot donde dice `p`, dentro de la ventana. Se usa al soltarlo,
-  // al cargar la página y cuando la ventana cambia de tamaño.
+  // al cargar la página y cuando la ventana cambia de tamaño. Se calcula con el
+  // tamaño de la ventana y del botón, sin medir posiciones en pantalla: así el
+  // resultado no depende del momento de un scroll en que se mida.
   const place = useCallback(
     (p: Placement, smooth: boolean) => {
       const b = button.current;
       if (!b) return;
-      const x = p?.side === "left" ? -(window.innerWidth - b.offsetWidth - 2 * edgeMargin()) : 0;
-      // y acotada: nunca por debajo de su sitio ni por encima del encabezado.
-      const rect = b.getBoundingClientRect();
-      const top = rect.top - (dy.get() - (p?.y ?? 0));
-      let y = Math.min(0, p?.y ?? 0);
-      if (top < TOP_LIMIT_PX) y += TOP_LIMIT_PX - top;
+      const m = edgeMargin();
+      const x = p?.side === "left" ? -(window.innerWidth - 2 * m - b.offsetWidth) : 0;
+      const y = clampY(p?.y ?? 0, b.offsetHeight);
       if (smooth && !reduced) {
         animate(dx, x, { type: "spring", stiffness: 380, damping: 30 });
         animate(dy, y, { type: "spring", stiffness: 380, damping: 30 });
@@ -292,12 +321,24 @@ export function Robot({
     [dx, dy, reduced]
   );
 
-  // Al montar: recupera dónde lo dejaron y se reacomoda si cambia la ventana.
+  // Al montar: recupera dónde lo dejaron, y se reacomoda cuando la ventana
+  // termina de cambiar de tamaño (girar el teléfono, redimensionar). Anclado
+  // abajo, mientras la barra del navegador sube y baja el robot conserva su
+  // distancia al borde inferior sin que haga falta tocarlo.
   useEffect(() => {
     place(readPlacement(), false);
-    const onResize = () => place(readPlacement(), false);
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const onResize = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (!pointer.current) place(readPlacement(), false);
+      }, RESIZE_SETTLE_MS);
+    };
     window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", onResize);
+    };
   }, [place]);
 
   // Al soltarlo: se pega al borde más cercano con un muelle y se recuerda. Si
@@ -306,99 +347,70 @@ export function Robot({
     setDragging(false);
     const b = button.current;
     if (!b) return;
-    const r = b.getBoundingClientRect();
-    const side = r.left + r.width / 2 < window.innerWidth / 2 ? "left" : "right";
-    const y = Math.min(0, dy.get());
+    const centerX = window.innerWidth - edgeMargin() - b.offsetWidth / 2 + dx.get();
+    const side = centerX < window.innerWidth / 2 ? "left" : "right";
+    // Se guarda ya acotada: si no, al crecer la ventana (la barra del navegador
+    // que se oculta) el robot subía solo hacia la altura sin acotar.
+    const y = clampY(dy.get(), b.offsetHeight);
     const next: Placement = side === "right" && y > -24 ? null : { side, y };
     setPlacement(next);
     savePlacement(next);
     place(next, true);
-  }, [dy, place]);
+  }, [dx, dy, place]);
 
-  // Arrastre táctil: mantener presionado lo levanta (con una vibración corta
-  // donde el navegador la permite) y entonces sigue al dedo; al soltarlo se
-  // pega al borde como con el mouse. Va con eventos nativos porque hace falta
-  // cancelar el scroll (preventDefault) y React registra touchmove como pasivo.
-  useEffect(() => {
-    const el = button.current;
-    if (!el) return;
-    type TouchDrag = {
-      x: number;
-      y: number;
-      fromX: number;
-      fromY: number;
-      armed: boolean;
-      timer: ReturnType<typeof setTimeout>;
-      bounds: { minX: number; maxX: number; minY: number; maxY: number };
+  // Arrastre propio con Pointer Events, igual con mouse que con dedo: más de
+  // 5 px con el botón apretado es arrastre y si no, es un toque que abre el chat.
+  // No usa el drag de Motion: con límites dados por un elemento, Motion vuelve
+  // a medir y reubica lo arrastrado en cada cambio de tamaño de la ventana, y en
+  // el celular, al deslizar rápido, la barra del navegador lo dispara una y otra
+  // vez: el robot saltaba hasta arriba o al medio de la pantalla y volvía.
+  const onPointerDown = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    dragged.current = false;
+    const b = e.currentTarget;
+    const m = edgeMargin();
+    // Si todavía se estaba acomodando en el borde, se agarra desde donde está
+    dx.stop();
+    dy.stop();
+    pointer.current = {
+      id: e.pointerId,
+      startX: e.clientX,
+      startY: e.clientY,
+      fromX: dx.get(),
+      fromY: dy.get(),
+      moving: false,
+      minX: -(window.innerWidth - 2 * m - b.offsetWidth),
+      minY: TOP_LIMIT_PX - (window.innerHeight - m - b.offsetHeight),
     };
-    let state: TouchDrag | null = null;
-    const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
+    try {
+      b.setPointerCapture(e.pointerId);
+    } catch {
+      // Sin captura el arrastre igual funciona mientras el puntero siga encima
+    }
+  };
 
-    const onStart = (e: TouchEvent) => {
-      const t = e.touches[0];
-      if (!t || e.touches.length > 1) return;
-      const r = el.getBoundingClientRect();
-      const m = edgeMargin();
-      state = {
-        x: t.clientX,
-        y: t.clientY,
-        fromX: dx.get(),
-        fromY: dy.get(),
-        armed: false,
-        bounds: {
-          minX: -(r.left - m),
-          maxX: window.innerWidth - m - r.right,
-          minY: -(r.top - TOP_LIMIT_PX),
-          maxY: window.innerHeight - m - r.bottom,
-        },
-        timer: setTimeout(() => {
-          if (!state) return;
-          state.armed = true;
-          // Lo que siga ya no es un toque: al soltar no abre el chat
-          dragged.current = true;
-          setDragging(true);
-          navigator.vibrate?.(12);
-        }, LONG_PRESS_MS),
-      };
-    };
-    const onMove = (e: TouchEvent) => {
-      const t = e.touches[0];
-      if (!state || !t) return;
-      const ox = t.clientX - state.x;
-      const oy = t.clientY - state.y;
-      if (!state.armed) {
-        // Se movió antes de tiempo: es un scroll, que siga su curso
-        if (Math.hypot(ox, oy) > SCROLL_SLOP_PX) {
-          clearTimeout(state.timer);
-          state = null;
-        }
-        return;
-      }
-      e.preventDefault();
-      const { minX, maxX, minY, maxY } = state.bounds;
-      dx.set(state.fromX + clamp(ox, minX, maxX));
-      dy.set(state.fromY + clamp(oy, minY, maxY));
-    };
-    const onEnd = () => {
-      if (!state) return;
-      clearTimeout(state.timer);
-      const armed = state.armed;
-      state = null;
-      if (armed) drop();
-    };
+  const onPointerMove = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    const d = pointer.current;
+    if (!d || d.id !== e.pointerId) return;
+    const ox = e.clientX - d.startX;
+    const oy = e.clientY - d.startY;
+    if (!d.moving) {
+      if (Math.hypot(ox, oy) <= DRAG_THRESHOLD_PX) return;
+      d.moving = true;
+      // Lo que siga ya no es un toque: al soltar no abre el chat
+      dragged.current = true;
+      setDragging(true);
+    }
+    dx.set(clamp(d.fromX + ox, d.minX, 0));
+    dy.set(clamp(d.fromY + oy, d.minY, 0));
+  };
 
-    el.addEventListener("touchstart", onStart, { passive: true });
-    el.addEventListener("touchmove", onMove, { passive: false });
-    el.addEventListener("touchend", onEnd);
-    el.addEventListener("touchcancel", onEnd);
-    return () => {
-      if (state) clearTimeout(state.timer);
-      el.removeEventListener("touchstart", onStart);
-      el.removeEventListener("touchmove", onMove);
-      el.removeEventListener("touchend", onEnd);
-      el.removeEventListener("touchcancel", onEnd);
-    };
-  }, [dx, dy, drop]);
+  const endPointer = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    const d = pointer.current;
+    if (!d || d.id !== e.pointerId) return;
+    pointer.current = null;
+    if (d.moving) drop();
+  };
 
   // El clic: estrellas en los ojos y un "boing", y el chat se abre a los
   // 220 ms, antes de que acabe la celebración. Sin movimiento, abre al instante.
@@ -424,40 +436,13 @@ export function Robot({
 
   return (
     <>
-      {/* Dónde se puede soltar: la ventana, menos el encabezado */}
-      <div
-        ref={bounds}
-        aria-hidden
-        className="pointer-events-none fixed inset-x-2 top-[76px] bottom-2"
-      />
       <motion.div
         className="fixed right-4 bottom-4 z-40 sm:right-6 sm:bottom-6"
         animate={{ scale: open ? 0.6 : 1, opacity: open ? 0 : 1 }}
         transition={{ type: "spring", stiffness: 260, damping: 26 }}
         style={{ pointerEvents: open ? "none" : undefined }}
       >
-        <motion.div
-          className="relative"
-          style={{ x: dx, y: dy }}
-          drag
-          // Con el mouse arrastra Motion; el dedo va por el efecto de arriba
-          dragListener={false}
-          dragControls={dragControls}
-          dragConstraints={bounds}
-          dragElastic={0.06}
-          dragMomentum={false}
-          onPointerDown={(e) => {
-            dragged.current = false;
-            if (e.pointerType === "mouse") dragControls.start(e);
-          }}
-          onDragStart={() => setDragging(true)}
-          onDrag={(_, info) => {
-            if (Math.hypot(info.offset.x, info.offset.y) > DRAG_THRESHOLD_PX) {
-              dragged.current = true;
-            }
-          }}
-          onDragEnd={drop}
-        >
+        <motion.div className="relative" style={{ x: dx, y: dy }}>
           <AnimatePresence>
             {bubble && !open && !asleep && !dragging ? (
               <motion.button
@@ -505,6 +490,16 @@ export function Robot({
             aria-label={label}
             title={label}
             onClick={onClick}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={endPointer}
+            onPointerCancel={endPointer}
+            onLostPointerCapture={endPointer}
+            // Un arrastre soltado fuera del botón no dispara "click": que no se
+            // coma el siguiente Enter
+            onKeyDown={() => {
+              dragged.current = false;
+            }}
             // Solo el mouse cuenta como "acercarse": un toque dispara pointerenter
             // sin pointerleave y el robot se quedaba saludando
             onPointerEnter={(e) => setHover(e.pointerType === "mouse")}
@@ -514,8 +509,9 @@ export function Robot({
             // Con teclado se ve el anillo de foco, que es lo que hace falta.
             className={cn(
               "group focus-visible:ring-primary focus-visible:ring-offset-background relative block size-18 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-offset-2 sm:size-21",
-              // Sin menú contextual ni selección al mantenerlo presionado
-              "select-none [-webkit-touch-callout:none]",
+              // El dedo que lo toca lo arrastra (como en Smart Report), sin menú
+              // contextual ni selección al mantenerlo presionado
+              "touch-none select-none [-webkit-touch-callout:none]",
               dragging ? "cursor-grabbing" : "cursor-grab"
             )}
             onContextMenu={(e) => e.preventDefault()}
