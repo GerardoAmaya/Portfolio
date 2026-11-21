@@ -12,9 +12,11 @@
  * adormecen tras un minuto sin nadie.
  *
  * De vez en cuando habla: un globo con una frase corta, que se cierra solo y
- * abre el chat si se toca. Se arrastra con mouse o dedo, se pega al borde más
- * cercano y recuerda dónde lo dejaron. Con "reducir movimiento" se queda
- * quieto, mira al frente y no habla.
+ * abre el chat si se toca. El mismo globo sale al pasarle el mouse por encima
+ * o al llegar con el teclado, porque dice qué hace el botón. Se arrastra con
+ * mouse o dedo, se pega al borde más cercano y recuerda dónde lo dejaron. Con
+ * "reducir movimiento" se queda quieto, mira al frente y solo habla si se lo
+ * piden.
  */
 import {
   AnimatePresence,
@@ -31,6 +33,7 @@ import {
   useId,
   useRef,
   useState,
+  type FocusEvent as ReactFocusEvent,
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { BorderBeam } from "@/components/ui/border-beam";
@@ -40,6 +43,9 @@ import { cn } from "@/lib/utils";
 const FIRST_BUBBLE_MS = 9_000;
 const BETWEEN_BUBBLES_MS = 40_000;
 const BUBBLE_VISIBLE_MS = 6_500;
+// Al quitarle el mouse, el globo espera esto antes de irse: lo justo para
+// pasar del robot al globo y tocarlo.
+const BUBBLE_GRACE_MS = 280;
 
 // Sin mover el mouse este rato, la mirada vuelve al frente; con mucho más,
 // el robot se adormece.
@@ -60,6 +66,10 @@ type Mood = "normal" | "happy" | "stars" | "thinking" | "asleep" | "surprised";
 
 /** Dónde lo dejó la persona; `null` es su sitio de siempre, abajo a la derecha. */
 type Placement = { side: "left" | "right"; y: number } | null;
+
+/** Lo que tiene abierto el globo a pedido: el mouse (sobre el robot o el globo) y el foco. */
+type Holders = { robot: boolean; bubble: boolean; focus: boolean };
+const NO_HOLDERS: Holders = { robot: false, bubble: false, focus: false };
 
 const STORAGE_KEY = "portfolio:ask-robot";
 // Más de esto con el botón apretado es arrastre, no clic.
@@ -145,6 +155,9 @@ export function Robot({
   const [asleep, setAsleep] = useState(false);
   const [reaction, setReaction] = useState(false);
   const [bubble, setBubble] = useState<string | null>(null);
+  // El globo que pide la persona (mouse encima o foco de teclado). Su frase se
+  // fija al abrirse para que no cambie ni parpadee mientras sigue ahí.
+  const [pinned, setPinned] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   // Solo decide hacia dónde sale el globo, que nunca está en el primer render:
   // leerlo aquí no descuadra la hidratación aunque el servidor no lo conozca.
@@ -154,6 +167,8 @@ export function Robot({
   const button = useRef<HTMLButtonElement>(null);
   const dragged = useRef(false);
   const pointer = useRef<PointerDrag | null>(null);
+  const holders = useRef<Holders>({ ...NO_HOLDERS });
+  const holdTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // Desplazamiento respecto de su sitio de siempre: en x, pegado a un lado o
   // al otro; en y, lo que eligió la persona.
@@ -267,8 +282,8 @@ export function Robot({
     };
   }, [reduced]);
 
-  // El globo: de vez en cuando, nunca con el chat abierto ni con movimiento
-  // reducido, y solo con la pestaña a la vista.
+  // El globo del turno: de vez en cuando, nunca con el chat abierto ni con
+  // movimiento reducido, y solo con la pestaña a la vista.
   const bubblesRef = useRef(bubbles);
   useEffect(() => {
     bubblesRef.current = bubbles;
@@ -298,6 +313,55 @@ export function Robot({
       setBubble(null);
     };
   }, [reduced, open]);
+
+  // Lo que dice el globo: lo que pidió la persona o, si no, el del turno, que no
+  // sale con el robot dormido. Ninguno con el chat abierto ni al arrastrarlo.
+  const shown = open || dragging ? null : (pinned ?? (asleep ? null : bubble));
+
+  // Cierra el globo, el pedido y el del turno, y olvida quién lo sostenía.
+  const dismiss = useCallback(() => {
+    holders.current = { ...NO_HOLDERS };
+    clearTimeout(holdTimer.current);
+    setPinned(null);
+    setBubble(null);
+  }, []);
+
+  // El globo a pedido sigue abierto mientras algo lo sostenga. Cuando lo suelta
+  // todo, espera un poco antes de cerrarse, para que el mouse alcance a pasar
+  // del robot al globo.
+  const hold = (who: keyof Holders, on: boolean) => {
+    if (holders.current[who] === on) return;
+    holders.current[who] = on;
+    clearTimeout(holdTimer.current);
+    if (on) {
+      // Si ya hay un globo a la vista se queda ese; si no, la primera frase.
+      setPinned((p) => p ?? shown ?? bubbles[0] ?? null);
+    } else if (!Object.values(holders.current).some(Boolean)) {
+      holdTimer.current = setTimeout(dismiss, BUBBLE_GRACE_MS);
+    }
+  };
+
+  // Con teclado el foco también lo abre, pero solo el foco visible: tras un
+  // clic el foco se queda en el botón y el globo seguiría abierto sin nadie.
+  const onFocus = (e: ReactFocusEvent<HTMLButtonElement>) => {
+    if (e.currentTarget.matches(":focus-visible")) hold("focus", true);
+  };
+  const onBlur = () => hold("focus", false);
+
+  // Con el chat abierto el robot se esconde y ya no le llegan "pointerleave" ni
+  // "blur": al abrir y al cerrar el chat, el globo empieza de cero.
+  useEffect(() => dismiss, [open, dismiss]);
+
+  // Escape cierra el globo sin tener que mover el mouse ni el foco.
+  const talking = shown !== null;
+  useEffect(() => {
+    if (!talking) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") dismiss();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [talking, dismiss]);
 
   // Coloca el robot donde dice `p`, dentro de la ventana. Se usa al soltarlo,
   // al cargar la página y cuando la ventana cambia de tamaño. Se calcula con el
@@ -400,6 +464,8 @@ export function Robot({
       // Lo que siga ya no es un toque: al soltar no abre el chat
       dragged.current = true;
       setDragging(true);
+      // Y el globo se va, sin volver solo al soltarlo
+      dismiss();
     }
     dx.set(clamp(d.fromX + ox, d.minX, 0));
     dy.set(clamp(d.fromY + oy, d.minY, 0));
@@ -414,17 +480,22 @@ export function Robot({
 
   // El clic: estrellas en los ojos y un "boing", y el chat se abre a los
   // 220 ms, antes de que acabe la celebración. Sin movimiento, abre al instante.
+  const openChat = () => {
+    dismiss();
+    setHover(false);
+    if (reduced) return onOpen();
+    setReaction(true);
+    setTimeout(onOpen, OPEN_AFTER_MS);
+    setTimeout(() => setReaction(false), REACTION_MS);
+  };
+
   // Un arrastre que termina sobre el botón también dispara "click": ese no abre.
   const onClick = () => {
     if (dragged.current) {
       dragged.current = false;
       return;
     }
-    setHover(false);
-    if (reduced) return onOpen();
-    setReaction(true);
-    setTimeout(onOpen, OPEN_AFTER_MS);
-    setTimeout(() => setReaction(false), REACTION_MS);
+    openChat();
   };
 
   const float = !reduced && !hover && !asleep && !dragging;
@@ -444,11 +515,21 @@ export function Robot({
       >
         <motion.div className="relative" style={{ x: dx, y: dy }}>
           <AnimatePresence>
-            {bubble && !open && !asleep && !dragging ? (
+            {shown ? (
               <motion.button
                 type="button"
-                key={bubble}
-                onClick={onClick}
+                key={shown}
+                // El globo no se arrastra: su clic siempre abre el chat
+                onClick={openChat}
+                // Con el mouse encima sigue abierto, para poder alcanzarlo y tocarlo
+                onPointerEnter={(e) => {
+                  if (e.pointerType === "mouse") hold("bubble", true);
+                }}
+                onPointerLeave={(e) => {
+                  if (e.pointerType === "mouse") hold("bubble", false);
+                }}
+                onFocus={onFocus}
+                onBlur={onBlur}
                 initial={{ opacity: 0, y: bubbleBelow ? -8 : 8, scale: 0.9 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: bubbleBelow ? -4 : 4, scale: 0.95 }}
@@ -469,7 +550,7 @@ export function Robot({
                       : "rounded-br-sm"
                 )}
               >
-                {bubble}
+                {shown}
                 {/* El borde con brillo de Magic UI, en la paleta del sitio */}
                 {!reduced ? (
                   <BorderBeam
@@ -487,8 +568,8 @@ export function Robot({
           <motion.button
             ref={button}
             type="button"
+            // Sin title: el tooltip del navegador saldría encima del globo
             aria-label={label}
-            title={label}
             onClick={onClick}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
@@ -502,11 +583,20 @@ export function Robot({
             }}
             // Solo el mouse cuenta como "acercarse": un toque dispara pointerenter
             // sin pointerleave y el robot se quedaba saludando
-            onPointerEnter={(e) => setHover(e.pointerType === "mouse")}
-            onPointerLeave={() => setHover(false)}
-            // Sin onFocus: el foco se queda en el botón tras un clic, un arrastre
+            onPointerEnter={(e) => {
+              const mouse = e.pointerType === "mouse";
+              setHover(mouse);
+              if (mouse) hold("robot", true);
+            }}
+            onPointerLeave={(e) => {
+              setHover(false);
+              if (e.pointerType === "mouse") hold("robot", false);
+            }}
+            // El foco no saluda: se queda en el botón tras un clic, un arrastre
             // o al cerrar el chat, y el robot seguía saludando con el mouse lejos.
-            // Con teclado se ve el anillo de foco, que es lo que hace falta.
+            // Con teclado se ven el anillo de foco y el globo.
+            onFocus={onFocus}
+            onBlur={onBlur}
             className={cn(
               "group focus-visible:ring-primary focus-visible:ring-offset-background relative block size-18 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-offset-2 sm:size-21",
               // El dedo que lo toca lo arrastra (como en Smart Report), sin menú
