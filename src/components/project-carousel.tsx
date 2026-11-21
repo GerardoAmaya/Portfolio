@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 
 export type CarouselSlide = { src: string; alt: string };
 
-const AUTOPLAY_MS = 4000;
+const AUTOPLAY_MS = 7000;
 // Las capturas vecinas se asoman achicadas y tenues, y crecen al llegar al centro
 const MIN_SCALE = 0.86;
 const MIN_OPACITY = 0.4;
@@ -25,7 +25,7 @@ const MIN_OPACITY = 0.4;
  * Carrusel de capturas de un caso de estudio, en el lugar de la portada.
  * Sobre el Carousel de shadcn/ui (Embla) con su plugin de autoplay:
  *
- * - Avanza cada 4 s en bucle; se detiene con el mouse encima o el foco dentro
+ * - Avanza cada 7 s en bucle; se detiene con el mouse encima o el foco dentro
  *   y retoma al salir. La barra de la miniatura activa va atada al temporizador
  *   del plugin, así que pausa y reinicia con él.
  * - Las capturas vecinas se ven a los lados, más chicas y tenues; al arrastrar
@@ -53,6 +53,17 @@ export function ProjectCarousel({ slides, title }: { slides: CarouselSlide[]; ti
     paused: true,
   });
   const tweenNodes = React.useRef<(HTMLDivElement | null)[]>([]);
+  const thumbsRef = React.useRef<HTMLDivElement>(null);
+
+  // La miniatura activa siempre a la vista: en el celular no caben todas. Se
+  // desplaza la fila y no se usa scrollIntoView, que también movía la página.
+  React.useEffect(() => {
+    const row = thumbsRef.current;
+    const thumb = row?.children[selected] as HTMLElement | undefined;
+    if (!row || !thumb) return;
+    const left = thumb.offsetLeft - (row.clientWidth - thumb.offsetWidth) / 2;
+    row.scrollTo({ left, behavior: reduced ? "auto" : "smooth" });
+  }, [selected, reduced]);
 
   const autoplay = React.useMemo(
     () =>
@@ -234,7 +245,12 @@ export function ProjectCarousel({ slides, title }: { slides: CarouselSlide[]; ti
             </span>
           </div>
 
-          <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+          {/* El relleno deja sitio al anillo y al salto de la miniatura activa,
+              que el scroll horizontal recortaba arriba y abajo */}
+          <div
+            ref={thumbsRef}
+            className="-mx-1 mt-2 flex [scrollbar-width:none] gap-2 overflow-x-auto px-1 pt-2 pb-2 [&::-webkit-scrollbar]:hidden"
+          >
             {slides.map((s, i) => {
               const active = i === selected;
               return (

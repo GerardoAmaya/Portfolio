@@ -107,14 +107,17 @@
    fondo de cada tema */
 :root {
   --robot-body-top: #f5f3ff;
+  --robot-body-mid: #ede9fe;
   --robot-body-bottom: #ddd6fe;
   --robot-body-edge: #c4b5fd;
 }
 
+/* El mismo blanco con toque lavanda del robot de Smart Report IA */
 .dark {
   --robot-body-top: #ffffff;
-  --robot-body-bottom: #dcd8e6;
-  --robot-body-edge: #c8c2d8;
+  --robot-body-mid: #f3f0fd;
+  --robot-body-bottom: #ddd6f5;
+  --robot-body-edge: #c4badf;
 }
 
 @layer base {
@@ -470,7 +473,7 @@ html.filter-transition::view-transition-new(root) {
 
 /* La captura activa se acerca muy despacio mientras está a la vista */
 .carousel-kenburns {
-  animation: carousel-kenburns 4.5s ease-out forwards;
+  animation: carousel-kenburns 7.5s ease-out forwards;
 }
 
 @keyframes carousel-kenburns {
