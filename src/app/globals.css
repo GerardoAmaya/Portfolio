@@ -473,7 +473,7 @@ html.filter-transition::view-transition-new(root) {
 
 /* La captura activa se acerca muy despacio mientras está a la vista */
 .carousel-kenburns {
-  animation: carousel-kenburns 4.5s ease-out forwards;
+  animation: carousel-kenburns 7.5s ease-out forwards;
 }
 
 @keyframes carousel-kenburns {
