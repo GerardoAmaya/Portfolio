@@ -101,7 +101,14 @@
       "backend": "Backend y APIs",
       "frontend": "Frontend"
     },
-    "viewAll": "Ver los {count} proyectos"
+    "viewAll": "Ver los {count} proyectos",
+    "carousel": {
+      "roledescription": "carrusel",
+      "label": "Capturas de {title}",
+      "previous": "Captura anterior",
+      "next": "Captura siguiente",
+      "goTo": "Ver captura {n}: {alt}"
+    }
   },
   "Experience": {
     "title": "Experiencia",

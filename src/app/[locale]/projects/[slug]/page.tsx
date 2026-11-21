@@ -6,6 +6,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ProjectCarousel } from "@/components/project-carousel";
 import { getProject, projects } from "@/data/projects";
 import { pageMetadata } from "@/lib/metadata";
 import { routing, type Locale } from "@/i18n/routing";
@@ -120,19 +121,26 @@ export default async function ProjectDetailPage({
       </header>
 
       <div className="container-app pb-12">
-        <div
-          className="border-border/60 bg-muted relative aspect-video w-full overflow-hidden rounded-2xl border"
-          style={{ viewTransitionName: "project-cover" }}
-        >
-          <Image
-            src={project.cover}
-            alt={i18n.title}
-            fill
-            sizes="(min-width: 1024px) 1024px, 100vw"
-            className="object-contain"
-            priority
+        {project.gallery?.length ? (
+          <ProjectCarousel
+            title={i18n.title}
+            slides={project.gallery.map((shot) => ({ src: shot.src, alt: shot.alt[locale] }))}
           />
-        </div>
+        ) : (
+          <div
+            className="border-border/60 bg-muted relative aspect-video w-full overflow-hidden rounded-2xl border"
+            style={{ viewTransitionName: "project-cover" }}
+          >
+            <Image
+              src={project.cover}
+              alt={i18n.title}
+              fill
+              sizes="(min-width: 1024px) 1024px, 100vw"
+              className="object-contain"
+              priority
+            />
+          </div>
+        )}
       </div>
 
       <section className="container-app pb-24">
