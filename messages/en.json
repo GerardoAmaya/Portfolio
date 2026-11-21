@@ -108,6 +108,14 @@
       "previous": "Previous screenshot",
       "next": "Next screenshot",
       "goTo": "Show screenshot {n}: {alt}"
+    },
+    "case": {
+      "problem": "Problem",
+      "solution": "Solution",
+      "outcome": "Outcome",
+      "showFull": "Read the full story",
+      "hideFull": "Hide the full story",
+      "readingTime": "{minutes} min read"
     }
   },
   "Experience": {
