@@ -445,6 +445,24 @@ html.filter-transition::view-transition-new(root) {
   }
 }
 
+/* Carrusel de capturas (components/project-carousel.tsx): la barra de la
+   miniatura activa marca cuánto falta para avanzar */
+.carousel-progress {
+  transform-origin: left;
+  animation-name: carousel-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes carousel-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* Asistente "Pregúntale a mi IA" (components/ask)                    */
 /* ------------------------------------------------------------------ */
