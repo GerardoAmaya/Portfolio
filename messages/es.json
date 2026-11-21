@@ -108,6 +108,14 @@
       "previous": "Captura anterior",
       "next": "Captura siguiente",
       "goTo": "Ver captura {n}: {alt}"
+    },
+    "case": {
+      "problem": "Problema",
+      "solution": "Solución",
+      "outcome": "Resultado",
+      "showFull": "Leer el caso completo",
+      "hideFull": "Ocultar el caso completo",
+      "readingTime": "{minutes} min de lectura"
     }
   },
   "Experience": {

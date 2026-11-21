@@ -5,6 +5,21 @@ export type ProjectCategory = "ai" | "fullstack" | "backend" | "frontend";
 
 export const PROJECT_CATEGORIES: ProjectCategory[] = ["ai", "fullstack", "backend", "frontend"];
 
+/** Un tramo del resumen: una frase y de 3 a 4 viñetas cortas */
+export type BriefSection = { lead: string; points: string[] };
+
+/**
+ * Resumen escaneable de un caso de estudio largo. Sale solo del texto completo
+ * del mismo proyecto, con sus cifras tal cual; `**...**` las resalta.
+ * src/data/projects.test.ts vigila los largos y que no aparezcan cifras nuevas.
+ */
+export type CaseBrief = {
+  /** Una frase de 30 palabras como mucho */
+  problem: string;
+  solution: BriefSection;
+  outcome: BriefSection;
+};
+
 export type Project = {
   slug: string;
   categories: ProjectCategory[];
@@ -40,6 +55,12 @@ export type Project = {
       outcome: string;
     }
   >;
+  /**
+   * Resumen para los casos largos: las tarjetas muestran esto y el texto
+   * completo de `i18n` queda detrás de «Leer el caso completo». `i18n` no se
+   * recorta porque también es lo que sabe el asistente (lib/ask/context.ts).
+   */
+  brief?: Record<Locale, CaseBrief>;
 };
 
 export const projects: Project[] = [
@@ -151,6 +172,52 @@ export const projects: Project[] = [
           'It is in production and can be tried: the Telegram bot and the dashboard, with a read-only demo user. It runs on a single Oracle Cloud Always Free ARM machine with Docker Compose and Caddy, and everything around it (Cloudflare R2, DuckDNS, OpenFreeMap, GitHub Actions) sits on permanent free tiers: infrastructure costs USD 0 a month and the only cost is the model, a measured USD 0.0018 per photo, because it receives the thumbnail rather than the original. The dashboard assistant has a daily cap per person, so public access cannot spend more than about USD 0.07 a day. The real cycle is closed end to end in production: a report sent from a phone (a flooded street in Mejicanos) went through category proposal, confirmation, assignment, "in progress" and closure with a photo of the repair, and the notifications came back; verified in the data, not just on screen. Closing is blocked without an evidence photo, because a closure with no evidence is a claim nobody can check. 312 tests and nine Playwright journeys run in CI against the running system. The classification and grouping phases stay open on purpose: their verification needs 200 hand-labeled photos and 200 hand-grouped reports, and the code that measures them reports an insufficient sample instead of producing a number.',
       },
     },
+    brief: {
+      es: {
+        problem:
+          "Quien reporta tiene prisa y no va a instalar una app; quien despacha necesita saber qué reportes son el mismo; y sin aviso de vuelta, nadie reporta una segunda vez.",
+        solution: {
+          lead: "El modelo propone y el código decide: Claude Haiku 4.5 mira la foto y sugiere categoría y urgencia, y el bot pide confirmación antes de aceptarla.",
+          points: [
+            "Agrupa el código, no el modelo: por categoría confirmada y distancia medida con PostGIS.",
+            "Tres salidas, no dos: agrupado, dudoso o solo; lo dudoso espera a una persona.",
+            "«Pregúntale al tablero» contesta con los datos del sistema, pero solo puede mirar.",
+            "Sin Redis: la cola es una tabla de Postgres con FOR UPDATE SKIP LOCKED.",
+          ],
+        },
+        outcome: {
+          lead: "En producción y con el ciclo real cerrado de punta a punta: un reporte desde un teléfono llegó al cierre con foto del arreglo, y los avisos llegaron de vuelta.",
+          points: [
+            "La infraestructura cuesta **USD 0** al mes: todo está en niveles gratuitos permanentes.",
+            "El único costo es el modelo: **USD 0,0018** medidos por foto.",
+            "**312 pruebas** y **nueve recorridos** de Playwright corren en CI contra el sistema levantado.",
+            "Clasificación y agrupación siguen abiertas a propósito: sin muestra suficiente, no hay número.",
+          ],
+        },
+      },
+      en: {
+        problem:
+          "Reporters are in a hurry and will not install an app; dispatchers need to know which reports are the same; and without a notification back, no one reports twice.",
+        solution: {
+          lead: "The model proposes and the code decides: Claude Haiku 4.5 looks at the photo and suggests category and urgency, and the bot asks for confirmation first.",
+          points: [
+            "Code, not the model, groups reports: by confirmed category and distance measured with PostGIS.",
+            "Three outcomes, not two: grouped, doubtful or alone; doubtful cases wait on a human.",
+            "“Ask the dashboard” answers with the system's data, but it can only look.",
+            "No Redis: the queue is a Postgres table with FOR UPDATE SKIP LOCKED.",
+          ],
+        },
+        outcome: {
+          lead: "In production, with the real cycle closed end to end: a report sent from a phone reached closure with a repair photo, and the notifications came back.",
+          points: [
+            "Infrastructure costs **USD 0** a month: everything sits on permanent free tiers.",
+            "The only cost is the model: a measured **USD 0.0018** per photo.",
+            "**312 tests** and **nine Playwright journeys** run in CI against the running system.",
+            "Classification and grouping stay open on purpose: no number without a large enough sample.",
+          ],
+        },
+      },
+    },
   },
   {
     slug: "waypoint",
@@ -214,6 +281,52 @@ export const projects: Project[] = [
           "Across a 26-case benchmark: 25 satisfy every hard constraint, zero invented places over 321 generated stops and zero out of 240 stops outside opening or daylight hours. The detour factor (1.45) and the speeds (35 to 62 km/h depending on leg length) were measured against 812 real pairs rather than picked by feel. Catalog of 5,786 active places, 743 backend tests and 55 on the frontend. Public demo live.",
       },
     },
+    brief: {
+      es: {
+        problem:
+          "Armar un viaje de varios días exige cruzar a mano lugares, distancias y horarios; un modelo de lenguaje a veces ignora «odio madrugar» y devuelve lugares que pueden no existir.",
+        solution: {
+          lead: "El problema se parte en dos: el modelo traduce la frase a restricciones y un motor determinista las hace cumplir.",
+          points: [
+            "Medible: se comprueba automáticamente si el itinerario respeta cada restricción.",
+            "Lo incumplido viaja en la respuesta como violación, con su magnitud, sin esconderse.",
+            "Catálogo de OpenStreetMap en PostGIS y una sola matriz de OpenRouteService por itinerario.",
+            "Un invariante geométrico descarta celdas donde la carretera mide menos que la línea recta.",
+          ],
+        },
+        outcome: {
+          lead: "**25 de 26 casos** del banco cumplen todas las restricciones duras, y la demo pública está en línea.",
+          points: [
+            "**Cero** lugares inventados en 321 paradas generadas.",
+            "**Cero** de 240 paradas fuera de horario.",
+            "Factor de desvío y velocidades medidos contra **812 pares reales**, no elegidos a ojo.",
+            "Catálogo de **5.786 lugares** activos; 743 tests en backend y 55 en frontend.",
+          ],
+        },
+      },
+      en: {
+        problem:
+          "Planning a multi-day trip means cross-referencing places, distances and opening hours by hand; a language model sometimes ignores “I hate early mornings” and returns places that may not exist.",
+        solution: {
+          lead: "The problem is split in two: the model translates the sentence into constraints and a deterministic engine enforces them.",
+          points: [
+            "Measurable: an automatic check tells whether the itinerary respects every constraint.",
+            "Whatever could not be satisfied comes back as a violation with its magnitude.",
+            "OpenStreetMap catalog in PostGIS and a single OpenRouteService matrix call per itinerary.",
+            "A geometric invariant discards cells where the road is shorter than the straight line.",
+          ],
+        },
+        outcome: {
+          lead: "**25 of 26 benchmark cases** satisfy every hard constraint, and the public demo is live.",
+          points: [
+            "**Zero** invented places over 321 generated stops.",
+            "**Zero** out of 240 stops outside opening or daylight hours.",
+            "Detour factor and speeds measured against **812 real pairs**, not picked by feel.",
+            "Catalog of **5,786 active places**; 743 backend tests and 55 on the frontend.",
+          ],
+        },
+      },
+    },
   },
   {
     slug: "docu-flow",
@@ -259,6 +372,52 @@ export const projects: Project[] = [
           "Measured across 120 fields against ground-truth labels: 93.3% accuracy when the system answers and just 1.7% silent failures, at 0.0045 USD per document. Faced with illegible documents it abstains rather than inventing, and whatever it cannot resolve lands in the review queue. Public demo with 12 invoices already processed.",
       },
     },
+    brief: {
+      es: {
+        problem:
+          "Una PyME recibe facturas en tres formatos y las pasa a mano al sistema contable; automatizarlo cuesta terminarlo, porque el OCR y el modelo se equivocan sin avisar.",
+        solution: {
+          lead: "Un pipeline asíncrono con Celery y Redis en el que cada campo lleva su confianza y procedencia, y lo que no supera el umbral va a revisión humana.",
+          points: [
+            "Tesseract con preprocesamiento OpenCV para las fotos con sombra.",
+            "Claude Haiku 4.5 para la extracción y Claude Sonnet 5 para las respuestas.",
+            "PostgreSQL 16 con pgvector: datos estructurados y vectores en un solo motor.",
+            "Preguntas semánticas por RAG, citando la página exacta; las de agregación, por SQL.",
+          ],
+        },
+        outcome: {
+          lead: "Medido sobre 120 campos con etiquetas de referencia.",
+          points: [
+            "**93.3%** de exactitud cuando el sistema responde.",
+            "Apenas **1.7%** de fallos silenciosos.",
+            "**0.0045 USD** por documento.",
+            "Ante documentos ilegibles se abstiene en lugar de inventar.",
+          ],
+        },
+      },
+      en: {
+        problem:
+          "A small business receives invoices in three formats and keys them in by hand; automating it is hard to finish because both OCR and model make mistakes silently.",
+        solution: {
+          lead: "An async pipeline on Celery and Redis where every field carries its confidence and provenance, and anything below the threshold goes to human review.",
+          points: [
+            "Tesseract with OpenCV preprocessing for shadowed phone photos.",
+            "Claude Haiku 4.5 for extraction and Claude Sonnet 5 for answers.",
+            "PostgreSQL 16 with pgvector: structured data and embeddings in a single engine.",
+            "Semantic questions go through RAG citing the exact page; aggregation questions, through SQL.",
+          ],
+        },
+        outcome: {
+          lead: "Measured across 120 fields against ground-truth labels.",
+          points: [
+            "**93.3%** accuracy when the system answers.",
+            "Just **1.7%** silent failures.",
+            "**0.0045 USD** per document.",
+            "Faced with illegible documents it abstains rather than inventing.",
+          ],
+        },
+      },
+    },
   },
   {
     slug: "portfolio-ai-assistant",
@@ -294,6 +453,52 @@ export const projects: Project[] = [
           "The model can only answer from a knowledge block built from the same data that powers the site (projects, experience, certifications and an extended profile with no phone number or references), and it cites where each fact comes from with markers like [[project:waypoint]] that the chat turns into links; references that do not exist are dropped on the client. It runs on Claude Haiku 5.5 with streamed responses, and that knowledge block uses prompt caching because it is identical on every question. The endpoint checks origin and body shape, caps questions at 500 characters and conversations at 8 turns, ignores instructions that try to change its role, and enforces 10 questions per hour per IP (stored only as a hash) and 300 per day site-wide. It is bilingual, the button can be dragged to either edge, and on phones it does not pop the keyboard open on entry.",
         outcome:
           "It runs in production and answers in about 3 to 4 seconds, measured from the browser. Getting there meant debugging three failures that never showed up locally: Haiku 5.5 rejects the temperature parameter; with extended thinking on it spent every token reasoning and returned an empty answer, so thinking is disabled and an empty answer now logs its reason; and on Netlify the function hung for 30 seconds until the platform killed it, so every external step (rate-limit storage and the model call) now has a timeout and logs how long it took. Cost is under a tenth of a cent per question, estimated from the model's published prices and not yet measured against real usage.",
+      },
+    },
+    brief: {
+      es: {
+        problem:
+          "Un reclutador tiene minutos, no horas, y un chat genérico inventaría: el asistente tenía que ser útil, honesto sobre lo que no sabe y barato de mantener abierto.",
+        solution: {
+          lead: "El modelo solo puede responder desde un bloque de conocimiento armado con los mismos datos del sitio: proyectos, experiencia, certificaciones y un perfil extendido.",
+          points: [
+            "Cita cada dato con un enlace a su fuente; las referencias inexistentes se descartan.",
+            "Corre en Claude Haiku 5.5 con streaming y prompt caching del bloque de conocimiento.",
+            "Valida origen y forma del cuerpo e ignora instrucciones que intenten cambiar su papel.",
+            "10 preguntas por hora por IP y 300 al día para todo el sitio.",
+          ],
+        },
+        outcome: {
+          lead: "Funciona en producción y responde en unos **3 a 4 segundos**, medidos desde el navegador, tras depurar tres fallas que en local no aparecían.",
+          points: [
+            "Haiku 5.5 rechaza el parámetro temperature.",
+            "El razonamiento extendido gastaba todos los tokens y devolvía una respuesta vacía: se desactiva.",
+            "En Netlify se colgaba 30 segundos: cada paso externo tiene ahora un tiempo máximo.",
+            "Menos de **una milésima de dólar** por pregunta: estimado, aún no medido.",
+          ],
+        },
+      },
+      en: {
+        problem:
+          "Recruiters have minutes, not hours, and a generic chatbot makes things up: the assistant had to be useful, honest about what it does not know and cheap to keep open.",
+        solution: {
+          lead: "The model can only answer from a knowledge block built from the same data as the site: projects, experience, certifications and an extended profile.",
+          points: [
+            "It cites each fact with a link to its source; nonexistent references are dropped.",
+            "Runs on Claude Haiku 5.5 with streaming and prompt caching for the knowledge block.",
+            "Checks origin and body shape, and ignores instructions that try to change its role.",
+            "10 questions per hour per IP and 300 a day site-wide.",
+          ],
+        },
+        outcome: {
+          lead: "It runs in production and answers in about **3 to 4 seconds**, measured from the browser, after debugging three failures that never showed up locally.",
+          points: [
+            "Haiku 5.5 rejects the temperature parameter.",
+            "Extended thinking spent every token and returned an empty answer, so it is disabled.",
+            "On Netlify it hung for 30 seconds; every external step now has a timeout.",
+            "Under **a tenth of a cent** per question: estimated, not yet measured.",
+          ],
+        },
       },
     },
   },
@@ -353,6 +558,50 @@ export const projects: Project[] = [
           "The dashboard resolves in a single $facet aggregation stage, and the groupings share a function-generated subpipeline, so adding a new breakdown is one line. Indexes live in migrations rather than the schema, with autoIndex off, following the ESR pattern so the screen's real query is served without an in-memory sort. Validation is layered: strict Zod at the API, which closes mass assignment and Mongo operator injection at once, plus $jsonSchema on the database itself, so a script or a direct connection cannot insert invalid data either.",
         outcome:
           "Delivered with Playwright E2E tests, a green SonarCloud quality gate and a written technical analysis covering the data model, an incident diagnosis, the AWS architecture and the migration plan.",
+      },
+    },
+    brief: {
+      es: {
+        problem:
+          "El riesgo estaba en el dashboard: resolver sus métricas con consultas separadas significa seis viajes a la base y, peor, seis fotos tomadas en momentos distintos.",
+        solution: {
+          lead: "El dashboard se resuelve con una única etapa de agregación $facet, y la validación es doble: en la API y en la propia base.",
+          points: [
+            "Los agrupamientos comparten un subpipeline generado por función: un desglose nuevo es una línea.",
+            "Índices en migraciones, con autoIndex desactivado y patrón ESR: sin ordenamiento en memoria.",
+            "Zod estricto en la API cierra mass assignment e inyección de operadores de Mongo.",
+            "$jsonSchema en la base, para que un script tampoco pueda insertar datos inválidos.",
+          ],
+        },
+        outcome: {
+          lead: "Módulo entregado, probado y documentado.",
+          points: [
+            "Pruebas E2E en Playwright y quality gate de SonarCloud en verde.",
+            "Análisis técnico escrito: modelo de datos y diagnóstico de un incidente.",
+            "El mismo análisis cubre la arquitectura en AWS y el plan de migración.",
+          ],
+        },
+      },
+      en: {
+        problem:
+          "The risk was in the dashboard: resolving its metrics with separate queries means six round trips to the database and, worse, six snapshots taken at different moments.",
+        solution: {
+          lead: "The dashboard resolves in a single $facet aggregation stage, and validation is layered: at the API and on the database itself.",
+          points: [
+            "Groupings share a function-generated subpipeline, so adding a new breakdown is one line.",
+            "Indexes live in migrations with autoIndex off, following ESR: no in-memory sort.",
+            "Strict Zod at the API closes mass assignment and Mongo operator injection.",
+            "$jsonSchema on the database, so a script cannot insert invalid data either.",
+          ],
+        },
+        outcome: {
+          lead: "Module delivered, tested and documented.",
+          points: [
+            "Playwright E2E tests and a green SonarCloud quality gate.",
+            "Written technical analysis: data model and an incident diagnosis.",
+            "The same analysis covers the AWS architecture and the migration plan.",
+          ],
+        },
       },
     },
   },

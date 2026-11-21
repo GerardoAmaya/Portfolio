@@ -6,6 +6,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CaseStudy } from "@/components/case-study";
 import { ProjectCarousel } from "@/components/project-carousel";
 import { getProject, projects } from "@/data/projects";
 import { pageMetadata } from "@/lib/metadata";
@@ -144,21 +145,8 @@ export default async function ProjectDetailPage({
       </div>
 
       <section className="container-app pb-24">
-        <div className="reveal-children grid gap-10 md:grid-cols-3">
-          <CaseBlock title={locale === "es" ? "Problema" : "Problem"}>{i18n.problem}</CaseBlock>
-          <CaseBlock title={locale === "es" ? "Solución" : "Solution"}>{i18n.solution}</CaseBlock>
-          <CaseBlock title={locale === "es" ? "Resultado" : "Outcome"}>{i18n.outcome}</CaseBlock>
-        </div>
+        <CaseStudy full={i18n} brief={project.brief?.[locale]} />
       </section>
     </article>
-  );
-}
-
-function CaseBlock({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="border-border/60 bg-card/40 rounded-xl border p-6 backdrop-blur">
-      <h2 className="text-primary text-sm font-semibold tracking-wide uppercase">{title}</h2>
-      <p className="text-muted-foreground mt-3 text-base leading-relaxed">{children}</p>
-    </div>
   );
 }
