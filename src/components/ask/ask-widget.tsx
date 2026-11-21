@@ -2,13 +2,14 @@
 
 import * as React from "react";
 import { ArrowUp, RotateCcw, Sparkles, X } from "lucide-react";
-import { animate, motion, useMotionValue } from "motion/react";
+import { animate, motion, useMotionValue, useReducedMotion } from "motion/react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { cleanRefs, isValidRef, parseAnswerBlocks, REF_PATTERN } from "@/lib/ask/answer";
 import { resumeUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { AskMascot } from "./ask-mascot";
 import { RobotIcon } from "./robot-icon";
 
 type Message = { role: "user" | "assistant"; content: string; error?: boolean };
@@ -34,6 +35,10 @@ export function AskWidget({ projects }: { projects: AskProject[] }) {
   const [input, setInput] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const scrollRef = React.useRef<HTMLDivElement>(null);
+  // Estado de la mascota del botón: feliz con el mouse encima, corazones al hacer clic
+  const reduceMotion = useReducedMotion();
+  const [fabHover, setFabHover] = React.useState(false);
+  const [fabLove, setFabLove] = React.useState(false);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
 
   // Solo se enfoca el campo con mouse/trackpad: en pantallas tactiles abriria
@@ -283,8 +288,21 @@ export function AskWidget({ projects }: { projects: AskProject[] }) {
               return;
             }
             dismissTeaser();
-            setOpen(true);
+            // Un instante de ojos de corazón antes de abrir; sin animaciones, abre ya
+            if (reduceMotion) {
+              setOpen(true);
+              return;
+            }
+            if (fabLove) return;
+            setFabLove(true);
+            window.setTimeout(() => {
+              setOpen(true);
+              setFabLove(false);
+            }, 380);
           }}
+          // Solo con mouse: en pantallas táctiles el "hover" queda pegado tras tocar
+          onPointerEnter={(e) => setFabHover(e.pointerType === "mouse")}
+          onPointerLeave={() => setFabHover(false)}
           aria-label={t("button")}
           className="ask-fab group relative flex cursor-grab rounded-full active:cursor-grabbing"
         >
@@ -303,7 +321,7 @@ export function AskWidget({ projects }: { projects: AskProject[] }) {
               className="ask-fab-ring bg-primary/40 absolute inset-0 rounded-full"
             />
             <span className="from-primary shadow-primary/30 relative flex size-14 items-center justify-center rounded-full bg-gradient-to-br to-fuchsia-500 text-white shadow-lg transition-transform duration-300 group-hover:scale-105">
-              <RobotIcon className="ask-fab-robot size-8" />
+              <AskMascot happy={fabHover} love={fabLove} className="size-8" />
             </span>
             <span className="bg-background text-primary border-primary/40 absolute -top-1 -right-1 rounded-full border px-1.5 text-[0.6rem] leading-4 font-bold">
               {t("badge")}
