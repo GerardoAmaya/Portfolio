@@ -136,6 +136,17 @@ export function ProjectCarousel({ slides, title }: { slides: CarouselSlide[]; ti
     };
   }, [api, tween]);
 
+  // Navegar a mano reinicia el temporizador: si no, la captura elegida solo
+  // duraba lo que le quedaba al ciclo anterior y saltaba enseguida a la siguiente
+  const navigate = React.useCallback(
+    (move: (embla: NonNullable<CarouselApi>) => void) => {
+      if (!api) return;
+      move(api);
+      api.plugins().autoplay?.reset();
+    },
+    [api]
+  );
+
   const slide = slides[selected]!;
   const arrow =
     "bg-background/80 text-foreground border-border/60 hover:bg-background absolute top-1/2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-full border shadow-md backdrop-blur transition-all hover:scale-105 sm:size-10";
@@ -187,7 +198,7 @@ export function ProjectCarousel({ slides, title }: { slides: CarouselSlide[]; ti
           <>
             <button
               type="button"
-              onClick={() => api?.scrollPrev()}
+              onClick={() => navigate((embla) => embla.scrollPrev())}
               aria-label={t("previous")}
               className={cn(arrow, "left-2 sm:left-4")}
             >
@@ -195,7 +206,7 @@ export function ProjectCarousel({ slides, title }: { slides: CarouselSlide[]; ti
             </button>
             <button
               type="button"
-              onClick={() => api?.scrollNext()}
+              onClick={() => navigate((embla) => embla.scrollNext())}
               aria-label={t("next")}
               className={cn(arrow, "right-2 sm:right-4")}
             >
@@ -230,7 +241,7 @@ export function ProjectCarousel({ slides, title }: { slides: CarouselSlide[]; ti
                 <button
                   key={s.src}
                   type="button"
-                  onClick={() => api?.scrollTo(i)}
+                  onClick={() => navigate((embla) => embla.scrollTo(i))}
                   aria-label={t("goTo", { n: i + 1, alt: s.alt })}
                   aria-current={active}
                   className={cn(
