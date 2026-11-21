@@ -157,20 +157,20 @@ export const projects: Project[] = [
     categories: ["ai", "fullstack"],
     year: "2026",
     updatedAt: "2026-09-15",
-    cover: "/projects/waypoint-cover.jpg",
+    cover: "/projects/waypoint-inicio.jpg",
     gallery: [
-      {
-        src: "/projects/waypoint-cover.jpg",
-        alt: {
-          es: "Un itinerario de dos días: paradas, horarios y traslados, con la ruta en el mapa",
-          en: "A two-day itinerary: stops, times and transfers, with the route on the map",
-        },
-      },
       {
         src: "/projects/waypoint-inicio.jpg",
         alt: {
           es: "La entrada: se describe el viaje en una frase y Waypoint arma el recorrido",
           en: "The start screen: describe the trip in one sentence and Waypoint builds the route",
+        },
+      },
+      {
+        src: "/projects/waypoint-cover.jpg",
+        alt: {
+          es: "Un itinerario de dos días: paradas, horarios y traslados, con la ruta en el mapa",
+          en: "A two-day itinerary: stops, times and transfers, with the route on the map",
         },
       },
     ],
@@ -302,20 +302,20 @@ export const projects: Project[] = [
     categories: ["fullstack"],
     updatedAt: "2026-09-08",
     year: "2026",
-    cover: "/projects/real-estate-lead-management.jpg",
+    cover: "/projects/real-estate-lead-management-login.jpg",
     gallery: [
-      {
-        src: "/projects/real-estate-lead-management.jpg",
-        alt: {
-          es: "Seguimiento de leads: indicadores, filtros por estado, fuente y proyecto, y la tabla de prospectos",
-          en: "Lead tracking: metrics, filters by status, source and project, and the prospects table",
-        },
-      },
       {
         src: "/projects/real-estate-lead-management-login.jpg",
         alt: {
           es: "El acceso, con las credenciales de demostración a la vista",
           en: "Sign-in, with the demo credentials in plain sight",
+        },
+      },
+      {
+        src: "/projects/real-estate-lead-management.jpg",
+        alt: {
+          es: "Seguimiento de leads: indicadores, filtros por estado, fuente y proyecto, y la tabla de prospectos",
+          en: "Lead tracking: metrics, filters by status, source and project, and the prospects table",
         },
       },
       {

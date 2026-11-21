@@ -103,6 +103,20 @@
   --ring: oklch(0.706 0.213 293.756);
 }
 
+/* Cuerpo del robot del asistente (components/ask/robot.tsx): contrasta con el
+   fondo de cada tema */
+:root {
+  --robot-body-top: #f5f3ff;
+  --robot-body-bottom: #ddd6fe;
+  --robot-body-edge: #c4b5fd;
+}
+
+.dark {
+  --robot-body-top: #ffffff;
+  --robot-body-bottom: #dcd8e6;
+  --robot-body-edge: #c8c2d8;
+}
+
 @layer base {
   * {
     @apply border-border;

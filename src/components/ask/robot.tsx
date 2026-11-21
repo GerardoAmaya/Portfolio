@@ -25,7 +25,7 @@ import {
   useSpring,
   type MotionValue,
 } from "motion/react";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { cn } from "@/lib/utils";
 
@@ -83,6 +83,23 @@ function savePlacement(p: Placement) {
   }
 }
 
+// Arrastrar es solo para mouse: en pantallas táctiles el dedo que hace scroll
+// pasando sobre el robot lo arrastraba (y la página no bajaba), y un toque con
+// un temblor mínimo lo ladeaba como si lo hubieran agarrado.
+const FINE_POINTER = "(hover: hover) and (pointer: fine)";
+function subscribeFinePointer(onChange: () => void) {
+  const query = window.matchMedia(FINE_POINTER);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+function useFinePointer() {
+  return useSyncExternalStore(
+    subscribeFinePointer,
+    () => window.matchMedia(FINE_POINTER).matches,
+    () => false
+  );
+}
+
 /** Margen al borde de la ventana, el mismo de las clases right-4 / sm:right-6. */
 const edgeMargin = () => (window.innerWidth >= 640 ? 24 : 16);
 
@@ -102,6 +119,7 @@ export function Robot({
   bubbles: string[];
 }) {
   const reduced = !!useReducedMotion();
+  const canDrag = useFinePointer();
   const [hover, setHover] = useState(false);
   const [blink, setBlink] = useState(false);
   const [asleep, setAsleep] = useState(false);
@@ -345,7 +363,7 @@ export function Robot({
         <motion.div
           className="relative"
           style={{ x: dx, y: dy }}
-          drag
+          drag={canDrag}
           dragConstraints={bounds}
           dragElastic={0.06}
           dragMomentum={false}
@@ -407,13 +425,19 @@ export function Robot({
             aria-label={label}
             title={label}
             onClick={onClick}
-            onPointerEnter={() => setHover(true)}
+            // Solo el mouse cuenta como "acercarse": un toque dispara pointerenter
+            // sin pointerleave y el robot se quedaba saludando
+            onPointerEnter={(e) => setHover(e.pointerType === "mouse")}
             onPointerLeave={() => setHover(false)}
-            onFocus={() => setHover(true)}
+            // Y el foco solo cuando llega con teclado: al cerrar el chat el foco
+            // vuelve aquí y lo dejaba feliz hasta hacer clic en otra parte
+            onFocus={(e) => setHover(e.currentTarget.matches(":focus-visible"))}
             onBlur={() => setHover(false)}
             className={cn(
-              "group focus-visible:ring-primary focus-visible:ring-offset-background relative block size-18 touch-none rounded-full outline-none focus-visible:ring-2 focus-visible:ring-offset-2 sm:size-21",
-              dragging ? "cursor-grabbing" : "cursor-grab"
+              "group focus-visible:ring-primary focus-visible:ring-offset-background relative block size-18 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-offset-2 sm:size-21",
+              canDrag
+                ? cn("touch-none", dragging ? "cursor-grabbing" : "cursor-grab")
+                : "cursor-pointer"
             )}
             // El "boing" del clic.
             animate={reaction ? { scale: [1, 0.86, 1.12, 1] } : { scale: 1 }}
@@ -522,12 +546,11 @@ export function RobotMini({ thinking, className }: { thinking: boolean; classNam
   );
 }
 
-// Paleta del portafolio: violeta (primary) y fucsia. El cuerpo es blanco en
-// los dos temas: el sitio se ve en oscuro por defecto y un robot gris oscuro se
-// perdía contra el fondo.
-const BODY_TOP = "#ffffff";
-const BODY_BOTTOM = "#dcd8e6";
-const BODY_EDGE = "#c8c2d8";
+// Paleta del portafolio: violeta (primary) y fucsia. El cuerpo cambia con el
+// tema para contrastar con el fondo (ver --robot-body-* en globals.css).
+const BODY_TOP = "var(--robot-body-top)";
+const BODY_BOTTOM = "var(--robot-body-bottom)";
+const BODY_EDGE = "var(--robot-body-edge)";
 const EYE = "#c4b5fd";
 const STAR = "#f0abfc";
 const ACCENT = "#d946ef";
